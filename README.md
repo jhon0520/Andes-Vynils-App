@@ -1,4 +1,6 @@
-# Andes-Vynils-App
+# Wine Music
+
+## Equipo
 
 Jhon Edman Linares Rivera - [je.linaresr@uniandes.edu.co](mailto:je.linaresr@uniandes.edu.co)
 
@@ -8,7 +10,7 @@ Jesus Enrique Quesada Diaz - [je.quesadad@uniandes.edu.co](mailto:je.quesadad@un
 
 Juan Martin Santos Ayala - [j.santosa@uniandes.edu.co](mailto:j.santosa@uniandes.edu.co)
 
-Compromisos del grupo:
+## Compromisos del grupo:
 
 Horario: El equipo se compromete reunirse todo los Lunes de 7 - 8 pm para realizar una sincronización con los avances o dudas que puede tener alguno de los integrantes.
 
@@ -20,7 +22,11 @@ Horario: El equipo se compromete reunirse todo los Lunes de 7 - 8 pm para realiz
 
 Utilizaremos metodología Scrum y llevaremos comunicación continua por medio de un grupo creado en slack por los estudiantes, acordaremos de antemano sesiones para compartir las tareas asignadas o resolver dudas y dificultades que tenga el equipo.
 
+## Actas por Semana
+
+Se adjunta documento con acta y evidencias de reunión del equipo [Documento](https://docs.google.com/document/d/18FE3xbBaMrto_UNlFDcZVraxfUT13bbsTulDw_RbJc0/edit?usp=sharing).
 
 ## Diseño de mockups de Wine Music App
 
-Ver diseño en Figma: [Figma](https://send-sauna-69077229.figma.site/)
+* WireFrame: [WireFrame](https://send-sauna-69077229.figma.site/)
+* Diseño en Figma: [Figma](https://www.figma.com/design/4CKmBMf3pZgEf5rkBU9XRv/Wireframe-App-Vinilos?node-id=0-1&t=uVtnkMcJR235XoSf-1)
