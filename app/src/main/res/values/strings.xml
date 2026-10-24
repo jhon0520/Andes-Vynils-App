@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Wine Music App</string>
+    <string name="roll_dices">Hola</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Artists</string>
+    <string name="collectors">Collectors</string>
+    <string name="musician">Musician</string>
+    <string name="band">Band</string>
+    <string name="tracks">Tracks</string>
+    <string name="back">Back</string>
+    <string name="retry">Retry</string>
+    <string name="error_loading">Something went wrong while loading the data.</string>
+    <string name="empty_list">Nothing here yet.</string>
+    <string name="album_cover_description">Cover of %1$s</string>
 </resources>
