@@ -31,6 +31,8 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 * WireFrame: [WireFrame](https://send-sauna-69077229.figma.site/)
 * Diseño en Figma: [Figma](https://www.figma.com/design/4CKmBMf3pZgEf5rkBU9XRv/Wireframe-App-Vinilos?node-id=0-1&t=uVtnkMcJR235XoSf-1)
 
+## Gitflow
+[GitFlow documentation](./docs/gitflow.md)
 
 ## Cómo construir y ejecutar la app
 
