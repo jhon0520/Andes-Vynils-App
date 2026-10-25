@@ -440,7 +440,7 @@ El código es coherente con el diseño cuando los paquetes y clases coinciden co
 - Estado de pantalla: siempre `StateFlow<UiState<T>>`, con `LoadingView`, `ErrorView` y `EmptyView` de `ui/components`.
 - Rutas nuevas como clases `@Serializable` en `Routes.kt`.
 - Textos en `strings.xml`, en español como el diseño; colores y tipografía solo desde `ui/theme`.
-- Una rama por HU desde `h0_base_architecture` (por ejemplo `hu04_detalle_artista`) y un pull request por HU.
+- Una rama por HU desde `develop` (por ejemplo `feature/hu04-detalle-artista`) y un pull request por HU hacia `develop`, según el [gitflow del equipo](gitflow.md).
 
 ### Checklist del pull request
 
@@ -457,7 +457,7 @@ El código es coherente con el diseño cuando los paquetes y clases coinciden co
 
 ## Reparto del trabajo
 
-La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarla a `main`. Lo pendiente son cuatro HU nuevas, completar cuatro parciales y tres piezas transversales (tema, perfil y errores) que varias HU necesitan. Cada quien escribe su nombre en Responsable y actualiza el Estado (Por hacer · En curso · En revisión · Hecho).
+La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarla a `develop` (ver [puesta en marcha del gitflow](gitflow.md#puesta-en-marcha)). Lo pendiente son cuatro HU nuevas, completar cuatro parciales y tres piezas transversales (tema, perfil y errores) que varias HU necesitan. Cada quien escribe su nombre en Responsable y actualiza el Estado (Por hacer · En curso · En revisión · Hecho).
 
 | # | Tarea | Depende de | Responsable | Estado |
 |---|---|---|---|---|
