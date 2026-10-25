@@ -46,7 +46,7 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 
 ### 1. Levantar el backend
 
-1. Clonar **BackVynils** y seguir las instrucciones de su README.
+1. Clonar [BackVynils](https://github.com/TheSoftwareDesignLab/BackVynils) y seguir las instrucciones de su README.
 2. Confirmar que responde en [`http://localhost:3000/albums`](http://localhost:3000/albums).
 
 ### 2. Revisar la URL de la API
