@@ -30,3 +30,79 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 
 * WireFrame: [WireFrame](https://send-sauna-69077229.figma.site/)
 * Diseño en Figma: [Figma](https://www.figma.com/design/4CKmBMf3pZgEf5rkBU9XRv/Wireframe-App-Vinilos?node-id=0-1&t=uVtnkMcJR235XoSf-1)
+
+## Gitflow
+[GitFlow documentation](./docs/gitflow.md)
+
+## Cómo construir y ejecutar la app
+
+### Requisitos
+
+| Herramienta | Versión |
+| --- | --- |
+| Android Studio | Compatible con Android Gradle Plugin 8.8 *(versión exacta por confirmar)* |
+| JDK | 17 para Gradle (Android Studio ya lo incluye) |
+| Android SDK | 35 |
+| Emulador | Android 7.0 (API 24) o superior |
+| Backend | **BackVynils** corriendo localmente (ver su propio README) |
+
+### 1. Levantar el backend
+
+1. Clonar [BackVynils](https://github.com/TheSoftwareDesignLab/BackVynils) y seguir las instrucciones de su README.
+2. Confirmar que responde en [`http://localhost:3000/albums`](http://localhost:3000/albums).
+
+### 2. Revisar la URL de la API
+
+La URL está en [`app/build.gradle.kts`](app/build.gradle.kts):
+
+```kotlin
+buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/\"")
+```
+
+> [!NOTE]
+> `10.0.2.2` es el computador visto desde el emulador.
+
+> [!TIP]
+> En un **teléfono físico**, cambia la URL por la IP del computador en la red local y agrega esa IP en
+> [`app/src/main/res/xml/network_security_config.xml`](app/src/main/res/xml/network_security_config.xml).
+
+### 3. Compilar y ejecutar
+
+```bash
+git clone https://github.com/jhon0520/Andes-Vynils-App.git
+cd Andes-Vynils-App
+./gradlew assembleDebug
+./gradlew installDebug   # con el emulador abierto
+```
+
+O abrir la carpeta en **Android Studio** y pulsar **Run ▶** sobre el módulo `app`.
+
+### 4. Pruebas
+
+```bash
+./gradlew test                   # pruebas unitarias
+./gradlew connectedAndroidTest   # pruebas de interfaz (emulador abierto)
+```
+
+## Arquitectura
+
+**MVVM** con **Jetpack Compose**, casos de uso, **Repository** y **Retrofit** como *Service Adapter*, con inyección de dependencias por **Hilt**.
+
+> [!NOTE]
+> Los diagramas están en el documento de diseño arquitectónico del equipo.
+
+## Problemas comunes
+
+<details>
+<summary><b>La app muestra "Something went wrong"</b></summary>
+
+Revisar que el backend responde y que la URL base es correcta.
+
+</details>
+
+<details>
+<summary><b>"Cleartext HTTP traffic not permitted"</b></summary>
+
+La IP usada no está en `network_security_config.xml`.
+
+</details>
