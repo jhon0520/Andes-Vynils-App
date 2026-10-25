@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Wine Music App</string>
+    <string name="albums">Albumes</string>
+    <string name="artists">Artistas</string>
+    <string name="collectors">Coleccionistas</string>
+    <string name="musician">Musico</string>
+    <string name="band">Banda</string>
+    <string name="tracks">Tracks</string>
+    <string name="back">Volver</string>
+    <string name="retry">Reintentar</string>
+    <string name="error_loading">Algo salió mal.</string>
+    <string name="empty_list">Nada por aquí todavía.</string>
+    <string name="album_cover_description">Portada de %1$s</string>
 </resources>
