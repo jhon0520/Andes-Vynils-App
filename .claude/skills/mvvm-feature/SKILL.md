@@ -1,6 +1,6 @@
 ---
 name: mvvm-feature
-description: Implementa un feature o historia de usuario (HU) nueva en la app Android Wine Music / Vinilos siguiendo MVVM + Clean Architecture del proyecto (Compose, Hilt, Retrofit, StateFlow<UiState>). Úsala cuando pidan crear una pantalla, HU, listado, detalle, formulario, endpoint o caso de uso nuevo; completar una HU parcial (búsqueda, filtros, navegación); o agregar manejo de errores por tipo. Triggers: "nuevo feature", "implementar HU", "HU04", "crear pantalla", "agregar endpoint", "formulario", "detalle de artista/coleccionista", "new feature", "new screen".
+description: Implementa un feature o historia de usuario (HU) nueva en la app Android Wine Music / Vinilos siguiendo MVVM + Clean Architecture del proyecto (Compose, Hilt, Retrofit, StateFlow<UiState>). Úsala cuando pidan crear una pantalla, HU, listado, detalle, formulario, endpoint o caso de uso nuevo; completar una HU parcial (búsqueda, filtros, navegación); o agregar manejo de errores por tipo. Incluye las pruebas unitarias y E2E (Compose sobre MainActivity y Kraken) del feature. Triggers: "nuevo feature", "implementar HU", "HU04", "crear pantalla", "agregar endpoint", "formulario", "detalle de artista/coleccionista", "new feature", "new screen", "pruebas e2e del feature", "escenario Kraken".
 ---
 
 # Implementar un feature con MVVM en Wine Music
@@ -37,6 +37,7 @@ Hilt une todo: `di/NetworkModule` crea las APIs y `di/RepositoryModule` enlaza c
 | Formulario que crea o modifica datos (POST/PUT) | [references/layers.md](references/layers.md) + [references/forms.md](references/forms.md) |
 | Distinguir errores (sin red, 404, 400/412) | [references/errors.md](references/errors.md) |
 | Pruebas de cualquier capa | [references/testing.md](references/testing.md) |
+| Pruebas E2E (Compose sobre `MainActivity` y Kraken) | [references/e2e.md](references/e2e.md) |
 | Rama, commits, documentación y PR | [references/docs-and-git.md](references/docs-and-git.md) |
 
 Presenta al usuario un plan corto con la lista de archivos que vas a crear o tocar antes de empezar.
@@ -56,7 +57,7 @@ Cada capa compila sobre la anterior, así los errores salen pronto. Las plantill
 5. **Repository**: interfaz en `domain/repository`, implementación `@Inject constructor` en `data/repository`. Si es nuevo, agrega el `@Binds` en `RepositoryModule`.
 6. **UseCase** `domain/usecase/<Verbo><Entidad>UseCase.kt`: una acción, `suspend operator fun invoke`. Aquí van ordenar, combinar y cruzar datos.
 7. **ViewModel** `ui/<entidad>/<accion>/<Entidad><Accion>ViewModel.kt`: `@HiltViewModel`, `MutableStateFlow` privado y `StateFlow` público, carga en `init`, función pública para reintentar.
-8. **Screen + Content** en el mismo archivo `<Entidad><Accion>Screen.kt`: `Screen` obtiene el ViewModel con `hiltViewModel()` y usa `collectAsStateWithLifecycle()`; `Content` recibe estado y lambdas, y pinta Loading/Error/Empty/Success.
+8. **Screen + Content** en el mismo archivo `<Entidad><Accion>Screen.kt`: `Screen` obtiene el ViewModel con `hiltViewModel()` y usa `collectAsStateWithLifecycle()`; `Content` recibe estado y lambdas, y pinta Loading/Error/Empty/Success. Pon `Modifier.testTag(...)` en lista, ítems, campos y botones según la convención de [e2e.md](references/e2e.md).
 9. **Textos** en `res/values/strings.xml`, en español.
 10. **Navegación**: ruta `@Serializable` en `ui/navigation/Routes.kt`, `composable<Ruta>` en `WineMusicNavHost.kt`. Si es pestaña, agrégala en `TopLevelDestination`.
 
@@ -70,6 +71,11 @@ Mínimo por HU (plantillas en [testing.md](references/testing.md)):
 - Prueba del mapper cuando hay lógica (inferir tipos, cruzar campos).
 - Prueba Compose del `Content` en `androidTest` cuando hay interacción (clics, formulario).
 
+Pruebas E2E del recorrido principal (plantillas en [e2e.md](references/e2e.md)):
+
+- Flujo Compose sobre `MainActivity` en `androidTest/.../e2e/HUxx<Nombre>E2ETest.kt`, con backend real, esperas explícitas y selectores por `testTag`.
+- Escenario Kraken `e2e/kraken/features/HUxx-<nombre>.feature` (`@user1 @mobile`) con el mismo recorrido; señales entre `@user1` y `@user2` si la HU involucra a dos usuarios. Si `e2e/kraken` no existe, pregunta antes de crearlo.
+
 ## Paso 4 · Verificar
 
 ```bash
@@ -77,7 +83,15 @@ Mínimo por HU (plantillas en [testing.md](references/testing.md)):
 ./gradlew assembleDebug   # compila la app
 ```
 
-Si hay emulador y backend corriendo, `./gradlew connectedDebugAndroidTest` para las pruebas Compose. No declares el feature terminado si algo falla: reporta qué falló y por qué.
+Si hay emulador y backend corriendo:
+
+```bash
+./gradlew connectedDebugAndroidTest                      # Compose: Content y E2E
+cp app/build/outputs/apk/debug/app-debug.apk distributions/app-debug.apk
+(cd e2e/kraken && npx kraken-node run)                   # Kraken
+```
+
+Si no hay emulador o backend, dile al usuario qué comandos faltan por correr. No declares el feature terminado si algo falla: reporta qué falló y por qué.
 
 ## Paso 5 · Documentación, checklist y commits
 
@@ -101,6 +115,7 @@ Actualiza `docs/App-technical-documentation.md` (mapa de trazabilidad, diagrama 
 - Listas con `LazyColumn`/`LazyVerticalGrid` y `key` estable (`it.id`; si los ids pueden repetirse entre tipos, combina tipo e id como en artistas).
 - Reutiliza `LoadingView`, `ErrorView`, `EmptyView` y tarjetas de `ui/components`. Si un componente se usa en dos pantallas, muévelo ahí.
 - Colores y tipografía solo de `MaterialTheme` (definidos en `ui/theme`); nada de `Color(0x...)` ni tamaños de fuente en las pantallas.
+- Lo que una prueba toca o verifica lleva `testTag` en `snake_case` (`album_list`, `album_item_<id>`, `back_button`); la raíz de la UI tiene `testTagsAsResourceId = true` para que Kraken los vea.
 - Todo texto visible sale de `stringResource`. Imágenes con Coil `AsyncImage` y `contentDescription` (o `null` si es decorativa).
 - Navegación por lambdas (`onAlbumClick: (Int) -> Unit`): la pantalla no recibe el `NavController`.
 
