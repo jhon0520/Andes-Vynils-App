@@ -13,6 +13,8 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dev.wine.music.app.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,10 +24,14 @@ import org.junit.runner.RunWith
  * "Buscando América" (Elektra, 01/08/1984) opens with "Decisiones" (5:05) and a review by Manolo Bellon.
  */
 @OptIn(ExperimentalTestApi::class)
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class HU02AlbumDetailE2ETest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private fun openSalsaAlbum() {

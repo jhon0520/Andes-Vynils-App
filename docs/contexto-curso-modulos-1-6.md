@@ -63,7 +63,7 @@ Enums:
 **Pruebas (sem. 2, 4, 5).**
 - Espresso: ViewMatchers, ViewActions con `perform()` y ViewAssertions con `check()`, `ActivityScenarioRule` y `AndroidJUnitRunner`. Hay que **desactivar las animaciones** con `adb shell settings put global window_animation_scale 0.0`, igual para `transition_animation_scale` y `animator_duration_scale`.
 - Espresso Recorder sirve para grabar escenarios.
-- Kraken (Gherkin + Appium, Node 18) se usa para E2E con interacción entre varios usuarios.
+- Kraken (Gherkin + Appium) es la herramienta del curso para E2E de caja negra; su fuerte es la interacción entre varios usuarios. En este proyecto cada HU tiene un escenario de Kraken con su recorrido principal, y las señales se usan solo cuando hay varios usuarios (ver `docs/E2E-testing-guide.md`). El equipo usa Node 20.
 - ADB/Telnet sirven para pruebas manuales y automatizadas en emulador y dispositivo.
 - Firebase Test Lab permite pruebas en la nube sobre muchos dispositivos (fragmentación).
 - Pirámide de pruebas: muchas unitarias, menos de integración y pocas E2E.

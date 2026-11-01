@@ -2,6 +2,8 @@ package com.dev.wine.music.app.e2e
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -11,6 +13,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dev.wine.music.app.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,10 +24,14 @@ import org.junit.runner.RunWith
  * Rubén Blades is a musician and Queen is a band.
  */
 @OptIn(ExperimentalTestApi::class)
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class HU03ArtistListE2ETest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private fun openArtists() {
@@ -34,6 +42,14 @@ class HU03ArtistListE2ETest {
 
     private fun scrollToArtist(name: String) {
         composeTestRule.onNodeWithTag("artist_list").performScrollToNode(hasText(name))
+    }
+
+    private fun waitUntilEveryArtistHas(avatarTag: String) {
+        composeTestRule.waitUntilEveryItemMatches(
+            itemTagPrefix = "artist_item_",
+            matcher = hasAnyDescendant(hasTestTag(avatarTag)),
+            timeoutMillis = TIMEOUT,
+        )
     }
 
     @Test
@@ -51,8 +67,11 @@ class HU03ArtistListE2ETest {
         openArtists()
 
         composeTestRule.onNodeWithTag("artist_type_tab_band").performClick()
+        composeTestRule.onNodeWithTag("artist_type_tab_band").assertIsSelected()
 
-        composeTestRule.waitUntilDoesNotExist(hasText(MUSICIAN), timeoutMillis = TIMEOUT)
+        // Every artist left must have the band avatar; only then is the musician's absence meaningful.
+        waitUntilEveryArtistHas("artist_avatar_band")
+        composeTestRule.onNodeWithText(MUSICIAN).assertDoesNotExist()
         scrollToArtist(BAND)
         composeTestRule.onNodeWithText(BAND).assertIsDisplayed()
     }
@@ -62,11 +81,14 @@ class HU03ArtistListE2ETest {
         openArtists()
 
         composeTestRule.onNodeWithTag("artist_type_tab_musician").performClick()
-        composeTestRule.waitUntilDoesNotExist(hasText(BAND), timeoutMillis = TIMEOUT)
+        composeTestRule.onNodeWithTag("artist_type_tab_musician").assertIsSelected()
+        waitUntilEveryArtistHas("artist_avatar_musician")
+        composeTestRule.onNodeWithText(BAND).assertDoesNotExist()
         scrollToArtist(MUSICIAN)
         composeTestRule.onNodeWithText(MUSICIAN).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("artist_type_tab_all").performClick()
+        composeTestRule.onNodeWithTag("artist_type_tab_all").assertIsSelected()
         scrollToArtist(BAND)
         composeTestRule.onNodeWithText(BAND).assertIsDisplayed()
     }

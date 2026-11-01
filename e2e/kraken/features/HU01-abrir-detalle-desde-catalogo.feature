@@ -5,6 +5,7 @@ Feature: HU01 - Tocar un álbum del catálogo abre su detalle
     Given I wait for 5 seconds
     When I type "<ALBUM_QUERY>" into the element with id "album_search_input"
     And I hide the keyboard
+    And I scroll to the text "<SALSA_ALBUM>" in the element with id "album_list"
     And I tap the text "<SALSA_ALBUM>"
     Then I should see the element with id "album_detail"
     When I tap the element with id "back_button"

@@ -11,9 +11,11 @@ class AlbumRepositoryImpl @Inject constructor(
     private val api: AlbumApi,
 ) : AlbumRepository {
 
-    override suspend fun getAlbums(): List<Album> =
+    override suspend fun getAlbums(): List<Album> = safeApiCall {
         api.getAlbums().map { it.toDomain() }
+    }
 
-    override suspend fun getAlbum(albumId: Int): Album =
+    override suspend fun getAlbum(albumId: Int): Album = safeApiCall {
         api.getAlbum(albumId).toDomain()
+    }
 }

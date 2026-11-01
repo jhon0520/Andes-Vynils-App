@@ -1,8 +1,9 @@
 {
-  "FIRST_ALBUM": "A Day at the Races",
+  "CATALOG_ALBUM": "A Day at the Races",
   "SALSA_ALBUM": "Buscando América",
   "ROCK_ALBUM": "A Night at the Opera",
   "PERFORMER_QUERY": "ruben",
+  "NO_MATCH_QUERY": "zzz-e2e-sin-resultados",
   "ALBUM_QUERY": "Buscando",
   "SALSA_LABEL": "Elektra",
   "SALSA_RELEASE_DATE": "01/08/1984",

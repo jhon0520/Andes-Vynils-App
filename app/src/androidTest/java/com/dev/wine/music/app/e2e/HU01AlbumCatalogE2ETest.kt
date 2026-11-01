@@ -2,6 +2,8 @@ package com.dev.wine.music.app.e2e
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -14,6 +16,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.dev.wine.music.app.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import com.dev.wine.music.app.R
 import org.junit.Rule
 import org.junit.Test
@@ -22,12 +26,18 @@ import org.junit.runner.RunWith
 /**
  * HU01 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
  * Rubén Blades has "Buscando América" (Salsa) and Queen has "A Night at the Opera" (Rock).
+ * The checks only ask for these albums to exist, never for counts or order, so albums created by
+ * other tests do not break them.
  */
 @OptIn(ExperimentalTestApi::class)
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class HU01AlbumCatalogE2ETest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -57,23 +67,48 @@ class HU01AlbumCatalogE2ETest {
         composeTestRule.onNodeWithTag("album_search_input").performTextInput("queen")
         composeTestRule.onNodeWithTag("album_search_input").performImeAction()
 
-        composeTestRule.waitUntilDoesNotExist(hasText(SALSA_ALBUM), timeoutMillis = TIMEOUT)
+        // Every card left must be by Queen; only then is the absence of the salsa album meaningful.
+        composeTestRule.waitUntilEveryItemMatches(
+            itemTagPrefix = "album_item_",
+            matcher = hasAnyDescendant(hasText(ROCK_PERFORMER, substring = true)),
+            timeoutMillis = TIMEOUT,
+        )
+        composeTestRule.onNodeWithText(SALSA_ALBUM).assertDoesNotExist()
         scrollToAlbum(ROCK_ALBUM)
         composeTestRule.onNodeWithText(ROCK_ALBUM).assertIsDisplayed()
     }
 
     @Test
-    fun searchCombinedWithGenreWithoutMatchesShowsNoResultsAndCanBeCleared() {
+    fun searchCombinedWithGenreKeepsOnlyTheAlbumsThatMatchBoth() {
         waitForCatalog()
 
-        composeTestRule.onNodeWithTag("album_search_input").performTextInput("queen")
+        composeTestRule.onNodeWithTag("album_search_input").performTextInput("ruben")
         composeTestRule.onNodeWithTag("album_search_input").performImeAction()
         composeTestRule.onNodeWithTag("album_genre_tab_salsa").performClick()
+        composeTestRule.onNodeWithTag("album_genre_tab_salsa").assertIsSelected()
+
+        composeTestRule.waitUntilEveryItemMatches(
+            itemTagPrefix = "album_item_",
+            matcher = hasAnyDescendant(hasText(SALSA_PERFORMER, substring = true)),
+            timeoutMillis = TIMEOUT,
+        )
+        scrollToAlbum(SALSA_ALBUM)
+        composeTestRule.onNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+    }
+
+    @Test
+    fun searchWithoutMatchesShowsNoResultsAndCanBeCleared() {
+        waitForCatalog()
+
+        // A query no album can match, so the empty result does not depend on what the backend holds.
+        composeTestRule.onNodeWithTag("album_search_input").performTextInput(NO_MATCH_QUERY)
+        composeTestRule.onNodeWithTag("album_search_input").performImeAction()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("no_results_view"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithText(context.getString(R.string.album_no_results_query, "queen")).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.album_no_results_query, NO_MATCH_QUERY)).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("clear_search_button").performClick()
+        composeTestRule.onNodeWithTag("album_genre_tab_all").assertIsSelected()
 
         waitForCatalog()
         scrollToAlbum(SALSA_ALBUM)
@@ -97,6 +132,9 @@ class HU01AlbumCatalogE2ETest {
     private companion object {
         const val TIMEOUT = 15_000L
         const val SALSA_ALBUM = "Buscando América"
+        const val SALSA_PERFORMER = "Rubén Blades"
         const val ROCK_ALBUM = "A Night at the Opera"
+        const val ROCK_PERFORMER = "Queen"
+        const val NO_MATCH_QUERY = "zzz-e2e-sin-resultados"
     }
 }

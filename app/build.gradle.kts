@@ -57,7 +57,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Hilt runner: lets error tests swap the API URL for a fake backend (see HiltTestRunner).
+        testInstrumentationRunner = "com.dev.wine.music.app.HiltTestRunner"
 
         // The only domain the app talks to; NetworkModule builds Retrofit with it.
         // String.valueOf keeps it from being a compile-time constant: Kotlin would copy a constant
@@ -139,6 +140,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    androidTestImplementation(libs.okhttp.mockwebserver)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -4,6 +4,8 @@ Guía de pruebas de extremo a extremo (E2E) para **Wine Music (Vinilos)**. Expli
 
 Fuente de Kraken: [thesoftwaredesignlab.github.io/Kraken](https://thesoftwaredesignlab.github.io/Kraken/).
 
+¿Solo necesita escribir las pruebas de una HU? Empiece por la [guía rápida](E2E-guia-rapida.md).
+
 ---
 
 ## Contenido
@@ -18,11 +20,12 @@ Fuente de Kraken: [thesoftwaredesignlab.github.io/Kraken](https://thesoftwaredes
 8. [Step definitions propios](#step-definitions-propios)
 9. [Señales entre dispositivos](#señales-entre-dispositivos)
 10. [Propiedades y datos falsos](#propiedades-y-datos-falsos)
-11. [Monkey testing y snapshots](#monkey-testing-y-snapshots)
-12. [Ejecutar las pruebas](#ejecutar-las-pruebas)
-13. [Buenas prácticas](#buenas-prácticas)
-14. [Problemas comunes](#problemas-comunes)
-15. [Checklist por HU](#checklist-por-hu)
+11. [Datos de prueba y estado del backend](#datos-de-prueba-y-estado-del-backend)
+12. [Monkey testing y snapshots](#monkey-testing-y-snapshots)
+13. [Ejecutar las pruebas](#ejecutar-las-pruebas)
+14. [Buenas prácticas](#buenas-prácticas)
+15. [Problemas comunes](#problemas-comunes)
+16. [Checklist por HU](#checklist-por-hu)
 
 ---
 
@@ -37,7 +40,7 @@ Fuente de Kraken: [thesoftwaredesignlab.github.io/Kraken](https://thesoftwaredes
 | Puntos fuertes | Rápido, estable, sincroniza solo con la UI | Escenarios legibles, varios usuarios o dispositivos a la vez, web + móvil |
 | Usarlo para | Pantallas y flujos de una HU, con o sin backend | Recorridos completos sobre el APK instalado, con el backend real |
 
-**Regla práctica:** cada HU tiene al menos una prueba de Compose UI Test (rápida, en el PR) y los recorridos principales se cubren también con un escenario de Kraken sobre el APK.
+**Regla práctica:** cada HU tiene una prueba `*ContentTest` (estados de la pantalla), una `HUxx<Nombre>E2ETest` (recorrido con el backend real), una `HUxx<Nombre>ErrorE2ETest` (errores con backend falso) y **un escenario de Kraken con su recorrido principal**, aunque la HU sea de un solo usuario. Las señales de Kraken se agregan solo cuando la HU involucra a varios usuarios.
 
 > La app está hecha solo con Jetpack Compose. Las vistas Compose no son `View` clásicas, así que en vez de `onView(withId(...))` de Espresso se usa **Compose UI Test** (`createComposeRule`, `onNodeWithText`), que corre sobre la misma infraestructura de Espresso. Espresso clásico solo hace falta si se agregan pantallas con XML.
 
@@ -96,10 +99,14 @@ class AlbumListContentTest {
 Requiere el backend corriendo en el dominio de `api.base.url` (`gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`). Para correrlas contra un backend local, ver «Cambiar el dominio de la API» en el README.
 
 ```kotlin
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class AlbumFlowE2ETest {
+class HU02AlbumDetailE2ETest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
@@ -118,7 +125,54 @@ class AlbumFlowE2ETest {
 }
 ```
 
-> Si `MainActivity` usa `@AndroidEntryPoint`, la prueba arranca con el grafo real de Hilt. Para reemplazar repositorios por fakes hace falta `hilt-android-testing`, `@HiltAndroidTest` y un runner propio; agréguelo solo cuando se necesite.
+> Las pruebas instrumentadas corren con `HiltTestRunner`. Toda prueba que abra `MainActivity` (que es `@AndroidEntryPoint`) debe llevar `@HiltAndroidTest` y `HiltAndroidRule` en `order = 0`; si no, falla al arrancar. Sin `@UninstallModules`, la prueba usa los módulos reales (backend real). Las pruebas `*Content` con `createComposeRule()` no necesitan nada de esto.
+
+### Ejemplo 3: camino de error con un backend falso
+
+Las pruebas `*Content` ya cubren cómo se dibujan los estados de error. Estas pruebas cubren el flujo completo: ViewModel → caso de uso → repositorio → Retrofit → pantalla de error → "Reintentar". La app corre igual que en producción; solo cambia la URL, que apunta a un servidor local (`FakeBackendRule`, con MockWebServer) que falla a propósito.
+
+Piezas (ya están en el repo):
+
+| Pieza | Dónde | Para qué |
+|---|---|---|
+| `HiltTestRunner` | `app/src/androidTest/.../HiltTestRunner.kt` | Runner de instrumentación que usa `HiltTestApplication` (configurado en `app/build.gradle.kts`) |
+| `ApiConfigModule` + `@ApiBaseUrl` | `app/src/main/.../di/ApiConfigModule.kt` | Módulo de Hilt que solo provee la URL; la prueba lo desinstala y pone otra |
+| `FakeBackendRule` | `androidTest/.../e2e/FakeBackendRule.kt` | Servidor falso: `respondJson`, `respondStatus(path, code)`, `respondNetworkError` |
+| `FakeBackendData` | `androidTest/.../e2e/FakeBackendData.kt` | JSON pequeños con la forma de los datos semilla |
+
+```kotlin
+@HiltAndroidTest
+@UninstallModules(ApiConfigModule::class)
+@RunWith(AndroidJUnit4::class)
+class HU01AlbumCatalogErrorE2ETest {
+
+    @get:Rule(order = 0) val hiltRule = HiltAndroidRule(this)
+    @get:Rule(order = 1) val backend = FakeBackendRule()
+    @get:Rule(order = 2) val composeTestRule = createEmptyComposeRule()
+
+    @BindValue @field:ApiBaseUrl @JvmField
+    val baseUrl: String = backend.baseUrl
+
+    @Test
+    fun serverErrorShowsTheErrorAndRetryLoadsTheCatalog() {
+        backend.respondStatus("/albums", 500)
+        ActivityScenario.launch(MainActivity::class.java)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("error_view"), timeoutMillis = 15_000)
+
+        backend.respondJson("/albums", FakeBackendData.albums)
+        composeTestRule.onNodeWithTag("retry_button").performClick()
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = 15_000)
+    }
+}
+```
+
+Reglas:
+
+- Configure las respuestas **antes** de abrir la app (`ActivityScenario.launch`); por eso se usa `createEmptyComposeRule()` y no `createAndroidComposeRule<MainActivity>()`.
+- Cada ruta responde lo mismo hasta que la prueba lo cambie; las rutas sin respuesta devuelven 404.
+- Use `@UninstallModules` en la clase, **no** `@TestInstallIn`: `@TestInstallIn` reemplaza el módulo en todas las pruebas del source set, incluidas las que usan el backend real.
+- Una clase `HUxx<Nombre>ErrorE2ETest` por pantalla con datos: error del servidor + reintento, sin conexión (mensaje de red), lista vacía y, en detalles, 404 sin reintento.
+- No necesitan BackVynils encendido: solo el emulador.
 
 ### API básica de Compose UI Test
 
@@ -136,6 +190,17 @@ class AlbumFlowE2ETest {
 | Texto exacto | `.assertTextEquals("...")` |
 | Esperar | `composeTestRule.waitUntil(timeoutMillis) { ... }` |
 | Imprimir el árbol | `onRoot().printToLog("TREE")` |
+
+### Nombres de las pruebas
+
+| Prueba | Archivo | Backend |
+|---|---|---|
+| Pantalla sin estado | `app/src/androidTest/.../ui/<feature>/<Pantalla>ContentTest.kt` | No usa |
+| Recorrido E2E de la HU | `app/src/androidTest/.../e2e/HUxx<Nombre>E2ETest.kt` (ej. `HU01AlbumCatalogE2ETest`) | BackVynils real |
+| Caminos de error de la HU | `app/src/androidTest/.../e2e/HUxx<Nombre>ErrorE2ETest.kt` (ej. `HU01AlbumCatalogErrorE2ETest`) | `FakeBackendRule` |
+| Escenario Kraken | `e2e/kraken/features/HUxx-<nombre>.feature` (ej. `HU01-catalogo-albumes.feature`) | BackVynils real |
+
+Métodos en inglés y en forma de frase (`searchByPerformerShowsOnlyTheirAlbums`); features y escenarios en español.
 
 ### Ejecutar
 
@@ -178,8 +243,8 @@ Vocabulario:
 ### Requisitos
 
 - Android SDK con `adb` y `aapt` en el `PATH`.
-- Appium.
-- Node.js 12 o superior.
+- Appium (viene como `devDependency` en `e2e/kraken/package.json`).
+- Node.js 18 o superior; el equipo usa **Node 20** (`e2e/kraken/.nvmrc`). Con Node 20 o superior corra Kraken con `NODE_OPTIONS=--no-deprecation` (ver [Problemas comunes](#problemas-comunes)).
 - Java (JDK).
 - Un emulador o dispositivo encendido (`adb devices` debe listarlo).
 
@@ -433,6 +498,8 @@ Notas:
 - Use `{kraken-string}` en lugar de `{string}` cuando el paso deba aceptar **propiedades** (`<PASSWORD>`) o **datos falsos** (`$name_1`). Kraken los resuelve antes de pasar el valor.
 - `this.driver` es la sesión de WebdriverIO del dispositivo del escenario.
 - Si un paso propio tiene el mismo texto que un paso de Kraken, Cucumber falla por ambigüedad: cambie la redacción.
+- Kraken no hace scroll. Para verificar o tocar un ítem de una lista use primero `I scroll to the text "<texto>" in the element with id "<lista>"` (usa `UiScrollable` sobre el `resource-id` de la lista; por id evita que tome la fila de pestañas, que también es desplazable).
+- Para filtros y pestañas están también `the element with id "<tab>" should be selected` y `I should not see the element with id "<id>"`. El paso completo está en `e2e/kraken/features/mobile/step_definitions/step.js`.
 - Con `testTagsAsResourceId` el `resource-id` es el tag tal cual (`album_list`). Si no lo encuentra, revise el snapshot: algunas versiones lo prefijan con el paquete.
 
 Ejemplo en web, el de la documentación de Kraken:
@@ -549,6 +616,69 @@ Scenario: Crear y verificar
 
 ---
 
+## Datos de prueba y estado del backend
+
+Las E2E corren contra el BackVynils real. HU01–HU05 solo leen, pero las HU de escritura (crear álbum, agregar track, asociar artista o premio, comentar) **dejan datos en la base**, y esos datos pueden romper otras pruebas o la misma prueba en la siguiente corrida. Tenga en cuenta estas reglas al planear y escribir cada prueba E2E.
+
+### 1. Lo que la prueba crea lleva un nombre único
+
+Si la prueba crea "Mi álbum", la segunda corrida encuentra dos y `tap the text "Mi álbum"` no sabe cuál tocar (o el backend rechaza el duplicado).
+
+- **Kraken:** genere el valor con faker y reutilícelo para verificar.
+
+  ```gherkin
+  When I type "$name_1" into the element with id "album_name_input"
+  And I tap the element with id "album_save_button"
+  Then I scroll to the text "$$name_1" in the element with id "album_list"
+  ```
+
+- **Compose:** agregue una marca de tiempo.
+
+  ```kotlin
+  val albumName = "E2E ${System.currentTimeMillis()}"
+  ```
+
+- Verifique **solo lo que la prueba creó** (por su nombre único), no el total de la lista.
+
+### 2. Verificaciones que sigan valiendo cuando el backend tiene más datos
+
+Una prueba de lectura debe pasar igual con los datos semilla que con los datos semilla más lo que crearon otras pruebas.
+
+| Evitar | Preferir |
+|---|---|
+| "El primer álbum es X" | "El álbum X existe" (con scroll hasta él) |
+| "La lista tiene 4 álbumes" | "Todos los ítems mostrados cumplen el filtro" (`waitUntilEveryItemMatches`) |
+| "El filtro Rock + 'ruben' queda vacío" (deja de ser cierto si alguien crea un álbum de rock de Rubén) | Una búsqueda que nada puede cumplir (`NO_MATCH_QUERY = "zzz-e2e-sin-resultados"`) para probar "sin resultados" |
+| Un id fijo de un registro creado por otra prueba | Ids de los datos semilla (desde `100`) o el nombre único de lo que la prueba creó |
+| Contar reseñas, tracks o artistas de un álbum semilla | Verificar que el elemento esperado aparece |
+
+Aplica igual en Compose (`assertCountEquals`, `onFirst()`) y en Kraken (`I should see the text` sobre una posición).
+
+### 3. Volver a los datos semilla antes de la corrida oficial
+
+BackVynils tiene `dropSchema: false`: **reiniciarlo no borra los datos**. La migración de datos semilla corre una sola vez por base. Para empezar limpio hay que borrar la base:
+
+```bash
+# Con Docker (desde la carpeta de BackVynils): borra el volumen de PostgreSQL y vuelve a crear todo
+docker-compose down -v
+docker-compose up --build
+
+# Con PostgreSQL local
+dropdb vinyls && createdb vinyls
+npm run start
+```
+
+Compruebe que quedó limpio: `curl http://localhost:3000/albums` debe devolver los 4 álbumes semilla. Haga esto antes de la corrida que se reporta en la wiki de cada entrega.
+
+### 4. Separar pruebas de lectura y de escritura
+
+- **Lectura** (listados y detalles): solo datos semilla, con las verificaciones del punto 2.
+- **Escritura** (formularios y asociaciones): nombres únicos y verificación solo de lo creado.
+
+Así una corrida de escritura no rompe las de lectura, y el orden en que corren no importa.
+
+---
+
 ## Monkey testing y snapshots
 
 Eventos aleatorios para buscar fallos (crashes, ANR):
@@ -615,8 +745,9 @@ Kraken genera un reporte HTML por ejecución (en la carpeta `reports/`), con cap
 
 - **Un escenario, un objetivo.** Nombre el feature con la HU (`HU01 - ...`) para trazarlo.
 - **Selectores estables.** Prefiera `testTag` a textos; los textos cambian con traducciones. Use texto cuando lo que se verifica es justamente el contenido.
+- **Primero algo positivo, después la ausencia.** "No existe" o "no se ve" pasan solos si el ítem está fuera de pantalla (una lista *lazy* no compone lo que no se ve) o si la UI aún no se dibuja. En Compose use `waitUntilEveryItemMatches` (`e2e/E2EMatchers.kt`), que espera a que todos los ítems mostrados cumplan la condición, o `assertIsSelected` sobre la pestaña. En Kraken deje el ítem en pantalla antes de filtrar, o verifique primero el estado nuevo.
 - **Esperas explícitas.** Use `waitForDisplayed` / `waitUntil` en lugar de pausas fijas. Las pausas solo al arrancar la app.
-- **Datos conocidos.** Verifique contra los datos semilla del backend o contra valores que la misma prueba creó.
+- **Datos conocidos.** Verifique contra los datos semilla del backend o contra valores que la misma prueba creó, nunca contra conteos ni posiciones ([ver Datos de prueba](#datos-de-prueba-y-estado-del-backend)).
 - **Independencia.** Cada escenario debe poder correr solo; no dependa del orden.
 - **Pruebas rápidas en el PR.** Compose UI Test con `*Content` en cada PR; Kraken antes de cerrar un sprint o una entrega.
 - **Mismos tags en ambas herramientas.** Un `testTag` nuevo sirve para Compose UI Test y para Kraken.
@@ -644,7 +775,12 @@ Kraken genera un reporte HTML por ejecución (en la carpeta `reports/`), con cap
 
 - [ ] Los elementos que la prueba usa tienen `testTag` según la convención.
 - [ ] Prueba Compose UI Test de la pantalla `*Content` (éxito, vacío, error).
+- [ ] `HUxx<Nombre>E2ETest` con `@HiltAndroidTest` y backend real.
+- [ ] `HUxx<Nombre>ErrorE2ETest` con `FakeBackendRule`: error + reintento, sin conexión, vacío (y 404 en detalles).
 - [ ] Feature de Kraken `HUxx-<nombre>.feature` con el recorrido principal.
+- [ ] Las verificaciones no dependen de conteos, orden ni del "primer" elemento.
+- [ ] Si la HU crea datos: nombres únicos (`$name_1` / `E2E <timestamp>`) y se verifica solo lo creado.
+- [ ] Antes de la corrida oficial, backend reiniciado con base limpia (`docker-compose down -v`).
 - [ ] APK de `distributions/` regenerado.
 - [ ] `./gradlew connectedDebugAndroidTest` y `npx kraken-node run` pasan.
 - [ ] Reporte de Kraken revisado.

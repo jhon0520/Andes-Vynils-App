@@ -1,10 +1,11 @@
 # Pruebas E2E del feature
 
-Cada HU termina con dos pruebas de extremo a extremo sobre la app real:
+Cada HU termina con tres pruebas de extremo a extremo sobre la app real:
 
 | Prueba | Herramienta | Dónde | Qué cubre |
 |---|---|---|---|
 | Flujo Compose | Compose UI Test (Espresso) con `createAndroidComposeRule<MainActivity>()` | `app/src/androidTest/java/com/dev/wine/music/app/e2e/HUxx<Nombre>E2ETest.kt` | Navegar hasta la pantalla, ver datos del backend, la interacción principal |
+| Caminos de error | Compose UI Test + `FakeBackendRule` (MockWebServer) | `app/src/androidTest/java/com/dev/wine/music/app/e2e/HUxx<Nombre>ErrorE2ETest.kt` | Error del servidor + reintento, sin conexión, vacío, 404 en detalles |
 | Escenario Kraken | Kraken (Appium + Cucumber, Gherkin) sobre el APK | `e2e/kraken/features/HUxx-<nombre>.feature` | El mismo recorrido como caja negra; varios usuarios si la HU lo pide |
 
 Guía completa (instalación, señales, faker, problemas comunes): `docs/E2E-testing-guide.md`. Léela si es la primera vez que se configura Kraken en el repo.
@@ -42,13 +43,17 @@ Los tags van en el `Content` (o en el componente de `ui/components`), aplicados 
 
 ## 2. Flujo Compose sobre `MainActivity`
 
-`MainActivity` es `@AndroidEntryPoint`, así que la prueba usa el grafo real de Hilt y la red. Textos desde recursos, nunca fijos; datos esperados de la semilla del backend.
+`MainActivity` es `@AndroidEntryPoint` y las pruebas corren con `HiltTestRunner`, así que la clase lleva `@HiltAndroidTest` y `HiltAndroidRule` en `order = 0` (sin eso falla al arrancar). Sin `@UninstallModules` usa el grafo real de Hilt y la red. Textos desde recursos, nunca fijos; datos esperados de la semilla del backend.
 
 ```kotlin
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class HU02AlbumDetailE2ETest {
 
-    @get:Rule
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -66,13 +71,10 @@ class HU02AlbumDetailE2ETest {
         composeTestRule.onNodeWithTag("back_button").performClick()
         composeTestRule.onNodeWithTag("album_list").assertIsDisplayed()
     }
-
-    /** Encuentra ítems por prefijo del tag (`album_item_<id>`) sin depender de un id fijo. */
-    private fun hasTestTagPrefix(prefix: String) = SemanticsMatcher("testTag starts with $prefix") {
-        it.config.getOrNull(SemanticsProperties.TestTag)?.startsWith(prefix) == true
-    }
 }
 ```
+
+`hasTestTagPrefix` y `waitUntilEveryItemMatches` ya están en `app/src/androidTest/.../e2e/E2EMatchers.kt`; reutilízalos, no los copies en cada clase.
 
 Reglas:
 
@@ -80,7 +82,19 @@ Reglas:
 - Si la pantalla no es pestaña, navega desde la pestaña inicial como lo haría el usuario.
 - En listas largas usa `performScrollToNode(hasText(...))` sobre `<entidad>_list` antes de hacer clic.
 - Formularios: escribe con `performTextInput`, guarda y verifica que el nuevo elemento aparece en la lista. Usa un nombre único (`"E2E ${System.currentTimeMillis()}"`) porque los datos quedan en el backend.
-- Una clase por HU; uno o dos tests con el recorrido principal. Los casos de error y vacío ya están cubiertos con fakes.
+- Filtros y búsquedas: no verifiques solo que un ítem "no existe" (en una lista lazy lo que está fuera de pantalla tampoco existe). Usa `waitUntilEveryItemMatches(...)` y `assertIsSelected()` sobre la pestaña, y después la ausencia.
+- Sigue la sección [Datos de prueba](#4-datos-de-prueba-resumen): nada de conteos, orden ni "primer elemento".
+- Una clase por HU; uno o dos tests con el recorrido principal. Los casos de error y vacío van en `HUxx<Nombre>ErrorE2ETest` (sección 2b) y en el `ContentTest`.
+
+## 2b. Caminos de error con backend falso
+
+Copia la forma de `HU01AlbumCatalogErrorE2ETest` (detalle en `docs/E2E-testing-guide.md`, "Ejemplo 3"):
+
+- `@HiltAndroidTest` + `@UninstallModules(ApiConfigModule::class)`; reglas `HiltAndroidRule` (0), `FakeBackendRule` (1), `createEmptyComposeRule()` (2).
+- `@BindValue @field:ApiBaseUrl @JvmField val baseUrl: String = backend.baseUrl`.
+- Configura las respuestas (`respondJson`, `respondStatus`, `respondNetworkError`) **antes** de `ActivityScenario.launch(MainActivity::class.java)`; cierra el escenario en `@After`.
+- Si el feature agrega un endpoint, agrega su JSON a `FakeBackendData`.
+- Nunca `@TestInstallIn`: cambiaría el backend de todas las pruebas, también las del backend real.
 
 ## 3. Escenario Kraken
 
@@ -106,7 +120,8 @@ Feature: HU02 - Consultar el detalle de un álbum
   Scenario: Como visitante abro un álbum del catálogo y vuelvo
     Given I wait for 3 seconds
     Then I should see the element with id "album_list"
-    When I tap the text "<ALBUM_NAME>"
+    When I scroll to the text "<ALBUM_NAME>" in the element with id "album_list"
+    And I tap the text "<ALBUM_NAME>"
     Then I should see the element with id "album_detail"
     And I should see the text "Tracks"
     When I tap the element with id "back_button"
@@ -116,9 +131,11 @@ Feature: HU02 - Consultar el detalle de un álbum
 - Cada escenario lleva `@userN` y `@mobile`.
 - Valores de la semilla en `e2e/kraken/properties.json` y se usan como `"<CLAVE>"`.
 - En formularios usa datos falsos: `"$name_1"` para generar y `"$$name_1"` para verificar el mismo valor.
+- Kraken no hace scroll: antes de tocar o verificar un ítem de una lista usa `I scroll to the text "<X>" in the element with id "<entidad>_list"`.
+- `I should not see ...` pasa solo si el elemento nunca se dibujó. Úsalo después de haber visto el elemento en pantalla o después de una verificación positiva (`the element with id "<tab>" should be selected`).
 - Si la HU involucra a dos usuarios (uno crea, otro consulta), usa señales: `Then I send a signal to user 2 containing "album_created"` y `Given I wait for a signal containing "album_created" for 30 seconds`.
 
-Pasos propios en `e2e/kraken/features/mobile/step_definitions/step.js`. Antes de crear uno, revisa si ya existe ahí; reutiliza la redacción. Base:
+Pasos propios en `e2e/kraken/features/mobile/step_definitions/step.js`. Antes de crear uno, revisa si ya existe ahí; reutiliza la redacción. Ya existen, además de los de abajo: `I hide the keyboard`, `I scroll to the text {kraken-string} in the element with id {kraken-string}`, `I should not see the text/element with id ...` y `the element with id {kraken-string} should be selected`. Base:
 
 ```javascript
 const { Given, When, Then } = require('@cucumber/cucumber');
@@ -160,7 +177,15 @@ Then('I should see the element with id {kraken-string}', async function (id) {
 
 Usa `{kraken-string}` (no `{string}`) para que funcionen `<PROPIEDAD>` y `$faker`. Si un paso propio repite el texto de uno de Kraken, Cucumber falla por ambigüedad: cambia la redacción.
 
-## 4. Ejecutar
+## 4. Datos de prueba (resumen)
+
+Detalle completo en `docs/E2E-testing-guide.md`, sección "Datos de prueba y estado del backend".
+
+- Lo que la prueba crea lleva nombre único (`$name_1` en Kraken, `"E2E ${System.currentTimeMillis()}"` en Compose) y se verifica solo eso.
+- Las pruebas de lectura deben pasar igual si el backend tiene más datos que la semilla: nada de conteos, orden, "primer elemento" ni vacíos que dependan de los datos (para "sin resultados" usa una búsqueda imposible, `NO_MATCH_QUERY`).
+- Reiniciar BackVynils no borra datos (`dropSchema: false`); para la corrida oficial, base limpia con `docker-compose down -v && docker-compose up --build`.
+
+## 5. Ejecutar
 
 Requisitos: backend arriba, emulador encendido (`adb devices`).
 

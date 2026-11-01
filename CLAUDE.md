@@ -12,6 +12,7 @@ App Android nativa del **Equipo 10** para el curso *Ingeniería de Software para
 - `docs/Backend-technical-documentation.md`: endpoints y trampas conocidas del backend.
 - `docs/gitflow.md`: ramas, commits y PR.
 - `docs/E2E-testing-guide.md`: pruebas E2E (Compose y Kraken).
+- `docs/E2E-guia-rapida.md`: resumen práctico de cómo escribir y correr las E2E de una HU.
 - `docs/contexto-curso-modulos-1-6.md`: contexto del curso (módulos 1–6), reglas del proyecto, rúbricas de los sprints 1 y 2, endpoints por HU.
 
 ## Skills del proyecto (`.claude/skills/`)
