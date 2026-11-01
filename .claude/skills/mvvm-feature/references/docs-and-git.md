@@ -70,7 +70,7 @@ Ambos comandos deben salir vacíos.
 - [ ] Las acciones de coleccionista solo aparecen con ese perfil.
 - [ ] Hay pruebas del caso de uso y del ViewModel con los repositorios falsos de `fakes`.
 - [ ] Los elementos que usan las pruebas tienen `testTag` según la convención de [e2e.md](e2e.md).
-- [ ] Hay prueba E2E Compose (`androidTest/.../e2e/HUxx...E2ETest.kt`) y escenario Kraken (`e2e/kraken/features/HUxx-....feature`) del recorrido principal, y pasaron (o se indica qué falta por correr).
+- [ ] Hay prueba E2E Compose (`androidTest/.../e2e/HUxx...E2ETest.kt`), prueba de errores (`HUxx...ErrorE2ETest.kt`) y escenario Kraken (`e2e/kraken/features/HUxx-....feature`) del recorrido principal, y pasaron (o se indica qué falta por correr).
 - [ ] Si se agregó una clase, ya está en el diagrama de clases.
 - [ ] Textos en `strings.xml`; colores y tipografía desde el tema.
 - [ ] `./gradlew test` y `./gradlew assembleDebug` pasan.

@@ -11,6 +11,7 @@ class CollectorRepositoryImpl @Inject constructor(
     private val api: CollectorApi,
 ) : CollectorRepository {
 
-    override suspend fun getCollectors(): List<Collector> =
+    override suspend fun getCollectors(): List<Collector> = safeApiCall {
         api.getCollectors().map { it.toDomain() }
+    }
 }

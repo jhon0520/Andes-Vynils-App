@@ -41,6 +41,7 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 - El título de la pestaña ahora es «Álbumes» (antes «Albumes»).
 - El README explica cómo correr la app en un teléfono físico.
 - Pestañas de la barra inferior con tags `nav_albums`, `nav_artists` y `nav_collectors`.
+- El dominio del backend queda en un solo lugar: `api.base.url` en `gradle.properties` (se puede sobrescribir en `local.properties`). Por defecto es `https://backvynils-q6yc.onrender.com/`; el README explica dónde cambiarlo. De él salen `BuildConfig.API_BASE_URL` y `network_security_config.xml`, que ahora se genera al compilar en vez de tener los hosts escritos a mano.
 - Espresso 3.7.0 y androidx-junit 1.3.0: con Espresso 3.5.1 ninguna prueba de interfaz corría en Android 14 o superior (`NoSuchMethodException: InputManager.getInstance`).
 
 ### Corregido

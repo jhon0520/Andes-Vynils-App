@@ -5,13 +5,14 @@ App Android nativa del **Equipo 10** para el curso *Ingeniería de Software para
 ## Stack y arquitectura
 - Kotlin, Jetpack Compose + Material 3, Hilt, Retrofit + kotlinx.serialization, OkHttp logging, Coil, Navigation Compose, corrutinas.
 - MVVM + Clean Architecture: `ui/` (Screen + Content + ViewModel con `StateFlow<UiState<T>>`) → `domain/` (modelos, interfaces de repositorio, casos de uso) → `data/` (Api Retrofit = Service Adapter, DTO, mapper, RepositoryImpl), con DI en `di/`.
-- Paquete base: `com.dev.wine.music.app`. URL de la API en `app/build.gradle.kts` → `BuildConfig.API_BASE_URL` (emulador: `http://10.0.2.2:3000/`).
+- Paquete base: `com.dev.wine.music.app`. Dominio de la API centralizado en `api.base.url` de `gradle.properties` (sobrescribible en `local.properties`) → `BuildConfig.API_BASE_URL` y `network_security_config.xml` generado (por defecto `https://backvynils-q6yc.onrender.com/`; emulador con backend local: `http://10.0.2.2:3000/`; ver README «Cambiar el dominio de la API»).
 
 ## Documentos del repo (léelos antes de cambiar algo)
 - `docs/App-technical-documentation.md`: mapa de trazabilidad HU → clases, endpoints y rutas.
 - `docs/Backend-technical-documentation.md`: endpoints y trampas conocidas del backend.
 - `docs/gitflow.md`: ramas, commits y PR.
 - `docs/E2E-testing-guide.md`: pruebas E2E (Compose y Kraken).
+- `docs/E2E-guia-rapida.md`: resumen práctico de cómo escribir y correr las E2E de una HU.
 - `docs/contexto-curso-modulos-1-6.md`: contexto del curso (módulos 1–6), reglas del proyecto, rúbricas de los sprints 1 y 2, endpoints por HU.
 
 ## Skills del proyecto (`.claude/skills/`)

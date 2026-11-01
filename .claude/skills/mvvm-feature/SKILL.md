@@ -73,7 +73,8 @@ Mínimo por HU (plantillas en [testing.md](references/testing.md)):
 
 Pruebas E2E del recorrido principal (plantillas en [e2e.md](references/e2e.md)):
 
-- Flujo Compose sobre `MainActivity` en `androidTest/.../e2e/HUxx<Nombre>E2ETest.kt`, con backend real, esperas explícitas y selectores por `testTag`.
+- Flujo Compose sobre `MainActivity` en `androidTest/.../e2e/HUxx<Nombre>E2ETest.kt`, con `@HiltAndroidTest`, backend real, esperas explícitas y selectores por `testTag`.
+- Caminos de error en `androidTest/.../e2e/HUxx<Nombre>ErrorE2ETest.kt` con `FakeBackendRule` (error + reintento, sin conexión, vacío; 404 en detalles).
 - Escenario Kraken `e2e/kraken/features/HUxx-<nombre>.feature` (`@user1 @mobile`) con el mismo recorrido; señales entre `@user1` y `@user2` si la HU involucra a dos usuarios. Si `e2e/kraken` no existe, pregunta antes de crearlo.
 
 ## Paso 4 · Verificar

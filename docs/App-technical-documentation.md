@@ -295,7 +295,7 @@ Los tres patrones de la rúbrica ya están en el código, con una capa más: los
 
 ### Service Adapter: Retrofit
 
-Cada recurso tiene su interfaz; `NetworkModule` crea un solo Retrofit con la URL base de `BuildConfig.API_BASE_URL`.
+Cada recurso tiene su interfaz; `NetworkModule` crea un solo Retrofit con la URL base que provee `ApiConfigModule` (`@ApiBaseUrl`, por defecto `BuildConfig.API_BASE_URL`). La URL va en un módulo aparte para que las pruebas de error (`HUxx<Nombre>ErrorE2ETest`) la cambien por un backend falso sin tocar el resto.
 
 ```kotlin
 interface AlbumApi {
@@ -375,7 +375,7 @@ Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `h
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (por defecto `http://10.0.2.2:3000/`; se cambia con `api.base.url` en `local.properties`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
