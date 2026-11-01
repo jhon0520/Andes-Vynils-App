@@ -53,18 +53,22 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 
 ### 2. Revisar la URL de la API
 
-La URL está en [`app/build.gradle.kts`](app/build.gradle.kts):
-
-```kotlin
-buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/\"")
-```
-
-> [!NOTE]
-> `10.0.2.2` es el computador visto desde el emulador.
+Por defecto la app usa `http://10.0.2.2:3000/`, que es el computador visto desde el emulador. Para cambiarla sin tocar código, agrega `api.base.url` en `local.properties` (no se sube a git); [`app/build.gradle.kts`](app/build.gradle.kts) la lee al compilar.
 
 > [!TIP]
-> En un **teléfono físico**, cambia la URL por la IP del computador en la red local y agrega esa IP en
-> [`app/src/main/res/xml/network_security_config.xml`](app/src/main/res/xml/network_security_config.xml).
+> En un **teléfono físico** conectado por USB:
+>
+> ```bash
+> adb reverse tcp:3000 tcp:3000   # el localhost:3000 del teléfono llega al del computador
+> ```
+>
+> y en `local.properties`:
+>
+> ```properties
+> api.base.url=http://localhost:3000/
+> ```
+>
+> `adb reverse` se pierde al desconectar el cable o reiniciar el teléfono; vuelve a ejecutarlo.
 
 ### 3. Compilar y ejecutar
 

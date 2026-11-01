@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
+
+val apiBaseUrl: String = Properties()
+    .apply { rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) } }
+    .getProperty("api.base.url", "http://10.0.2.2:3000/")
 
 android {
     namespace = "com.dev.wine.music.app"
@@ -20,9 +26,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Placeholder: 10.0.2.2 is your computer's localhost as seen from the emulator.
-        // Change it to the real Vinilos backend URL (keep the trailing slash).
-        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/\"")
+        // 10.0.2.2 is your computer's localhost as seen from the emulator.
+        // On a physical device run `adb reverse tcp:3000 tcp:3000` and set
+        // api.base.url=http://localhost:3000/ in local.properties (keep the trailing slash).
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
     buildTypes {
