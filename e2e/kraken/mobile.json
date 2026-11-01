@@ -1,0 +1,6 @@
+{
+  "type": "singular",
+  "apk_path": "../../distributions/app-debug.apk",
+  "apk_package": "com.dev.wine.music.app",
+  "apk_launch_activity": "com.dev.wine.music.app.MainActivity"
+}

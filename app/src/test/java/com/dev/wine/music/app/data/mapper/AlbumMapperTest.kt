@@ -1,6 +1,7 @@
 package com.dev.wine.music.app.data.mapper
 
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
+import com.dev.wine.music.app.data.remote.dto.CommentDto
 import com.dev.wine.music.app.data.remote.dto.PerformerDto
 import com.dev.wine.music.app.data.remote.dto.TrackDto
 import com.dev.wine.music.app.domain.model.ArtistType
@@ -43,5 +44,23 @@ class AlbumMapperTest {
         val types = dto.toDomain().performers.map { it.type }
 
         assertEquals(listOf(ArtistType.MUSICIAN, ArtistType.BAND), types)
+    }
+
+    @Test
+    fun `maps comments and keeps the rating between 0 and 5`() {
+        val dto = AlbumDto(
+            id = 1,
+            name = "Album",
+            comments = listOf(
+                CommentDto(id = 100, description = "The most relevant album of Ruben Blades", rating = 5),
+                CommentDto(id = 101, description = "Too high", rating = 9),
+            ),
+        )
+
+        val comments = dto.toDomain().comments
+
+        assertEquals(listOf(100, 101), comments.map { it.id })
+        assertEquals(listOf(5, 5), comments.map { it.rating })
+        assertEquals(null, comments.first().author)
     }
 }

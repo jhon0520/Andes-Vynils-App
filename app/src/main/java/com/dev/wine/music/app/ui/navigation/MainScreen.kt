@@ -9,7 +9,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -20,6 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 /** App shell: bottom bar for the top-level tabs plus the navigation host. */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -27,7 +32,10 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     val showBottomBar = TopLevelDestination.entries.any { currentDestination.isOn(it) }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        // Exposes every testTag as a resource id so Kraken (Appium) can find it.
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { testTagsAsResourceId = true },
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
@@ -37,6 +45,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                             onClick = { navController.navigateToTopLevel(destination) },
                             icon = { Icon(destination.icon, contentDescription = null) },
                             label = { Text(stringResource(destination.labelRes)) },
+                            modifier = Modifier.testTag("nav_${destination.name.lowercase()}"),
                         )
                     }
                 }

@@ -14,4 +14,5 @@ fun PerformerDto.toDomain(type: ArtistType? = null): Artist = Artist(
     image = image,
     description = description,
     type = type ?: if (creationDate != null) ArtistType.BAND else ArtistType.MUSICIAN,
+    memberIds = musicians.map { it.id },
 )

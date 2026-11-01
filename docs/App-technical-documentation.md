@@ -95,7 +95,7 @@ flowchart LR
 
 ### Modelo de dominio
 
-Hoy existen `Album`, `Track`, `Artist`, `ArtistType` y `Collector`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
+Hoy existen `Album`, `Track`, `NumberedTrack`, `Comment`, `Artist`, `ArtistType`, `Collector` y `AppError`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
 
 ```mermaid
 classDiagram
@@ -110,7 +110,19 @@ classDiagram
         recordLabel: String
         tracks: List~Track~
         performers: List~Artist~
+        comments: List~Comment~
         releaseYear: String (calculado)
+        releaseDay: String dd/mm/aaaa (calculado)
+        numberedTracks: List~NumberedTrack~ (calculado, lados A y B)
+        genreType: AlbumGenre? (calculado)
+        performerNames: String (calculado)
+    }
+    class AlbumGenre {
+        <<enum · HU01, HU07>>
+        SALSA
+        ROCK
+        CLASSICAL
+        FOLK
     }
     class Track {
         id: Int
@@ -123,6 +135,8 @@ classDiagram
         image: String
         description: String
         type: ArtistType
+        memberIds: List~Int~ (bandas)
+        bandName: String? (músicos)
     }
     class ArtistType {
         <<enum>>
@@ -134,12 +148,13 @@ classDiagram
         name: String
         telephone: String
         email: String
+        commentIds: List~Int~
     }
     class Comment {
-        <<HU02 · por agregar>>
         id: Int
         description: String
         rating: Int (0 a 5)
+        author: String?
     }
     class ArtistPrize {
         <<HU04 · por agregar>>
@@ -173,6 +188,7 @@ classDiagram
         duration: String
     }
 
+    Album --> AlbumGenre : genreType
     Album "1" *-- "*" Track : tracks
     Album "*" --> "*" Artist : performers
     Album "1" *-- "*" Comment : comments
@@ -192,13 +208,18 @@ classDiagram
     class AlbumListScreen {
         <<Composable>>
         +AlbumListScreen(onAlbumClick, viewModel = hiltViewModel())
-        +AlbumListContent(uiState, onAlbumClick, onRetry)
+        +AlbumListContent(uiState, query, selectedGenre, onQueryChange, onGenreSelect, onClearFilters, onAlbumClick, onRetry)
     }
     class AlbumListViewModel {
         <<@HiltViewModel>>
         -getAlbums: GetAlbumsUseCase
-        +uiState: StateFlow~UiState~List~Album~~~
+        +uiState: StateFlow~UiState~AlbumCatalog~~
+        +query: StateFlow~String~
+        +selectedGenre: StateFlow~AlbumGenre?~
         +loadAlbums()
+        +onQueryChange(query)
+        +onGenreSelect(genre)
+        +clearFilters()
     }
     class GetAlbumsUseCase {
         -repository: AlbumRepository
@@ -243,13 +264,13 @@ classDiagram
 
 ## Mapa de trazabilidad
 
-Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repositorio y API de Retrofit. Hoy cuatro HU tienen la cadena empezada (HU01, HU02, HU03 y HU05); las otras cuatro están por construir. Los nombres de lo que falta siguen las convenciones del código.
+Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repositorio y API de Retrofit. HU01, HU02 y HU03 están completas (sprint 1) y HU05 tiene la cadena empezada; las otras cuatro están por construir. Los nombres de lo que falta siguen las convenciones del código.
 
 | HU | Pantalla | ViewModel | Caso de uso | Repository · API | Endpoint |
 |---|---|---|---|---|---|
 | HU01 Catálogo | `AlbumListScreen` | `AlbumListViewModel` | `GetAlbumsUseCase` | `AlbumRepository.getAlbums()` · `AlbumApi.getAlbums()` | `GET /albums` |
-| HU02 Detalle de álbum | `AlbumDetailScreen` | `AlbumDetailViewModel` | `GetAlbumDetailUseCase` | `AlbumRepository.getAlbum(id)` · `AlbumApi.getAlbum(id)` | `GET /albums/{id}` |
-| HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` | `GetArtistsUseCase` | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
+| HU02 Detalle de álbum | `AlbumDetailScreen` | `AlbumDetailViewModel` | `GetAlbumDetailUseCase` (cruza el autor de cada reseña) | `AlbumRepository.getAlbum(id)` · `AlbumApi.getAlbum(id)`; `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /albums/{id}`, `GET /collectors` |
+| HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` (filtro por tipo) | `GetArtistsUseCase` (asigna la banda de cada músico) | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
 | HU04 Detalle de artista | `ArtistDetailScreen` | `ArtistDetailViewModel` | `GetArtistDetailUseCase` | `ArtistRepository.getArtist(id, type)` · `ArtistApi.getMusician(id)`, `getBand(id)`, `getPerformerPrizes()` | `GET /musicians/{id}`, `GET /bands/{id}`, `GET /performerprizes` |
 | HU05 Coleccionistas | `CollectorListScreen` | `CollectorListViewModel` | `GetCollectorsUseCase` | `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /collectors` |
 | HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi` | `GET /collectors/{id}`, `GET /collectors/{id}/albums` |
@@ -274,7 +295,7 @@ Los tres patrones de la rúbrica ya están en el código, con una capa más: los
 
 ### Service Adapter: Retrofit
 
-Cada recurso tiene su interfaz; `NetworkModule` crea un solo Retrofit con la URL base de `BuildConfig.API_BASE_URL`.
+Cada recurso tiene su interfaz; `NetworkModule` crea un solo Retrofit con la URL base que provee `ApiConfigModule` (`@ApiBaseUrl`, por defecto `BuildConfig.API_BASE_URL`). La URL va en un módulo aparte para que las pruebas de error (`HUxx<Nombre>ErrorE2ETest`) la cambien por un backend falso sin tocar el resto.
 
 ```kotlin
 interface AlbumApi {
@@ -348,24 +369,24 @@ class AlbumListViewModel @Inject constructor(
 
 ### Pantalla
 
-Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, vacío o la lista. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada.
+Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, catálogo vacío, sin resultados o la cuadrícula. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada. En HU01, `AlbumListViewModel` combina la lista cargada con `query` y `selectedGenre` (`combine` + `stateIn`) y expone un `AlbumCatalog` con los álbumes visibles y el total cargado; la búsqueda ignora mayúsculas y tildes y no vuelve a llamar a la API.
 
 ---
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (`http://10.0.2.2:3000/`, definida en `app/build.gradle.kts`). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
 | `GET /albums` | HU01 | `AlbumApi.getAlbums()` | Existe |
-| `GET /albums/{id}` | HU02 | `AlbumApi.getAlbum(id)` | Existe; `AlbumDto` aún no lee `comments` |
+| `GET /albums/{id}` | HU02 | `AlbumApi.getAlbum(id)` | Existe; `AlbumDto` lee `comments` |
 | `GET /musicians` | HU03 | `ArtistApi.getMusicians()` | Existe |
-| `GET /bands` | HU03 | `ArtistApi.getBands()` | Existe; `PerformerDto` aún no lee `musicians` (de ahí sale la banda de cada músico) |
+| `GET /bands` | HU03 | `ArtistApi.getBands()` | Existe; `PerformerDto` lee `musicians`, de donde sale la banda de cada músico |
 | `GET /musicians/{id}` | HU04 | `ArtistApi.getMusician(id)` | Por agregar |
 | `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Por agregar |
 | `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Por agregar |
-| `GET /collectors` | HU05 | `CollectorApi.getCollectors()` | Existe |
+| `GET /collectors` | HU02, HU05 | `CollectorApi.getCollectors()` | Existe; `CollectorDto` lee `comments` para el autor de las reseñas de HU02 |
 | `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Por agregar |
 | `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Por agregar |
 | `POST /albums` | HU07 | `AlbumApi.createAlbum(body)` | Por agregar |
@@ -401,12 +422,12 @@ La respuesta del track trae el álbum embebido (`album`); `TrackDto` lo ignora g
 
 ### Manejo de errores
 
-Hoy cada ViewModel captura cualquier excepción y la guarda en `UiState.Error(message)`, y la pantalla muestra `ErrorView` con «Reintentar». Para cubrir el diseño hay que distinguir el tipo de error. La propuesta es agregar un campo `type` a `UiState.Error` y llenarlo según la excepción de Retrofit:
+Cada capa traduce lo suyo, para que `ui` nunca importe Retrofit. Los repositorios envuelven cada llamada en `safeApiCall` (`data/remote/SafeApiCall.kt`), que convierte `HttpException` e `IOException` en un `AppError` del dominio (`Network`, `NotFound`, `Validation`, `Server`). Los ViewModels capturan la excepción con `e.toUiError()`, que llena `UiState.Error.type` (`ErrorType`), y `ErrorView` elige el mensaje según ese tipo:
 
 | Excepción | Significado | Qué muestra la app |
 |---|---|---|
-| `IOException` | Sin conexión o servidor caído | `ErrorView` con «Reintentar» (ya existe) |
-| `HttpException` 404 | El recurso no existe | Pantalla «No encontrado» (por agregar) |
+| `IOException` | Sin conexión o servidor caído | `ErrorView` «No hay conexión» con «Reintentar» |
+| `HttpException` 404 | El recurso no existe | `ErrorView` «No encontrado», sin «Reintentar» (tag `not_found_view`) |
 | `HttpException` 400 o 412 | Datos rechazados por el backend | Mensaje en el formulario, sin perder lo escrito (por agregar) |
 | `HttpException` 500 | Error del servidor | `ErrorView` con «Reintentar» |
 
@@ -464,10 +485,10 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 1 | Arquitectura base: Compose, Hilt, Retrofit, navegación, `UiState` y vistas de estado (rama `h0_base_architecture`) | — | | En revisión |
 | 2 | Tema del estilo A: colores, Fraunces e IBM Plex, textos en español | 1 | | Por hacer |
 | 3 | Perfil visitante/coleccionista: `Profile`, `ProfileRepository` y pantalla de elegir perfil | 1 | | Por hacer |
-| 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | Por hacer |
-| 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, botón «Crear álbum» | 2, 3 | | Por hacer |
-| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | Por hacer |
-| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | Por hacer |
+| 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | 404 y red hechos (con HU02); 400/412 queda para HU07 |
+| 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
+| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (intérpretes navegables con HU04, «Agregar track» con HU08) |
+| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión (navegación al detalle con HU04) |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla y ruta | 4, 7 | | Por hacer |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
 | 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |

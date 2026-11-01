@@ -8,4 +8,5 @@ data class CollectorDto(
     val name: String,
     val telephone: String = "",
     val email: String = "",
+    val comments: List<CommentDto> = emptyList(),
 )

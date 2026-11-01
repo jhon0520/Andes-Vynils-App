@@ -8,4 +8,5 @@ fun CollectorDto.toDomain(): Collector = Collector(
     name = name,
     telephone = telephone,
     email = email,
+    commentIds = comments.map { it.id },
 )
