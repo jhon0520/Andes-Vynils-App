@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * HU02 against the real BackVynils (http://10.0.2.2:3000/) and its seed data:
+ * HU02 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
  * "Buscando América" (Elektra, 01/08/1984) opens with "Decisiones" (5:05) and a review by Manolo Bellon.
  */
 @OptIn(ExperimentalTestApi::class)

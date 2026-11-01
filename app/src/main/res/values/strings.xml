@@ -3,7 +3,6 @@
     <string name="albums">Álbumes</string>
     <string name="artists">Artistas</string>
     <string name="collectors">Coleccionistas</string>
-    <string name="musician">Musico</string>
     <string name="band">Banda</string>
     <string name="tracks">Tracks</string>
     <string name="back">Volver</string>
@@ -36,4 +35,11 @@
     <string name="album_reviews_empty">Aún no hay reseñas de este álbum.</string>
     <string name="review_anonymous">Anónimo</string>
     <string name="review_rating_description">Calificación: %1$d de %2$d</string>
+    <string name="artist_type_all">Todos</string>
+    <string name="artist_type_musicians">Músicos</string>
+    <string name="artist_type_bands">Bandas</string>
+    <string name="musician_of_band">Músico · %1$s</string>
+    <string name="artist_no_band">Sin banda</string>
+    <string name="artist_no_results_type">No hay artistas de este tipo todavía.</string>
+    <string name="artist_show_all">Ver todos</string>
 </resources>

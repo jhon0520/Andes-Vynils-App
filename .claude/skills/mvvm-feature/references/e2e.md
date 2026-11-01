@@ -9,7 +9,7 @@ Cada HU termina con dos pruebas de extremo a extremo sobre la app real:
 
 Guía completa (instalación, señales, faker, problemas comunes): `docs/E2E-testing-guide.md`. Léela si es la primera vez que se configura Kraken en el repo.
 
-Ambas pruebas usan el **backend real** (BackVynils en `http://10.0.2.2:3000/`) y sus datos semilla. Las pruebas del `Content` con fakes siguen en [testing.md](testing.md); las E2E no las reemplazan.
+Ambas pruebas usan el **backend real** (BackVynils en `api.base.url`; por defecto `https://backvynils-q6yc.onrender.com/`) y sus datos semilla. Las pruebas del `Content` con fakes siguen en [testing.md](testing.md); las E2E no las reemplazan.
 
 ## 1. Selectores: `testTag` en la pantalla
 

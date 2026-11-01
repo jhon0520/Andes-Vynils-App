@@ -1,3 +1,4 @@
+import java.net.URI
 import java.util.Properties
 
 plugins {
@@ -9,9 +10,41 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+// Backend domain: defined once in gradle.properties (api.base.url).
+// local.properties can override it on your machine, e.g. http://localhost:3000/ for a physical device.
 val apiBaseUrl: String = Properties()
     .apply { rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) } }
-    .getProperty("api.base.url", "http://10.0.2.2:3000/")
+    .getProperty("api.base.url")
+    ?: providers.gradleProperty("api.base.url").orNull
+    ?: error("Define api.base.url in gradle.properties")
+val apiUri: URI = URI(apiBaseUrl)
+require(apiUri.scheme in setOf("http", "https") && apiUri.host != null && apiBaseUrl.endsWith("/")) {
+    "api.base.url must look like http://host:port/ (with the trailing slash): $apiBaseUrl"
+}
+
+/** Writes res/xml/network_security_config.xml from the backend domain, so the host lives in one place. */
+abstract class NetworkSecurityConfigTask : DefaultTask() {
+    @get:Input abstract val host: Property<String>
+    @get:Input abstract val cleartext: Property<Boolean>
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val file = outputDir.file("xml/network_security_config.xml").get().asFile
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            |<?xml version="1.0" encoding="utf-8"?>
+            |<!-- Generated from api.base.url (gradle.properties). Do not edit. -->
+            |<network-security-config>
+            |    <domain-config cleartextTrafficPermitted="${cleartext.get()}">
+            |        <domain includeSubdomains="false">${host.get()}</domain>
+            |    </domain-config>
+            |</network-security-config>
+            |""".trimMargin(),
+        )
+    }
+}
 
 android {
     namespace = "com.dev.wine.music.app"
@@ -26,10 +59,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // 10.0.2.2 is your computer's localhost as seen from the emulator.
-        // On a physical device run `adb reverse tcp:3000 tcp:3000` and set
-        // api.base.url=http://localhost:3000/ in local.properties (keep the trailing slash).
-        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        // The only domain the app talks to; NetworkModule builds Retrofit with it.
+        // String.valueOf keeps it from being a compile-time constant: Kotlin would copy a constant
+        // into NetworkModule and incremental builds would keep the old domain after a change.
+        buildConfigField("String", "API_BASE_URL", "String.valueOf(\"$apiBaseUrl\")")
     }
 
     buildTypes {
@@ -54,6 +87,18 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        val task = tasks.register<NetworkSecurityConfigTask>(
+            "generate${variant.name.replaceFirstChar { it.uppercase() }}NetworkSecurityConfig",
+        ) {
+            host.set(apiUri.host)
+            cleartext.set(apiUri.scheme == "http")
+        }
+        variant.sources.res?.addGeneratedSourceDirectory(task, NetworkSecurityConfigTask::outputDir)
     }
 }
 

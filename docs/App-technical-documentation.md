@@ -135,6 +135,8 @@ classDiagram
         image: String
         description: String
         type: ArtistType
+        memberIds: List~Int~ (bandas)
+        bandName: String? (músicos)
     }
     class ArtistType {
         <<enum>>
@@ -262,13 +264,13 @@ classDiagram
 
 ## Mapa de trazabilidad
 
-Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repositorio y API de Retrofit. HU01 y HU02 están completas, y HU03 y HU05 tienen la cadena empezada; las otras cuatro están por construir. Los nombres de lo que falta siguen las convenciones del código.
+Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repositorio y API de Retrofit. HU01, HU02 y HU03 están completas (sprint 1) y HU05 tiene la cadena empezada; las otras cuatro están por construir. Los nombres de lo que falta siguen las convenciones del código.
 
 | HU | Pantalla | ViewModel | Caso de uso | Repository · API | Endpoint |
 |---|---|---|---|---|---|
 | HU01 Catálogo | `AlbumListScreen` | `AlbumListViewModel` | `GetAlbumsUseCase` | `AlbumRepository.getAlbums()` · `AlbumApi.getAlbums()` | `GET /albums` |
 | HU02 Detalle de álbum | `AlbumDetailScreen` | `AlbumDetailViewModel` | `GetAlbumDetailUseCase` (cruza el autor de cada reseña) | `AlbumRepository.getAlbum(id)` · `AlbumApi.getAlbum(id)`; `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /albums/{id}`, `GET /collectors` |
-| HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` | `GetArtistsUseCase` | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
+| HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` (filtro por tipo) | `GetArtistsUseCase` (asigna la banda de cada músico) | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
 | HU04 Detalle de artista | `ArtistDetailScreen` | `ArtistDetailViewModel` | `GetArtistDetailUseCase` | `ArtistRepository.getArtist(id, type)` · `ArtistApi.getMusician(id)`, `getBand(id)`, `getPerformerPrizes()` | `GET /musicians/{id}`, `GET /bands/{id}`, `GET /performerprizes` |
 | HU05 Coleccionistas | `CollectorListScreen` | `CollectorListViewModel` | `GetCollectorsUseCase` | `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /collectors` |
 | HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi` | `GET /collectors/{id}`, `GET /collectors/{id}/albums` |
@@ -373,14 +375,14 @@ Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `h
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (por defecto `http://10.0.2.2:3000/`; se cambia con `api.base.url` en `local.properties`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
 | `GET /albums` | HU01 | `AlbumApi.getAlbums()` | Existe |
 | `GET /albums/{id}` | HU02 | `AlbumApi.getAlbum(id)` | Existe; `AlbumDto` lee `comments` |
 | `GET /musicians` | HU03 | `ArtistApi.getMusicians()` | Existe |
-| `GET /bands` | HU03 | `ArtistApi.getBands()` | Existe; `PerformerDto` aún no lee `musicians` (de ahí sale la banda de cada músico) |
+| `GET /bands` | HU03 | `ArtistApi.getBands()` | Existe; `PerformerDto` lee `musicians`, de donde sale la banda de cada músico |
 | `GET /musicians/{id}` | HU04 | `ArtistApi.getMusician(id)` | Por agregar |
 | `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Por agregar |
 | `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Por agregar |
@@ -486,7 +488,7 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | 404 y red hechos (con HU02); 400/412 queda para HU07 |
 | 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
 | 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (intérpretes navegables con HU04, «Agregar track» con HU08) |
-| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | Por hacer |
+| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión (navegación al detalle con HU04) |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla y ruta | 4, 7 | | Por hacer |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
 | 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |

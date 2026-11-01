@@ -93,7 +93,7 @@ class AlbumListContentTest {
 
 ### Ejemplo 2: flujo E2E sobre `MainActivity`
 
-Requiere el backend corriendo en `http://10.0.2.2:3000/` (ver `API_BASE_URL`).
+Requiere el backend corriendo en el dominio de `api.base.url` (`gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`). Para correrlas contra un backend local, ver «Cambiar el dominio de la API» en el README.
 
 ```kotlin
 @RunWith(AndroidJUnit4::class)
@@ -278,7 +278,7 @@ cp app/build/outputs/apk/debug/app-debug.apk distributions/app-debug.apk
 
 ### Backend
 
-La app apunta a `http://10.0.2.2:3000/`, que es el `localhost` del computador visto desde el emulador. Levante **BackVynils** antes de correr Kraken; con un dispositivo físico cambie `API_BASE_URL` a la IP del computador.
+La app apunta a `api.base.url` (por defecto `https://backvynils-q6yc.onrender.com/`). Para un backend local, levante **BackVynils** y cambie el dominio en `local.properties` como indica «Cambiar el dominio de la API» en el README (`http://10.0.2.2:3000/` en emulador, `http://localhost:3000/` con `adb reverse` o la IP del computador en un teléfono).
 
 ### Navegador (escenarios `@web`)
 
@@ -634,6 +634,9 @@ Kraken genera un reporte HTML por ejecución (en la carpeta `reports/`), con cap
 | Escenario `@user2` nunca arranca | Falta un segundo dispositivo | Encender otro emulador |
 | Timeout en `wait for a signal` | El otro usuario falló antes de enviar la señal | Revisar el reporte del otro usuario; subir el timeout |
 | Compose test no encuentra un texto | La prueba busca el texto en otro idioma | Usar el texto de `strings.xml` (por ejemplo `"Reintentar"`) o un tag |
+| `Before` falla con `Error: Timeout` y luego `Cannot read properties of undefined (reading 'deleteSession')` | Con Node 20 o superior, Appium 1.22 escribe un `DeprecationWarning` en stderr y Kraken mata a Appium ante cualquier salida en stderr | Correr con `NODE_OPTIONS=--no-deprecation npx kraken-node run` |
+| Kraken usa el teléfono conectado por USB en vez del emulador | Kraken toma el primer dispositivo de `adb devices` | Desconectar el teléfono mientras corre Kraken, o dejar conectado solo el dispositivo de prueba |
+| Las pruebas de Compose fallan con `NoSuchMethodException: InputManager.getInstance` | Espresso anterior a 3.7.0 en Android 14 o superior | Usar `espressoCore = "3.7.0"` en `gradle/libs.versions.toml` |
 
 ---
 

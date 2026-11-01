@@ -20,7 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * HU01 against the real BackVynils (http://10.0.2.2:3000/) and its seed data:
+ * HU01 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
  * Rubén Blades has "Buscando América" (Salsa) and Queen has "A Night at the Opera" (Rock).
  */
 @OptIn(ExperimentalTestApi::class)

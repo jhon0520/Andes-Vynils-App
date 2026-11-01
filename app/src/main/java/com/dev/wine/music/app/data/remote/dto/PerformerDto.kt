@@ -2,7 +2,7 @@ package com.dev.wine.music.app.data.remote.dto
 
 import kotlinx.serialization.Serializable
 
-/** Musicians come with a birthDate, bands with a creationDate. */
+/** Musicians come with a birthDate, bands with a creationDate and their [musicians]. */
 @Serializable
 data class PerformerDto(
     val id: Int,
@@ -11,4 +11,5 @@ data class PerformerDto(
     val description: String = "",
     val birthDate: String? = null,
     val creationDate: String? = null,
+    val musicians: List<PerformerDto> = emptyList(),
 )

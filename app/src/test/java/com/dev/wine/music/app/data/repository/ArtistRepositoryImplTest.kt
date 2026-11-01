@@ -11,7 +11,9 @@ class ArtistRepositoryImplTest {
 
     private class FakeArtistApi : ArtistApi {
         override suspend fun getMusicians() = listOf(PerformerDto(id = 1, name = "Rubén Blades"))
-        override suspend fun getBands() = listOf(PerformerDto(id = 1, name = "Queen"))
+        override suspend fun getBands() = listOf(
+            PerformerDto(id = 2, name = "Queen", musicians = listOf(PerformerDto(id = 1, name = "Rubén Blades"))),
+        )
     }
 
     @Test
@@ -23,5 +25,14 @@ class ArtistRepositoryImplTest {
         assertEquals(2, artists.size)
         assertEquals(ArtistType.MUSICIAN, artists.first { it.name == "Rubén Blades" }.type)
         assertEquals(ArtistType.BAND, artists.first { it.name == "Queen" }.type)
+    }
+
+    @Test
+    fun `keeps the members of each band`() = runTest {
+        val repository = ArtistRepositoryImpl(FakeArtistApi())
+
+        val queen = repository.getArtists().first { it.name == "Queen" }
+
+        assertEquals(listOf(1), queen.memberIds)
     }
 }
