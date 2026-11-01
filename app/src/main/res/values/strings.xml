@@ -23,4 +23,17 @@
     <string name="no_results_title">Esta funda está vacía</string>
     <string name="album_no_results_query">No encontramos álbumes para «%1$s». Revisa la ortografía o prueba con otro nombre.</string>
     <string name="album_no_results_genre">No hay álbumes de este género todavía.</string>
+    <string name="error_network">No hay conexión. Revisa tu red e intenta de nuevo.</string>
+    <string name="error_not_found">No encontramos lo que buscas. Puede que ya no exista.</string>
+    <string name="album_record_label">Sello</string>
+    <string name="album_release_date">Lanzamiento</string>
+    <string name="album_genre">Género</string>
+    <string name="album_track_count">Tracks</string>
+    <string name="read_more">Leer más</string>
+    <string name="read_less">Leer menos</string>
+    <string name="album_tracks_empty">Este álbum aún no tiene tracks.</string>
+    <string name="album_reviews">Reseñas</string>
+    <string name="album_reviews_empty">Aún no hay reseñas de este álbum.</string>
+    <string name="review_anonymous">Anónimo</string>
+    <string name="review_rating_description">Calificación: %1$d de %2$d</string>
 </resources>

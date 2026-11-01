@@ -2,6 +2,7 @@ package com.dev.wine.music.app.data.repository
 
 import com.dev.wine.music.app.data.mapper.toDomain
 import com.dev.wine.music.app.data.remote.api.ArtistApi
+import com.dev.wine.music.app.data.remote.safeApiCall
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.repository.ArtistRepository
@@ -14,10 +15,12 @@ class ArtistRepositoryImpl @Inject constructor(
     private val api: ArtistApi,
 ) : ArtistRepository {
 
-    override suspend fun getArtists(): List<Artist> = coroutineScope {
-        val musicians = async { api.getMusicians() }
-        val bands = async { api.getBands() }
-        musicians.await().map { it.toDomain(ArtistType.MUSICIAN) } +
-            bands.await().map { it.toDomain(ArtistType.BAND) }
+    override suspend fun getArtists(): List<Artist> = safeApiCall {
+        coroutineScope {
+            val musicians = async { api.getMusicians() }
+            val bands = async { api.getBands() }
+            musicians.await().map { it.toDomain(ArtistType.MUSICIAN) } +
+                bands.await().map { it.toDomain(ArtistType.BAND) }
+        }
     }
 }

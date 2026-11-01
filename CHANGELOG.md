@@ -20,6 +20,14 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
   - de la pantalla (`AlbumListContentTest`);
   - E2E con Compose sobre `MainActivity` contra el backend real (`HU01AlbumCatalogE2ETest`).
 - Proyecto Kraken en `e2e/kraken` (Appium 1.22.3) con dos escenarios de HU01.
+- **HU02 · Detalle de álbum completo**
+  - Portada con el vinilo, sello, fecha de lanzamiento (dd/mm/aaaa), género en español y cantidad de tracks.
+  - Descripción recortada con «Leer más» / «Leer menos» cuando no cabe.
+  - Tracklist numerado por lado del vinilo (A1, A2… B1) con la duración, y estado vacío si no hay tracks.
+  - Reseñas con texto, calificación de 0 a 5 estrellas y autor. El autor sale de `GET /collectors`, porque el backend no lo envía con el álbum; si no hay autor se muestra «Anónimo». Estado vacío si no hay reseñas.
+  - Un álbum que no existe (404) muestra «No encontramos lo que buscas», sin «Reintentar».
+- Errores por tipo: `AppError` en el dominio, `safeApiCall` en los repositorios y `ErrorType` en `UiState.Error`. «Sin conexión» y «No encontrado» tienen su propio mensaje.
+- Pruebas de HU02: unitarias (caso de uso, ViewModel, mappers, `safeApiCall`), de pantalla (`AlbumDetailContentTest`), E2E con Compose (`HU02AlbumDetailE2ETest`) y un escenario Kraken.
 
 ### Cambiado
 
@@ -27,6 +35,7 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 - Tags en los estados de carga, error, vacío y sin resultados, y en el detalle de álbum (`album_detail`, `back_button`).
 - El título de la pestaña ahora es «Álbumes» (antes «Albumes»).
 - El README explica cómo correr la app en un teléfono físico.
+- Espresso 3.7.0 y androidx-junit 1.3.0: con Espresso 3.5.1 ninguna prueba de interfaz corría en Android 14 o superior (`NoSuchMethodException: InputManager.getInstance`).
 
 ### Corregido
 

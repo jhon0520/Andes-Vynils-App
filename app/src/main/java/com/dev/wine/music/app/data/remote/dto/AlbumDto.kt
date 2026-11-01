@@ -13,6 +13,7 @@ data class AlbumDto(
     val recordLabel: String = "",
     val tracks: List<TrackDto> = emptyList(),
     val performers: List<PerformerDto> = emptyList(),
+    val comments: List<CommentDto> = emptyList(),
 )
 
 @Serializable

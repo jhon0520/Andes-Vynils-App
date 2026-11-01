@@ -7,6 +7,7 @@ import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.domain.usecase.GetAlbumsUseCase
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +67,7 @@ class AlbumListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                UiState.Error(e.message)
+                e.toUiError()
             }
         }
     }

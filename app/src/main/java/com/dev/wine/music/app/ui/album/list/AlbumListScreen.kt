@@ -86,7 +86,7 @@ fun AlbumListContent(
         CatalogHeader()
         when (uiState) {
             UiState.Loading -> LoadingView()
-            is UiState.Error -> ErrorView(onRetry = onRetry)
+            is UiState.Error -> ErrorView(onRetry = onRetry, type = uiState.type)
             is UiState.Success -> {
                 val catalog = uiState.data
                 if (catalog.totalCount == 0) {

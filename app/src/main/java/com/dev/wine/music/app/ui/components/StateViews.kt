@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dev.wine.music.app.R
+import com.dev.wine.music.app.ui.common.ErrorType
 
 @Composable
 fun LoadingView(modifier: Modifier = Modifier) {
@@ -28,23 +29,37 @@ fun LoadingView(modifier: Modifier = Modifier) {
     }
 }
 
+/** A missing resource (404) cannot be fixed by retrying, so that case hides the button. */
 @Composable
-fun ErrorView(onRetry: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorView(
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+    type: ErrorType = ErrorType.UNKNOWN,
+) {
+    val notFound = type == ErrorType.NOT_FOUND
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp)
-            .testTag("error_view"),
+            .testTag(if (notFound) "not_found_view" else "error_view"),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = stringResource(R.string.error_loading),
+            text = stringResource(
+                when (type) {
+                    ErrorType.NETWORK -> R.string.error_network
+                    ErrorType.NOT_FOUND -> R.string.error_not_found
+                    else -> R.string.error_loading
+                },
+            ),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
         )
-        Button(onClick = onRetry, modifier = Modifier.testTag("retry_button")) {
-            Text(text = stringResource(R.string.retry))
+        if (!notFound) {
+            Button(onClick = onRetry, modifier = Modifier.testTag("retry_button")) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }

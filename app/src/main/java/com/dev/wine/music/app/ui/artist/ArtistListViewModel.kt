@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.usecase.GetArtistsUseCase
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +34,7 @@ class ArtistListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                UiState.Error(e.message)
+                e.toUiError()
             }
         }
     }

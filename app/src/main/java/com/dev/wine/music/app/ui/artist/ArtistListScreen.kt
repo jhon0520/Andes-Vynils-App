@@ -45,7 +45,7 @@ fun ArtistListContent(
 ) {
     when (uiState) {
         UiState.Loading -> LoadingView(modifier)
-        is UiState.Error -> ErrorView(onRetry = onRetry, modifier = modifier)
+        is UiState.Error -> ErrorView(onRetry = onRetry, type = uiState.type, modifier = modifier)
         is UiState.Success -> if (uiState.data.isEmpty()) {
             EmptyView(modifier)
         } else {
