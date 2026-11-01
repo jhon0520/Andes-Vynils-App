@@ -47,9 +47,13 @@ class FakeBackendRule : ExternalResource() {
         responses[path] = status(code, message)
     }
 
-    /** Closes the connection without answering, as when there is no network. */
+    /**
+     * Closes the connection without answering, as when there is no network.
+     * DISCONNECT_AT_START is ignored when a custom Dispatcher answers (it sends an empty 200),
+     * so the socket is closed right after the request is read.
+     */
     fun respondNetworkError(path: String) {
-        responses[path] = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
+        responses[path] = MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST)
     }
 
     override fun after() {
