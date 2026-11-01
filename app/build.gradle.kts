@@ -26,22 +26,29 @@ require(apiUri.scheme in setOf("http", "https") && apiUri.host != null && apiBas
 abstract class NetworkSecurityConfigTask : DefaultTask() {
     @get:Input abstract val host: Property<String>
     @get:Input abstract val cleartext: Property<Boolean>
+    /** Debug only: the error E2E tests run a fake backend on http://localhost inside the device. */
+    @get:Input abstract val allowLocalhost: Property<Boolean>
     @get:OutputDirectory abstract val outputDir: DirectoryProperty
 
     @TaskAction
     fun generate() {
         val file = outputDir.file("xml/network_security_config.xml").get().asFile
         file.parentFile.mkdirs()
+        fun domainConfig(domain: String, cleartext: Boolean) =
+            "    <domain-config cleartextTrafficPermitted=\"$cleartext\">\n" +
+                "        <domain includeSubdomains=\"false\">$domain</domain>\n" +
+                "    </domain-config>\n"
         file.writeText(
-            """
-            |<?xml version="1.0" encoding="utf-8"?>
-            |<!-- Generated from api.base.url (gradle.properties). Do not edit. -->
-            |<network-security-config>
-            |    <domain-config cleartextTrafficPermitted="${cleartext.get()}">
-            |        <domain includeSubdomains="false">${host.get()}</domain>
-            |    </domain-config>
-            |</network-security-config>
-            |""".trimMargin(),
+            buildString {
+                append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+                append("<!-- Generated from api.base.url (gradle.properties). Do not edit. -->\n")
+                append("<network-security-config>\n")
+                append(domainConfig(host.get(), cleartext.get()))
+                if (allowLocalhost.get() && host.get() != "localhost") {
+                    append(domainConfig("localhost", true))
+                }
+                append("</network-security-config>\n")
+            },
         )
     }
 }
@@ -98,6 +105,7 @@ androidComponents {
         ) {
             host.set(apiUri.host)
             cleartext.set(apiUri.scheme == "http")
+            allowLocalhost.set(variant.buildType == "debug")
         }
         variant.sources.res?.addGeneratedSourceDirectory(task, NetworkSecurityConfigTask::outputDir)
     }
