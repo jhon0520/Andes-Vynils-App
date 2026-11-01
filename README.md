@@ -34,6 +34,13 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 ## Gitflow
 [GitFlow documentation](./docs/gitflow.md)
 
+## APK
+
+Puedes descargar la aplicación desde ./distributions/app-debug.apk
+
+> [!NOTE]
+> Actualmente el apk apunta a entornos locales.
+
 ## Cómo construir y ejecutar la app
 
 ### Requisitos
