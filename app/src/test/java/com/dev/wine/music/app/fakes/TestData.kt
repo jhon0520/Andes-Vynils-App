@@ -35,7 +35,8 @@ object TestData {
         id: Int = 1,
         name: String = "Rubén Blades",
         type: ArtistType = ArtistType.MUSICIAN,
-    ) = Artist(id = id, name = name, image = "", description = "", type = type)
+        memberIds: List<Int> = emptyList(),
+    ) = Artist(id = id, name = name, image = "", description = "", type = type, memberIds = memberIds)
 
     fun collector(
         id: Int = 1,

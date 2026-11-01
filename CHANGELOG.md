@@ -26,8 +26,13 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
   - Tracklist numerado por lado del vinilo (A1, A2… B1) con la duración, y estado vacío si no hay tracks.
   - Reseñas con texto, calificación de 0 a 5 estrellas y autor. El autor sale de `GET /collectors`, porque el backend no lo envía con el álbum; si no hay autor se muestra «Anónimo». Estado vacío si no hay reseñas.
   - Un álbum que no existe (404) muestra «No encontramos lo que buscas», sin «Reintentar».
+- **HU03 · Listado de artistas completo**
+  - Filtro Todos / Músicos / Bandas sobre la lista ya cargada.
+  - Avatar cuadrado para bandas y redondo para músicos.
+  - Cada músico muestra su banda, tomada de los `musicians` de `GET /bands`, o «Sin banda».
+  - Mensaje «No hay artistas de este tipo» con el botón «Ver todos» cuando un filtro queda vacío.
 - Errores por tipo: `AppError` en el dominio, `safeApiCall` en los repositorios y `ErrorType` en `UiState.Error`. «Sin conexión» y «No encontrado» tienen su propio mensaje.
-- Pruebas de HU02: unitarias (caso de uso, ViewModel, mappers, `safeApiCall`), de pantalla (`AlbumDetailContentTest`), E2E con Compose (`HU02AlbumDetailE2ETest`) y un escenario Kraken.
+- Pruebas de HU02 y HU03: unitarias (casos de uso, ViewModels, mappers, `safeApiCall`), de pantalla (`AlbumDetailContentTest`, `ArtistListContentTest`), E2E con Compose (`HU02AlbumDetailE2ETest`, `HU03ArtistListE2ETest`) y dos escenarios Kraken.
 
 ### Cambiado
 
@@ -35,11 +40,13 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 - Tags en los estados de carga, error, vacío y sin resultados, y en el detalle de álbum (`album_detail`, `back_button`).
 - El título de la pestaña ahora es «Álbumes» (antes «Albumes»).
 - El README explica cómo correr la app en un teléfono físico.
+- Pestañas de la barra inferior con tags `nav_albums`, `nav_artists` y `nav_collectors`.
 - Espresso 3.7.0 y androidx-junit 1.3.0: con Espresso 3.5.1 ninguna prueba de interfaz corría en Android 14 o superior (`NoSuchMethodException: InputManager.getInstance`).
 
 ### Corregido
 
 - `AlbumListContentTest` buscaba el texto «Retry»; ahora lee «Reintentar» desde `strings.xml`.
+- «Musico» ahora se escribe «Músico».
 - Con el teclado abierto, el mensaje de «sin resultados» quedaba tapado. Ahora la tecla «Buscar» del teclado lo cierra y esa vista se puede desplazar.
 
 ## [1.0.0] - 2026-10-25

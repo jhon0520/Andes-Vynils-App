@@ -76,7 +76,12 @@ fun EmptyView(modifier: Modifier = Modifier) {
 
 /** Shown when a search or filter leaves nothing to show; [message] explains what was searched. */
 @Composable
-fun NoResultsView(message: String, onClear: () -> Unit, modifier: Modifier = Modifier) {
+fun NoResultsView(
+    message: String,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier,
+    clearLabel: String = stringResource(R.string.clear_search),
+) {
     Column(
         // Scrollable so the message and the button stay reachable when the keyboard shrinks the screen.
         modifier = modifier
@@ -102,7 +107,7 @@ fun NoResultsView(message: String, onClear: () -> Unit, modifier: Modifier = Mod
             textAlign = TextAlign.Center,
         )
         OutlinedButton(onClick = onClear, modifier = Modifier.testTag("clear_search_button")) {
-            Text(text = stringResource(R.string.clear_search))
+            Text(text = clearLabel)
         }
     }
 }
