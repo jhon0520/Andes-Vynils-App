@@ -15,4 +15,5 @@ class KrakenWorld {
 }
 
 setWorldConstructor(KrakenWorld);
-setDefaultTimeout(30 * 1000);
+// The first session installs UiAutomator2 and the APK, which takes well over 30 s on recent emulators.
+setDefaultTimeout(180 * 1000);

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                             onClick = { navController.navigateToTopLevel(destination) },
                             icon = { Icon(destination.icon, contentDescription = null) },
                             label = { Text(stringResource(destination.labelRes)) },
+                            modifier = Modifier.testTag("nav_${destination.name.lowercase()}"),
                         )
                     }
                 }
