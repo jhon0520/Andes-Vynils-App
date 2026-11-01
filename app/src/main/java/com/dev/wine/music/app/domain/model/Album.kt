@@ -13,6 +13,12 @@ data class Album(
 ) {
     /** Release year, e.g. "1984" from "1984-08-01T00:00:00.000Z". */
     val releaseYear: String get() = releaseDate.take(4)
+
+    /** Null when the backend sends a genre outside [AlbumGenre]. */
+    val genreType: AlbumGenre? get() = AlbumGenre.fromApiValue(genre)
+
+    /** Performer names as shown on the catalog card, e.g. "Rubén Blades, Queen". */
+    val performerNames: String get() = performers.joinToString(", ") { it.name }
 }
 
 data class Track(

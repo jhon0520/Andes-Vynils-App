@@ -15,6 +15,7 @@ object TestData {
         genre: String = "Salsa",
         releaseDate: String = "1984-08-01T00:00:00.000Z",
         tracks: List<Track> = emptyList(),
+        performers: List<Artist> = emptyList(),
     ) = Album(
         id = id,
         name = name,
@@ -24,6 +25,7 @@ object TestData {
         genre = genre,
         recordLabel = "Elektra",
         tracks = tracks,
+        performers = performers,
     )
 
     fun artist(

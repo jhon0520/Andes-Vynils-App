@@ -9,3 +9,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+.kotlin
+
+# Kraken (E2E): dependencias y reportes generados
+e2e/**/node_modules/
+e2e/**/reports/

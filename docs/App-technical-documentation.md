@@ -111,6 +111,15 @@ classDiagram
         tracks: List~Track~
         performers: List~Artist~
         releaseYear: String (calculado)
+        genreType: AlbumGenre? (calculado)
+        performerNames: String (calculado)
+    }
+    class AlbumGenre {
+        <<enum · HU01, HU07>>
+        SALSA
+        ROCK
+        CLASSICAL
+        FOLK
     }
     class Track {
         id: Int
@@ -173,6 +182,7 @@ classDiagram
         duration: String
     }
 
+    Album --> AlbumGenre : genreType
     Album "1" *-- "*" Track : tracks
     Album "*" --> "*" Artist : performers
     Album "1" *-- "*" Comment : comments
@@ -192,13 +202,18 @@ classDiagram
     class AlbumListScreen {
         <<Composable>>
         +AlbumListScreen(onAlbumClick, viewModel = hiltViewModel())
-        +AlbumListContent(uiState, onAlbumClick, onRetry)
+        +AlbumListContent(uiState, query, selectedGenre, onQueryChange, onGenreSelect, onClearFilters, onAlbumClick, onRetry)
     }
     class AlbumListViewModel {
         <<@HiltViewModel>>
         -getAlbums: GetAlbumsUseCase
-        +uiState: StateFlow~UiState~List~Album~~~
+        +uiState: StateFlow~UiState~AlbumCatalog~~
+        +query: StateFlow~String~
+        +selectedGenre: StateFlow~AlbumGenre?~
         +loadAlbums()
+        +onQueryChange(query)
+        +onGenreSelect(genre)
+        +clearFilters()
     }
     class GetAlbumsUseCase {
         -repository: AlbumRepository
@@ -348,13 +363,13 @@ class AlbumListViewModel @Inject constructor(
 
 ### Pantalla
 
-Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, vacío o la lista. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada.
+Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, catálogo vacío, sin resultados o la cuadrícula. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada. En HU01, `AlbumListViewModel` combina la lista cargada con `query` y `selectedGenre` (`combine` + `stateIn`) y expone un `AlbumCatalog` con los álbumes visibles y el total cargado; la búsqueda ignora mayúsculas y tildes y no vuelve a llamar a la API.
 
 ---
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (`http://10.0.2.2:3000/`, definida en `app/build.gradle.kts`). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (por defecto `http://10.0.2.2:3000/`; se cambia con `api.base.url` en `local.properties`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
@@ -465,7 +480,7 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 2 | Tema del estilo A: colores, Fraunces e IBM Plex, textos en español | 1 | | Por hacer |
 | 3 | Perfil visitante/coleccionista: `Profile`, `ProfileRepository` y pantalla de elegir perfil | 1 | | Por hacer |
 | 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | Por hacer |
-| 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, botón «Crear álbum» | 2, 3 | | Por hacer |
+| 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
 | 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | Por hacer |
 | 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | Por hacer |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla y ruta | 4, 7 | | Por hacer |
