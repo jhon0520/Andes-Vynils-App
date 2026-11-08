@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.AlbumGenre
+import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.domain.usecase.GetAlbumsUseCase
+import com.dev.wine.music.app.domain.usecase.ObserveSessionUseCase
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,11 @@ data class AlbumCatalog(
 @HiltViewModel
 class AlbumListViewModel @Inject constructor(
     private val getAlbums: GetAlbumsUseCase,
+    observeSession: ObserveSessionUseCase,
 ) : ViewModel() {
+
+    /** Who is browsing: the header shows it, and only a collector can create albums. */
+    val session: StateFlow<UserSession?> = observeSession()
 
     private val loadedAlbums = MutableStateFlow<UiState<List<Album>>>(UiState.Loading)
 

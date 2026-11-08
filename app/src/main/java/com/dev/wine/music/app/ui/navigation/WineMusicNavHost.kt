@@ -44,6 +44,8 @@ fun WineMusicNavHost(
         composable<AlbumsRoute> {
             AlbumListScreen(
                 onAlbumClick = { albumId -> navController.navigate(AlbumDetailRoute(albumId)) },
+                // TODO: navigate to the create album form when its HU is implemented.
+                onCreateAlbumClick = {},
             )
         }
         composable<AlbumDetailRoute> {

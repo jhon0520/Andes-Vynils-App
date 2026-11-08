@@ -7,7 +7,6 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
@@ -22,7 +21,9 @@ import org.junit.runner.RunWith
 
 /**
  * HU02 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
- * "Buscando América" (Elektra, 01/08/1984) opens with "Decisiones" (5:05) and a review by Manolo Bellon.
+ * "Buscando América Prueba" (id 100, Elektra, 01/08/1984) opens with "Decisiones" (5:05) and a review
+ * by Manolo Bellon. The many "Buscando América" copies in the backend have no tracks or reviews,
+ * and this album repeats tracks and authors, so texts are found with [firstNodeWithText].
  */
 @OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
@@ -43,7 +44,7 @@ class HU02AlbumDetailE2ETest {
     private fun openSalsaAlbum() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText(SALSA_ALBUM))
-        composeTestRule.onNodeWithText(SALSA_ALBUM).performClick()
+        composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
     }
 
@@ -60,8 +61,8 @@ class HU02AlbumDetailE2ETest {
     fun tracklistShowsTheTracksWithSideAndDuration() {
         openSalsaAlbum()
 
-        composeTestRule.onNodeWithText(FIRST_TRACK).performScrollTo().assertIsDisplayed()
-        composeTestRule.onNodeWithText("A1").assertIsDisplayed()
+        composeTestRule.firstNodeWithText(FIRST_TRACK).performScrollTo().assertIsDisplayed()
+        composeTestRule.firstNodeWithText("A1").assertIsDisplayed()
     }
 
     @Test
@@ -69,7 +70,7 @@ class HU02AlbumDetailE2ETest {
         openSalsaAlbum()
 
         composeTestRule.onNodeWithTag("album_reviews").performScrollTo()
-        composeTestRule.onNodeWithText(REVIEW_AUTHOR).performScrollTo().assertIsDisplayed()
+        composeTestRule.firstNodeWithText(REVIEW_AUTHOR).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -83,7 +84,7 @@ class HU02AlbumDetailE2ETest {
 
     private companion object {
         const val TIMEOUT = 15_000L
-        const val SALSA_ALBUM = "Buscando América"
+        const val SALSA_ALBUM = "Buscando América Prueba"
         const val FIRST_TRACK = "Decisiones"
         const val REVIEW_AUTHOR = "Manolo Bellon"
     }

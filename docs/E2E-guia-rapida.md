@@ -57,8 +57,8 @@ class HU01AlbumCatalogE2ETest {
         // 1. Esperar a que llegue la respuesta del backend
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = 15_000)
         // 2. Hacer lo que haría el usuario
-        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText("Buscando América"))
-        composeTestRule.onNodeWithText("Buscando América").performClick()
+        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText("Buscando América Prueba"))
+        composeTestRule.firstNodeWithText("Buscando América Prueba").performClick()
         // 3. Verificar el resultado
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail"), timeoutMillis = 15_000)
     }
@@ -72,6 +72,8 @@ Reglas:
 - `@HiltAndroidTest` y `HiltAndroidRule` en `order = 0` son obligatorios: el runner es `HiltTestRunner` y sin eso la prueba falla al arrancar.
 - Espere con `waitUntil…`, nunca con `Thread.sleep`.
 - En listas, haga scroll (`performScrollToNode`) antes de tocar o verificar un ítem.
+- El backend es compartido y otros equipos crean álbumes con nombres repetidos (hay muchas copias vacías de «Buscando América»). Use el álbum de referencia «Buscando América Prueba» (id 100, el que tiene a Rubén Blades, canciones y reseñas) y búsquelo con `firstNodeWithText(...)` en lugar de `onNodeWithText(...)`, que falla si hay más de un nodo con ese texto (también pasa dentro del detalle: canciones y autores de reseñas repetidos). En Kraken, los datos están en `e2e/kraken/properties.json`.
+- En Kraken, el texto que se escribe en un buscador no debe ser igual al texto que después se toca: `UiSelector().text(...)` encuentra primero el campo de búsqueda y toca ahí. Por eso `ALBUM_QUERY` es «america prueba» y no el nombre completo del álbum.
 - En un filtro, verifique primero algo positivo con `waitUntilEveryItemMatches(...)` (de `e2e/E2EMatchers.kt`: todos los ítems mostrados cumplen el filtro) y la pestaña con `assertIsSelected()`. Después verifique que el otro ítem no está. Un "no existe" solo pasa también cuando el ítem está fuera de pantalla.
 - Use datos semilla del backend y no dependa de conteos, del orden ni del "primer" elemento.
 - Si la HU crea datos, use nombres únicos (`"E2E ${System.currentTimeMillis()}"`) y verifique solo lo que la prueba creó.

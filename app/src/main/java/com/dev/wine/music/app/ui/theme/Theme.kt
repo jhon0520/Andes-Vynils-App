@@ -18,21 +18,22 @@ private val DarkColorScheme = darkColorScheme(
     background = DarkBackground,
 )
 
+// Warm palette from the mockups: ink on paper with terracotta accents, no Material purple.
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+    primary = Terracotta,
+    onPrimary = SleeveText,
+    secondary = RecordGreen,
+    onSecondary = SleeveText,
+    tertiary = SleeveBrown,
+    onTertiary = SleeveText,
     background = LightBackground,
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onBackground = RecordBlack,
+    surface = LightBackground,
+    onSurface = RecordBlack,
+    surfaceVariant = SleeveSand,
+    onSurfaceVariant = NavBarInactive,
+    surfaceContainer = NavBarBackground,
+    outlineVariant = NavBarDivider,
 )
 
 @Composable

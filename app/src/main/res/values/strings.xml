@@ -11,6 +11,7 @@
     <string name="empty_list">Nada por aquí todavía.</string>
     <string name="album_cover_description">Portada de %1$s</string>
     <string name="catalog_eyebrow">Vinilos · Catálogo</string>
+    <string name="create_album">Crear álbum</string>
     <string name="album_search_hint">Buscar por álbum o artista</string>
     <string name="clear_search">Limpiar búsqueda</string>
     <string name="filter_all">Todos</string>
@@ -56,4 +57,8 @@
     <string name="collector_change_later">Podrás cambiar de perfil luego.</string>
     <string name="collector_continue_as">Continuar como %1$s</string>
     <string name="collector_continue">Continuar</string>
+    <string name="profile_badge_collector">COL</string>
+    <string name="profile_badge_visitor">VIS</string>
+    <string name="profile_badge_collector_description">Perfil: coleccionista %1$s</string>
+    <string name="profile_badge_visitor_description">Perfil: visitante</string>
 </resources>
