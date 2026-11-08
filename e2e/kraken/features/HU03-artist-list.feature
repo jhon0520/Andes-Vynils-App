@@ -1,11 +1,11 @@
-Feature: HU03 - Consultar el listado de artistas
+Feature: HU03 - Browse the list of artists
 
   @user1 @mobile
-  Scenario: Como visitante veo los artistas y los filtro por tipo
+  Scenario: As a visitor I see the artists and filter them by type
     Given I wait for 5 seconds
     When I tap the element with id "nav_artists"
     Then I should see the element with id "artist_list"
-    # Los dos artistas quedan en pantalla para que su ausencia al filtrar signifique algo
+    # Both artists are on screen first so that their absence after filtering is meaningful
     When I scroll to the text "<MUSICIAN>" in the element with id "artist_list"
     Then I should see the text "<MUSICIAN>"
     When I scroll to the text "<BAND>" in the element with id "artist_list"

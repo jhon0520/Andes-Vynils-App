@@ -8,7 +8,7 @@ description: "Úsala para diseñar o actualizar la estrategia y plan de pruebas 
 Contexto: la app es Android nativa en Kotlin (Compose + Hilt + Retrofit) que consume BackVynils. El curso exige "pruebas continuas": cada sprint define su estrategia al inicio, cada HU tiene escenarios automatizados y los resultados quedan en la wiki del repo; los defectos se reportan como issues.
 
 ## Qué entregar en cada sprint (wiki → sección del sprint)
-1. **Estrategia de pruebas** con estos componentes (la rúbrica revisa que sea clara y completa):
+1. **Estrategia de pruebas** con la **plantilla del curso de Pruebas automatizadas** (el tutor la exige): aplicación bajo pruebas (nombre, versión, descripción, funcionalidades core, arquitectura, contexto, modelo de datos, GUI) → contexto y objetivo de negocio → **un objetivo por funcionalidad o pantalla** → duración → presupuesto (humano, computacional, económico) → **TNT** (tabla Nivel | Tipo | Técnica | Objetivo) → **distribución de esfuerzo** (horas por semana y técnica). Ejemplo: `docs/wiki/Sprint-1-Estrategia-de-pruebas.md`. Además incluir:
    - Objetivo y alcance (HU del sprint + regresión de las anteriores).
    - Niveles y tipos: unitarias (UseCase, Repository con fakes, ViewModel con `MainDispatcherRule`), integración (Repository + MockWebServer opcional), E2E de UI (Espresso / Compose UI Test), E2E con Kraken si hay interacción entre usuarios, exploratorias/manuales con ADB.
    - Pirámide: muchas unitarias, menos integración, pocas E2E críticas por HU.
@@ -23,7 +23,7 @@ Contexto: la app es Android nativa en Kotlin (Compose + Hilt + Retrofit) que con
    - `app/src/androidTest/.../ui/<feature>/<Pantalla>ContentTest.kt`: estados de la pantalla sin backend.
    - `app/src/androidTest/.../e2e/HUxx<Nombre>E2ETest.kt` (ej. `HU01AlbumCatalogE2ETest`): recorrido con el backend real.
    - `app/src/androidTest/.../e2e/HUxx<Nombre>ErrorE2ETest.kt` (ej. `HU01AlbumCatalogErrorE2ETest`): errores con `FakeBackendRule`.
-   - `e2e/kraken/features/HUxx-<nombre>.feature` (ej. `HU01-catalogo-albumes.feature`).
+   - `e2e/kraken/features/HUxx-<name>.feature` (nombre, Feature y Scenario en inglés) (ej. `HU01-album-catalog.feature`).
    - Unitarias en `app/src/test/...` con el nombre de la clase probada + `Test`.
 5. **Reporte de resultados**: tabla de ejecución (fecha, dispositivo, API, pasaron/fallaron) + capturas o reporte HTML de Gradle (`app/build/reports/androidTests/connected/`).
 6. **Defectos**: cada fallo es un issue con etiqueta `bug`, HU, pasos para reproducir, resultado esperado/obtenido, dispositivo/API, severidad y evidencia; enlazar el issue en el inventario.

@@ -1,7 +1,7 @@
-Feature: HU01 - Tocar un álbum del catálogo abre su detalle
+Feature: HU01 - Tapping an album in the catalog opens its detail
 
   @user1 @mobile
-  Scenario: Como visitante abro un álbum del catálogo y vuelvo
+  Scenario: As a visitor I open an album from the catalog and go back
     Given I wait for 5 seconds
     When I type "<ALBUM_QUERY>" into the element with id "album_search_input"
     And I hide the keyboard

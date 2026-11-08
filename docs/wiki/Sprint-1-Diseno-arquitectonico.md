@@ -2,7 +2,7 @@
 
 **Wine Music (Vinilos)** · Equipo 10 · MISW4104 Ingeniería de Software para Aplicaciones Móviles
 
-Esta página describe la arquitectura de la app Android tal como está en el código de la rama `develop` al cierre del sprint 1. Incluye los diagramas de **componentes**, **paquetes** y **clases** que pide la rúbrica, más diagramas de secuencia y de navegación que muestran cómo se recorre la arquitectura en las HU implementadas.
+Esta página describe la arquitectura de la app Android tal como está en el código de la rama `develop` al cierre del sprint 1. Incluye los diagramas UML de **componentes**, **paquetes** y **clases** que pide la rúbrica (en inglés, como el código), más diagramas de secuencia y de navegación que muestran cómo se recorre la arquitectura en las HU implementadas.
 
 > Documento de trabajo del equipo con el detalle de cada HU: [`docs/App-technical-documentation.md`](../App-technical-documentation.md) en el repositorio.
 
@@ -10,8 +10,8 @@ Esta página describe la arquitectura de la app Android tal como está en el có
 
 1. [Visión general](#1-visión-general)
 2. [Decisiones de arquitectura](#2-decisiones-de-arquitectura)
-3. [Diagrama de componentes](#3-diagrama-de-componentes)
-4. [Diagrama de paquetes](#4-diagrama-de-paquetes)
+3. [Diagrama de componentes (UML)](#3-diagrama-de-componentes-uml)
+4. [Diagrama de paquetes (UML)](#4-diagrama-de-paquetes-uml)
 5. [Diagramas de clases](#5-diagramas-de-clases)
 6. [Diagramas de secuencia](#6-diagramas-de-secuencia)
 7. [Navegación](#7-navegación)
@@ -52,117 +52,86 @@ La arquitectura sigue **MVVM** sobre **Clean Architecture** en tres capas, más 
 | D8 | Búsqueda y filtros en memoria, en el ViewModel | Llamar a la API por cada búsqueda | El backend no ofrece búsqueda; filtrar la lista ya cargada evita llamadas de red mientras se escribe. |
 | D9 | Coil para imágenes | Glide / Picasso | Pensado para Compose y corrutinas, con caché de memoria y disco. |
 
-## 3. Diagrama de componentes
+## 3. Diagrama de componentes (UML)
 
-Cada componente llama solo al de abajo. Hilt construye la cadena al iniciar la app.
+![Vinilos – UML Component Diagram](images/component-diagram.png)
 
-```mermaid
-flowchart TB
-    subgraph DEVICE["Dispositivo Android · app Vinilos"]
-        direction TB
-        ACT["MainActivity<br/>Splash + MainScreen"]
-        NAV["Navegación<br/>MainScreen · WineMusicNavHost · barra inferior"]
-        UI["Pantallas Compose<br/>AlbumList · AlbumDetail · ArtistList · CollectorList"]
-        VM["ViewModels (@HiltViewModel)<br/>StateFlow&lt;UiState&lt;T&gt;&gt;"]
-        UC["Casos de uso<br/>GetAlbums · GetAlbumDetail · GetArtists · GetCollectors"]
-        REPO["Repositorios<br/>AlbumRepository · ArtistRepository · CollectorRepository"]
-        SA["Service Adapter (Retrofit)<br/>AlbumApi · ArtistApi · CollectorApi"]
-        HTTP["OkHttp + logging<br/>kotlinx.serialization"]
-        COIL["Coil<br/>carga de portadas e imágenes"]
-        HILT["Hilt<br/>NetworkModule · RepositoryModule"]
-    end
-    subgraph BACK["Backend BackVynils"]
-        REST["API REST NestJS<br/>:3000"]
-        DB[("PostgreSQL")]
-    end
-    IMG["Servidores de imágenes<br/>(URL de cover / image)"]
+> Fuente editable: [`uml/component-diagram.puml`](uml/component-diagram.puml) (PlantUML). Versión vectorial: [`images/component-diagram.svg`](images/component-diagram.svg).
 
-    ACT --> NAV --> UI
-    UI -- "observa uiState / envía eventos" --> VM
-    VM -- "invoke()" --> UC
-    UC -- "interfaz" --> REPO
-    REPO -- "suspend fun" --> SA
-    SA --> HTTP -- "HTTP GET · JSON" --> REST
-    REST -- TypeORM --> DB
-    UI --> COIL -- HTTPS --> IMG
-    HILT -. inyecta .-> VM
-    HILT -. inyecta .-> REPO
-    HILT -. inyecta .-> SA
-```
+**Notación UML 2.5 usada**
 
-| Componente | Interfaz que ofrece | Consume |
+| Elemento | Símbolo | Significado en el diagrama |
 |---|---|---|
-| Pantallas Compose | Lo que ve el usuario | `uiState` del ViewModel |
-| ViewModels | `uiState: StateFlow<UiState<T>>` y funciones de evento (`loadAlbums()`, `onQueryChange()`…) | Casos de uso |
-| Casos de uso | `operator fun invoke()` | Interfaces de repositorio |
-| Repositorios | `getAlbums()`, `getAlbum(id)`, `getArtists()`, `getCollectors()` | Interfaces Retrofit |
-| Service Adapter | Una función `suspend` por endpoint | API REST de BackVynils |
+| Nodo `«device»` / `«executionEnvironment»` | Caja 3D | Dónde se despliega cada componente: el teléfono Android (API 21+) y el servidor de BackVynils. |
+| Componente | Rectángulo con el icono de componente | Unidad reemplazable de la app que encapsula su implementación (p. ej. *Repositories*). |
+| Interfaz provista | Círculo ("lollipop") unido al componente | Servicio que el componente ofrece a otros (p. ej. *Repositories* provee `AlbumRepository`, `ArtistRepository`, `CollectorRepository`). |
+| Interfaz requerida | Semicírculo ("socket") | Servicio que el componente necesita. Cuando socket y lollipop se encuentran, es un **conector de ensamble**. |
+| Dependencia `«inject»` | Flecha punteada | Hilt crea la instancia y la entrega al componente que la usa. |
+| Dependencia `«use»` | Flecha continua | Un componente invoca a otro sin una interfaz explícita (arranque y navegación). |
 
-## 4. Diagrama de paquetes
+**Cómo se lee**
 
-Paquete raíz: `com.dev.wine.music.app`.
+1. `MainActivity` arranca la app y usa *Navigation* (`MainScreen` + `WineMusicNavHost`), que decide qué *Compose Screen* mostrar.
+2. Cada pantalla **requiere** la interfaz `StateFlow<UiState<T>>` + funciones de evento, que **proveen** los *ViewModels*. La pantalla solo observa estado y envía eventos; no conoce la red.
+3. Los *ViewModels* requieren `invoke()` de los *Use Cases*, y los casos de uso requieren las interfaces de repositorio del dominio. Esa interfaz es el punto de cambio: en el sprint 2 se puede poner una caché detrás sin tocar pantallas ni ViewModels.
+4. *Repositories* requiere las llamadas `suspend` del **Service Adapter** (interfaces Retrofit `AlbumApi`, `ArtistApi`, `CollectorApi`). Además envuelve cada llamada con `safeApiCall`, que traduce errores HTTP/red a `AppError`.
+5. El *Service Adapter* usa el *HTTP Client* (OkHttp + kotlinx.serialization), que es el único componente que sale del dispositivo: consume la interfaz REST/JSON de **BackVynils** (NestJS + PostgreSQL).
+6. Las pantallas requieren `AsyncImage` del *Image Loader* (Coil), que descarga portadas y fotos desde los servidores de imágenes con caché en memoria y disco.
+7. El *DI Container* (Hilt) construye la cadena: `ApiConfigModule` entrega la URL base (`BuildConfig.API_BASE_URL`), `NetworkModule` crea OkHttp, Retrofit y las APIs, y `RepositoryModule` enlaza cada interfaz de repositorio con su implementación. Las pruebas E2E de errores reemplazan solo `ApiConfigModule` para apuntar a un backend falso.
 
-```mermaid
-flowchart LR
-    subgraph ROOT["com.dev.wine.music.app"]
-        direction TB
-        RAIZ["(raíz)<br/>MainActivity · WineMusicApp"]
+| Componente | Interfaz que provee | Interfaz que requiere |
+|---|---|---|
+| Compose Screens | Lo que ve el usuario | `StateFlow<UiState<T>>`, `AsyncImage` |
+| ViewModels | `StateFlow<UiState<T>>` + `loadAlbums()`, `onQueryChange()`, `onGenreSelect()`… | `invoke()` de los casos de uso |
+| Use Cases | `operator fun invoke()` | `AlbumRepository`, `ArtistRepository`, `CollectorRepository` |
+| Repositories | `getAlbums()`, `getAlbum(id)`, `getArtists()`, `getCollectors()` | Llamadas `suspend` del Service Adapter |
+| Service Adapter | Una función `suspend` por endpoint (`GET /albums`, `/albums/{id}`, `/musicians`, `/bands`, `/collectors`) | `Call.Factory` (OkHttp) |
+| HTTP Client | `Call.Factory` | REST/JSON de BackVynils |
+| Image Loader | `AsyncImage` | HTTPS de los servidores de imágenes |
 
-        subgraph UIP["ui"]
-            direction TB
-            UA["album.list · album.detail"]
-            UR["artist"]
-            UCO["collector"]
-            UN["navigation"]
-            UCM["common · components · theme"]
-        end
+## 4. Diagrama de paquetes (UML)
 
-        subgraph DOM["domain"]
-            direction TB
-            DM["model"]
-            DR["repository"]
-            DU["usecase"]
-        end
+![Vinilos – UML Package Diagram](images/package-diagram.png)
 
-        subgraph DAT["data"]
-            direction TB
-            RA["remote.api"]
-            RD["remote.dto"]
-            MP["mapper"]
-            RI["repository"]
-        end
+> Fuente editable: [`uml/package-diagram.puml`](uml/package-diagram.puml) (PlantUML). Versión vectorial: [`images/package-diagram.svg`](images/package-diagram.svg).
 
-        subgraph DI["di"]
-            NM["NetworkModule · RepositoryModule"]
-        end
-    end
+**Notación UML 2.5 usada**
 
-    RAIZ --> UIP
-    UIP --> DOM
-    DAT --> DOM
-    DI --> DAT
-    DI --> DOM
-```
+| Elemento | Símbolo | Significado |
+|---|---|---|
+| Paquete | Carpeta con pestaña | Paquete Kotlin real del código (`com.dev.wine.music.app.<nombre>`). Los paquetes anidados se dibujan dentro de su paquete padre. |
+| Dependencia `«import»` | Flecha punteada con estereotipo | Las clases del paquete origen importan elementos públicos del paquete destino. |
+| Dependencia `«access»` | Flecha punteada con estereotipo | Uso de una librería externa sin reexportarla. |
+
+**Cómo se lee**
+
+- Paquete raíz `com.dev.wine.music.app`: `MainActivity` y `WineMusicApp` (`@HiltAndroidApp`) importan `ui.navigation` y `ui.theme`.
+- **`ui`** (presentación): un subpaquete por HU (`ui.album.list` → HU01, `ui.album.detail` → HU02, `ui.artist` → HU03, `ui.collector` → HU05), más `ui.navigation` (rutas tipadas y barra inferior), `ui.common` (`UiState`, `ErrorType`), `ui.components` (tarjetas y vistas de carga/error/vacío) y `ui.theme`. `ui` importa solo `domain.usecase` y `domain.model`; **nunca importa `data`**.
+- **`domain`**: Kotlin puro. `usecase` importa `repository` (interfaces) y `model`. No depende de Android, Retrofit ni Compose.
+- **`data`**: `data.repository` implementa las interfaces de `domain.repository`, usa `data.remote.api` (Service Adapter Retrofit) y `data.mapper` para convertir `data.remote.dto` en `domain.model`.
+- **`di`**: único paquete que conoce a la vez `data` y `domain`; con Hilt conecta cada interfaz con su implementación.
+- **Regla de dependencias**: todas las flechas internas apuntan hacia `domain`, por lo que no hay ciclos y cada capa se puede probar con dobles (fakes) de la capa inferior.
 
 | Paquete | Clases | Responsabilidad |
 |---|---|---|
-| *(raíz)* | `WineMusicApp`, `MainActivity` | Arranque de Hilt (`@HiltAndroidApp`), splash y contenido Compose |
+| *(raíz)* | `WineMusicApp`, `MainActivity` | Arranque de Hilt, splash y contenido Compose |
 | `ui.album.list` | `AlbumListScreen`, `AlbumListContent`, `AlbumListViewModel`, `AlbumCatalog` | HU01: catálogo con búsqueda y filtro por género |
 | `ui.album.detail` | `AlbumDetailScreen`, `AlbumDetailContent`, `AlbumDetailViewModel` | HU02: detalle de álbum |
 | `ui.artist` | `ArtistListScreen`, `ArtistListContent`, `ArtistListViewModel` | HU03: listado de artistas |
 | `ui.collector` | `CollectorListScreen`, `CollectorListContent`, `CollectorListViewModel` | HU05: listado de coleccionistas |
 | `ui.navigation` | `MainScreen`, `WineMusicNavHost`, `Routes`, `TopLevelDestination` | Barra inferior, grafo y rutas tipadas |
-| `ui.common` | `UiState` | Estados Loading / Success / Error |
+| `ui.common` | `UiState`, `ErrorType`, `toUiError()` | Estados Loading / Success / Error y tipo de error |
 | `ui.components` | `AlbumCard`, `LoadingView`, `ErrorView`, `EmptyView`, `NoResultsView`, `AlbumGenre.labelRes()` | Componentes reutilizables |
 | `ui.theme` | `WineMusicAppTheme`, colores, tipografía | Sistema de diseño |
-| `domain.model` | `Album`, `Track`, `AlbumGenre`, `Artist`, `ArtistType`, `Collector` | Entidades del negocio |
+| `domain.model` | `Album`, `Track`, `NumberedTrack`, `Comment`, `AlbumGenre`, `Artist`, `ArtistType`, `Collector`, `AppError` | Entidades y errores del negocio |
 | `domain.repository` | `AlbumRepository`, `ArtistRepository`, `CollectorRepository` | Contratos de acceso a datos |
 | `domain.usecase` | `GetAlbumsUseCase`, `GetAlbumDetailUseCase`, `GetArtistsUseCase`, `GetCollectorsUseCase` | Acciones de negocio |
+| `data.remote` | `safeApiCall` | Traduce excepciones HTTP/red a `AppError` |
 | `data.remote.api` | `AlbumApi`, `ArtistApi`, `CollectorApi` | Service Adapter (Retrofit) |
-| `data.remote.dto` | `AlbumDto`, `TrackDto`, `PerformerDto`, `CollectorDto` | Forma del JSON del backend |
+| `data.remote.dto` | `AlbumDto`, `TrackDto`, `PerformerDto`, `CommentDto`, `CollectorDto` | Forma del JSON del backend |
 | `data.mapper` | `AlbumDto.toDomain()`, `PerformerDto.toDomain()`, `CollectorDto.toDomain()` | DTO → modelo de dominio |
 | `data.repository` | `AlbumRepositoryImpl`, `ArtistRepositoryImpl`, `CollectorRepositoryImpl` | Implementación de los contratos |
-| `di` | `NetworkModule`, `RepositoryModule` | Grafo de dependencias de Hilt |
+| `di` | `ApiConfigModule`, `NetworkModule`, `RepositoryModule` | Grafo de dependencias de Hilt |
 
 ## 5. Diagramas de clases
 
@@ -247,7 +216,7 @@ classDiagram
     }
     class ArtistRepositoryImpl {
         -api: ArtistApi
-        +getArtists() músicos y bandas en paralelo
+        +getArtists() musicians and bands in parallel
     }
     class CollectorRepositoryImpl {
         -api: CollectorApi
@@ -314,7 +283,17 @@ classDiagram
     }
     class Error {
         +message: String?
+        +type: ErrorType
     }
+    class ErrorType {
+        <<enumeration>>
+        NETWORK
+        NOT_FOUND
+        VALIDATION
+        SERVER
+        UNKNOWN
+    }
+    Error --> ErrorType
     UiState <|-- Loading
     UiState <|-- Success
     UiState <|-- Error
@@ -372,7 +351,7 @@ classDiagram
     }
 
     AlbumListViewModel --> GetAlbumsUseCase
-    AlbumListViewModel ..> AlbumCatalog : emite
+    AlbumListViewModel ..> AlbumCatalog : emits
     AlbumDetailViewModel --> GetAlbumDetailUseCase
     ArtistListViewModel --> GetArtistsUseCase
     CollectorListViewModel --> GetCollectorsUseCase
@@ -405,6 +384,10 @@ classDiagram
         +provideArtistApi(retrofit) ArtistApi
         +provideCollectorApi(retrofit) CollectorApi
     }
+    class ApiConfigModule {
+        <<Hilt Module · SingletonComponent>>
+        +provideApiBaseUrl() String
+    }
     class RepositoryModule {
         <<Hilt Module · SingletonComponent>>
         +bindAlbumRepository(impl) AlbumRepository
@@ -417,14 +400,16 @@ classDiagram
     class MainActivity {
         <<AndroidEntryPoint>>
     }
-    WineMusicApp ..> NetworkModule : genera el contenedor
+    WineMusicApp ..> NetworkModule : builds the container
     WineMusicApp ..> RepositoryModule
+    WineMusicApp ..> ApiConfigModule
+    NetworkModule ..> ApiConfigModule : @ApiBaseUrl
     MainActivity ..> WineMusicApp
 ```
 
 - `Json` usa `ignoreUnknownKeys = true` y `coerceInputValues = true`: campos nuevos o nulos del backend no rompen la app.
 - `OkHttpClient` registra el cuerpo de las peticiones solo en *debug*.
-- La URL base viene de `BuildConfig.API_BASE_URL` (por defecto `http://10.0.2.2:3000/`; se cambia con `api.base.url` en `local.properties`).
+- La URL base viene de `BuildConfig.API_BASE_URL` que se toma de `api.base.url` en `gradle.properties` (por defecto `https://backvynils-q6yc.onrender.com/`; para un backend local se sobrescribe en `local.properties`, p. ej. `http://10.0.2.2:3000/` en emulador). `ApiConfigModule` la entrega con el calificador `@ApiBaseUrl`, y las pruebas E2E de errores reemplazan solo ese módulo.
 
 ## 6. Diagramas de secuencia
 
@@ -432,7 +417,7 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    actor U as Usuario
+    actor U as User
     participant S as AlbumListScreen
     participant VM as AlbumListViewModel
     participant UC as GetAlbumsUseCase
@@ -440,7 +425,7 @@ sequenceDiagram
     participant A as AlbumApi (Retrofit)
     participant B as BackVynils
 
-    U->>S: Abre la pestaña Álbumes
+    U->>S: Opens the Albums tab
     S->>VM: hiltViewModel() · init
     VM->>VM: loadedAlbums = Loading
     S-->>U: LoadingView
@@ -451,25 +436,25 @@ sequenceDiagram
     B-->>A: 200 [AlbumDto]
     A-->>R: List<AlbumDto>
     R-->>UC: List<Album> (toDomain)
-    UC-->>VM: List<Album> ordenada por nombre
+    UC-->>VM: List<Album> sorted by name
     VM->>VM: combine(albums, query, genre) → Success(AlbumCatalog)
     VM-->>S: uiState (StateFlow)
-    S-->>U: Cuadrícula de AlbumCard
+    S-->>U: Grid of AlbumCard
 
-    U->>S: Escribe «ruben» / elige «Salsa»
+    U->>S: Types "ruben" / picks "Salsa"
     S->>VM: onQueryChange() / onGenreSelect()
-    VM->>VM: Filtra en memoria (sin tildes ni mayúsculas)
-    VM-->>S: Success(AlbumCatalog filtrado)
-    S-->>U: Resultados o NoResultsView
+    VM->>VM: Filters in memory (accent and case insensitive)
+    VM-->>S: Success(filtered AlbumCatalog)
+    S-->>U: Results or NoResultsView
 
-    Note over VM,B: Si la llamada falla, VM emite UiState.Error<br/>y la pantalla muestra ErrorView con «Reintentar» → loadAlbums()
+    Note over VM,B: If the call fails, VM emits UiState.Error<br/>and the screen shows ErrorView with "Retry" → loadAlbums()
 ```
 
 ### 6.2 HU02 · Consultar detalle de álbum
 
 ```mermaid
 sequenceDiagram
-    actor U as Usuario
+    actor U as User
     participant L as AlbumListScreen
     participant N as NavController
     participant S as AlbumDetailScreen
@@ -478,18 +463,18 @@ sequenceDiagram
     participant R as AlbumRepositoryImpl
     participant B as BackVynils
 
-    U->>L: Toca un AlbumCard
+    U->>L: Taps an AlbumCard
     L->>N: navigate(AlbumDetailRoute(albumId))
     N->>S: composable<AlbumDetailRoute>
-    S->>VM: hiltViewModel() (albumId desde SavedStateHandle)
+    S->>VM: hiltViewModel() (albumId from SavedStateHandle)
     VM->>UC: invoke(albumId)
     UC->>R: getAlbum(albumId)
     R->>B: GET /albums/{id}
-    B-->>R: AlbumDto con tracks y performers
+    B-->>R: AlbumDto with tracks and performers
     R-->>VM: Album
     VM-->>S: UiState.Success(album)
-    S-->>U: Portada, datos, tracks e intérpretes
-    U->>S: Atrás
+    S-->>U: Cover, data, tracks and performers
+    U->>S: Back
     S->>N: popBackStack()
 ```
 
@@ -503,16 +488,16 @@ sequenceDiagram
     participant B as BackVynils
 
     UC->>R: getArtists()
-    par músicos
+    par musicians
         R->>A: async getMusicians()
         A->>B: GET /musicians
-    and bandas
+    and bands
         R->>A: async getBands()
         A->>B: GET /bands
     end
-    B-->>R: músicos + bandas
+    B-->>R: musicians + bands
     R-->>UC: List<Artist> (MUSICIAN + BAND)
-    UC-->>UC: Ordena por nombre
+    UC-->>UC: Sorts by name
 ```
 
 ## 7. Navegación
@@ -523,13 +508,13 @@ La app usa una sola `Activity` (`MainActivity`) y Navigation Compose. `MainScree
 stateDiagram-v2
     [*] --> Splash
     Splash --> AlbumsRoute : 2 s
-    state "Barra inferior" as Tabs {
+    state "Bottom bar" as Tabs {
         AlbumsRoute --> ArtistsRoute
         ArtistsRoute --> CollectorsRoute
         CollectorsRoute --> AlbumsRoute
     }
-    AlbumsRoute --> AlbumDetailRoute : toca un álbum (albumId)
-    AlbumDetailRoute --> AlbumsRoute : atrás
+    AlbumsRoute --> AlbumDetailRoute : tap album (albumId)
+    AlbumDetailRoute --> AlbumsRoute : back
 ```
 
 | Ruta (`Routes.kt`) | Pantalla | HU | Argumentos |

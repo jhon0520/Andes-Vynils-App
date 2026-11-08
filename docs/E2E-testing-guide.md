@@ -198,7 +198,7 @@ Reglas:
 | Pantalla sin estado | `app/src/androidTest/.../ui/<feature>/<Pantalla>ContentTest.kt` | No usa |
 | Recorrido E2E de la HU | `app/src/androidTest/.../e2e/HUxx<Nombre>E2ETest.kt` (ej. `HU01AlbumCatalogE2ETest`) | BackVynils real |
 | Caminos de error de la HU | `app/src/androidTest/.../e2e/HUxx<Nombre>ErrorE2ETest.kt` (ej. `HU01AlbumCatalogErrorE2ETest`) | `FakeBackendRule` |
-| Escenario Kraken | `e2e/kraken/features/HUxx-<nombre>.feature` (ej. `HU01-catalogo-albumes.feature`) | BackVynils real |
+| Escenario Kraken | `e2e/kraken/features/HUxx-<nombre>.feature` (ej. `HU01-album-catalog.feature`) | BackVynils real |
 
 Métodos en inglés y en forma de frase (`searchByPerformerShowsOnlyTheirAlbums`); features y escenarios en español.
 
@@ -648,7 +648,7 @@ Una prueba de lectura debe pasar igual con los datos semilla que con los datos s
 |---|---|
 | "El primer álbum es X" | "El álbum X existe" (con scroll hasta él) |
 | "La lista tiene 4 álbumes" | "Todos los ítems mostrados cumplen el filtro" (`waitUntilEveryItemMatches`) |
-| "El filtro Rock + 'ruben' queda vacío" (deja de ser cierto si alguien crea un álbum de rock de Rubén) | Una búsqueda que nada puede cumplir (`NO_MATCH_QUERY = "zzz-e2e-sin-resultados"`) para probar "sin resultados" |
+| "El filtro Rock + 'ruben' queda vacío" (deja de ser cierto si alguien crea un álbum de rock de Rubén) | Una búsqueda que nada puede cumplir (`NO_MATCH_QUERY = "zzz-e2e-no-results"`) para probar "sin resultados" |
 | Un id fijo de un registro creado por otra prueba | Ids de los datos semilla (desde `100`) o el nombre único de lo que la prueba creó |
 | Contar reseñas, tracks o artistas de un álbum semilla | Verificar que el elemento esperado aparece |
 

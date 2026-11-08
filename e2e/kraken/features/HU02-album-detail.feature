@@ -1,7 +1,7 @@
-Feature: HU02 - Consultar la información detallada de un álbum
+Feature: HU02 - View the detailed information of an album
 
   @user1 @mobile
-  Scenario: Como visitante abro el detalle de un álbum y veo su información
+  Scenario: As a visitor I open the detail of an album and see its information
     Given I wait for 5 seconds
     When I type "<ALBUM_QUERY>" into the element with id "album_search_input"
     And I hide the keyboard
