@@ -15,7 +15,7 @@ Una prueba E2E usa la app completa como lo haría una persona: la abre, navega, 
 | Errores E2E | `app/src/androidTest/.../e2e/HUxx<Nombre>ErrorE2ETest.kt` | Error 500, sin red, vacío, 404 y Reintentar | Servidor falso (`FakeBackendRule`) |
 | Kraken | `e2e/kraken/features/HUxx-<nombre>.feature` | El mismo recorrido, desde fuera del APK | BackVynils real |
 
-Ejemplos en el repo: `AlbumListContentTest`, `HU01AlbumCatalogE2ETest`, `HU01AlbumCatalogErrorE2ETest` y `HU01-catalogo-albumes.feature`.
+Ejemplos en el repo: `AlbumListContentTest`, `HU01AlbumCatalogE2ETest`, `HU01AlbumCatalogErrorE2ETest` y `HU01-album-catalog.feature`.
 
 ---
 

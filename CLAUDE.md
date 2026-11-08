@@ -25,10 +25,12 @@ App Android nativa del **Equipo 10** para el curso *Ingeniería de Software para
 - Patrones **MVVM + Repository + Service Adapter** y consumo real de la API.
 - **GitFlow**: `feature/*` desde `develop`, PR revisado por otro miembro, **squash and merge**; cada entrega queda **etiquetada como release en `main`**, con el **APK en el repo** (`distributions/`).
 - Cada HU debe tener **pruebas automatizadas** (Espresso/Compose y Kraken) en verde; los defectos se registran como issues.
-- La wiki se organiza por sprint: arquitectura (diagramas de clases, paquetes y componentes), estrategia de pruebas, resultados. Desde el sprint 2 también: burndown, micro-optimizaciones y profiling en ≥ 3 dispositivos físicos.
+- La wiki se organiza por sprint en la barra lateral (`_Sidebar` de la wiki de GitHub, repo `Andes-Vynils-App.wiki`; la wiki no se guarda en este repo): arquitectura (diagramas de clases, paquetes y componentes), estrategia de pruebas (plantilla del curso con objetivos por funcionalidad, TNT y distribución de esfuerzo), resultados, actas semanales y retrospectiva. Desde el sprint 2 también: burndown, micro-optimizaciones y profiling en ≥ 3 dispositivos físicos.
 - Hitos de HU: ≥ 5 al cierre del sprint 2 y 8 (HU01–HU08) al cierre del sprint 3.
 - Las entregas cierran el domingo a las 23:59 GMT-5.
-- La app debe funcionar **desde Android L (API 21)**. Hoy `minSdk = 24`: es un riesgo abierto, coméntalo antes de tocar `minSdk`.
+- La app debe funcionar **desde Android L (API 21)**: `minSdk = 21` (no subirlo). Cada release se prueba en un emulador API 21 antes de etiquetarse.
+- **Código y diagramas en inglés**: clases, funciones, variables, comentarios, `testTag`, nombres y textos de los `.feature` de Kraken, y etiquetas de los diagramas. Solo los textos visibles para el usuario (`strings.xml`) y la prosa de la wiki van en español.
+- Diagramas de componentes y paquetes en **notación UML** (fuente PlantUML en `uml/` e imágenes en `images/` del repo de la wiki), cada uno con su explicación en la wiki.
 
 ## Comandos
 ```bash

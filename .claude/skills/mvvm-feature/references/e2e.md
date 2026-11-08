@@ -111,13 +111,13 @@ Si `e2e/kraken` no existe, avisa al usuario y propón crearlo con los pasos de `
 }
 ```
 
-Feature por HU, `e2e/kraken/features/HU02-detalle-album.feature`:
+Feature por HU, `e2e/kraken/features/HU02-album-detail.feature`:
 
 ```gherkin
-Feature: HU02 - Consultar el detalle de un álbum
+Feature: HU02 - View the detail of an album
 
   @user1 @mobile
-  Scenario: Como visitante abro un álbum del catálogo y vuelvo
+  Scenario: As a visitor I open an album from the catalog and go back
     Given I wait for 3 seconds
     Then I should see the element with id "album_list"
     When I scroll to the text "<ALBUM_NAME>" in the element with id "album_list"

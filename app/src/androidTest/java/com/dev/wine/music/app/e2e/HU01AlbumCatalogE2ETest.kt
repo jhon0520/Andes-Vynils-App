@@ -135,6 +135,6 @@ class HU01AlbumCatalogE2ETest {
         const val SALSA_PERFORMER = "Rubén Blades"
         const val ROCK_ALBUM = "A Night at the Opera"
         const val ROCK_PERFORMER = "Queen"
-        const val NO_MATCH_QUERY = "zzz-e2e-sin-resultados"
+        const val NO_MATCH_QUERY = "zzz-e2e-no-results"
     }
 }
