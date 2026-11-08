@@ -48,6 +48,7 @@ class HU02AlbumDetailErrorE2ETest {
         // Without an answer for /collectors the fake backend sends 404; the detail still loads.
         backend.respondJson("/albums", FakeBackendData.albums)
         scenario = ActivityScenario.launch(MainActivity::class.java)
+        composeTestRule.enterAsVisitor()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithText(FakeBackendData.ALBUM_NAME).performClick()

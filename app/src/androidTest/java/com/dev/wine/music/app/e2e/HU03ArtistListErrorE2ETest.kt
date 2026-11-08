@@ -52,6 +52,7 @@ class HU03ArtistListErrorE2ETest {
     private fun openArtists() {
         backend.respondJson("/albums", FakeBackendData.EMPTY_LIST)
         scenario = ActivityScenario.launch(MainActivity::class.java)
+        composeTestRule.enterAsVisitor()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("nav_artists"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithTag("nav_artists").performClick()

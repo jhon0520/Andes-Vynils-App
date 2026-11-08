@@ -2,7 +2,11 @@ package com.dev.wine.music.app.e2e
 
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.ComposeTestRule
 
 /** Matches list items by their tag prefix, for example "album_item_" for every album card. */
@@ -26,4 +30,14 @@ fun ComposeTestRule.waitUntilEveryItemMatches(
         val items = onAllNodes(hasTestTagPrefix(itemTagPrefix), useUnmergedTree = true).fetchSemanticsNodes()
         items.isNotEmpty() && items.all { matcher.matches(it) }
     }
+}
+
+/**
+ * The app always opens on "¿Cómo quieres ingresar?". Taps "Visitante" so the test lands on the albums screen.
+ * Call it right after the app starts, before waiting for `album_list`.
+ */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeTestRule.enterAsVisitor(timeoutMillis: Long = 15_000L) {
+    waitUntilAtLeastOneExists(hasTestTag("role_visitor"), timeoutMillis)
+    onNodeWithTag("role_visitor").performClick()
 }

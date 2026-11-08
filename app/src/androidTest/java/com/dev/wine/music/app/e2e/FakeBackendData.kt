@@ -24,6 +24,15 @@ object FakeBackendData {
          "performers":[$musician],"comments":[]}
     """.trimIndent()
 
+    const val COLLECTOR_ID = 100
+    const val COLLECTOR_NAME = "Manolo Bellon"
+    const val OTHER_COLLECTOR_NAME = "Jaime Monsalve"
+
+    val collectors = """
+        [{"id":$COLLECTOR_ID,"name":"$COLLECTOR_NAME","telephone":"3502457896","email":"manollo@caracol.com.co","comments":[]},
+         {"id":101,"name":"$OTHER_COLLECTOR_NAME","telephone":"3012357936","email":"jmonsalve@rtvc.com.co","comments":[]}]
+    """.trimIndent()
+
     val albums = "[$album]"
     val musicians = "[$musician]"
     val bands = "[$band]"

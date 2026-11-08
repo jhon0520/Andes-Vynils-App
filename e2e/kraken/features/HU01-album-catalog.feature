@@ -3,6 +3,8 @@ Feature: HU01 - Browse the album catalog
   @user1 @mobile
   Scenario: As a visitor I search by performer, filter by genre and clear the search
     Given I wait for 5 seconds
+    # The app always opens on the role selection screen
+    When I tap the element with id "role_visitor"
     Then I should see the element with id "album_list"
     When I scroll to the text "<CATALOG_ALBUM>" in the element with id "album_list"
     Then I should see the text "<CATALOG_ALBUM>"

@@ -19,6 +19,7 @@ import com.dev.wine.music.app.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import com.dev.wine.music.app.R
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,6 +40,11 @@ class HU01AlbumCatalogE2ETest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @Before
+    fun enterApp() {
+        composeTestRule.enterAsVisitor()
+    }
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 

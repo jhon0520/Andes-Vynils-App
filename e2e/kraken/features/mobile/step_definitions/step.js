@@ -21,6 +21,13 @@ When('I tap the element with id {kraken-string}', async function (id) {
   await el.click();
 });
 
+// For list rows whose id depends on the backend (collector_row_<id>): taps the first one on screen.
+When('I tap the first element with id starting with {kraken-string}', async function (prefix) {
+  const el = await this.driver.$(`android=new UiSelector().resourceIdMatches("${prefix}.*")`);
+  await el.waitForDisplayed({ timeout: TIMEOUT });
+  await el.click();
+});
+
 When('I type {kraken-string} into the element with id {kraken-string}', async function (value, id) {
   const el = await this.driver.$(byId(id));
   await el.waitForDisplayed({ timeout: TIMEOUT });

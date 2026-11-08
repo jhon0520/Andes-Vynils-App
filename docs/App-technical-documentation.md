@@ -277,7 +277,23 @@ Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repos
 | HU07 Crear álbum | `AlbumCreateScreen` | `AlbumCreateViewModel` | `CreateAlbumUseCase` | `AlbumRepository.createAlbum(newAlbum)` · `AlbumApi.createAlbum(body)` | `POST /albums` |
 | HU08 Asociar tracks | `AddTrackSheet` | `AddTrackViewModel` | `AddTrackUseCase` | `AlbumRepository.addTrack(albumId, newTrack)` · `AlbumApi.addTrack(id, body)` | `POST /albums/{id}/tracks` |
 
-**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` y `AlbumDetailRoute(albumId)`. Faltan `ArtistDetailRoute(artistId, type)`, `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
+### Habilitador transversal: selección de perfil (onboarding)
+
+No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de él. Entre el splash y Álbumes la app pregunta «¿Cómo quieres ingresar?»: **Visitante** va directo a Álbumes y **Coleccionista** pasa por «¿Quién eres?» para escoger su perfil de la lista de `GET /collectors`.
+
+| Pantalla | ViewModel | Caso de uso | Repository · API | Endpoint |
+|---|---|---|---|---|
+| `RoleSelectionScreen` | `RoleSelectionViewModel` | `SelectVisitorUseCase` | `SessionRepository.selectVisitor()` | — |
+| `CollectorPickerScreen` | `CollectorPickerViewModel` (búsqueda por nombre o correo sin tildes; consulta y selección en `SavedStateHandle`) | `GetCollectorsUseCase`, `SelectCollectorUseCase` | `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()`; `SessionRepository.selectCollector()` | `GET /collectors` |
+| `MainScreen` (guardia de sesión) | `SessionViewModel` | `ObserveSessionUseCase` | `SessionRepository.session` | — |
+
+- **Sesión:** `UserSession` (`Visitor` o `Collector(id, name, email)`) vive en `InMemorySessionRepository`, un `@Singleton` con un `MutableStateFlow`, enlazado en `di/SessionModule`. **No se guarda en disco** (sin DataStore ni SharedPreferences): cada proceso nuevo vuelve a pedir el perfil.
+- **Muerte del proceso:** Navigation restaura las pantallas, pero la sesión se pierde. `MainScreen` lo detecta (`session == null` fuera del onboarding) y vuelve a `OnboardingGraph` limpiando la pila.
+- **Rutas:** `OnboardingGraph` (grafo anidado, `startDestination` de la app) con `RoleSelectionRoute` y `CollectorPickerRoute`. Al terminar se navega a `AlbumsRoute` con `popUpTo<OnboardingGraph> { inclusive = true }`, así atrás en Álbumes sale de la app.
+- **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
+- **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
+
+**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` y `AlbumDetailRoute(albumId)`. Faltan `ArtistDetailRoute(artistId, type)`, `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
 
 ---
 

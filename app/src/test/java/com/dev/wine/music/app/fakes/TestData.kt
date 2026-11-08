@@ -41,12 +41,13 @@ object TestData {
     fun collector(
         id: Int = 1,
         name: String = "Manolo Bellon",
+        email: String = "manollo@caracol.com.co",
         commentIds: List<Int> = emptyList(),
     ) = Collector(
         id = id,
         name = name,
         telephone = "3502457896",
-        email = "manollo@caracol.com.co",
+        email = email,
         commentIds = commentIds,
     )
 

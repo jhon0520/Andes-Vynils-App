@@ -13,3 +13,10 @@ val Pink40 = Color(0xFF7D5260)
 val LightBackground = Color(0xFFF3EEE4)
 
 val DarkBackground = Color(0xFF3A342C)
+
+// Onboarding tokens, approximated from the mockup.
+val Terracotta = Color(0xFFC2410C)
+val RecordGreen = Color(0xFF2E4A3F)
+val RecordBlack = Color(0xFF1C1917)
+val RecordGroove = Color(0xFF3A3532)
+val SleeveText = Color(0xFFF3EEE4)

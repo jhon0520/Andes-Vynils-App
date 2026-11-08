@@ -52,6 +52,7 @@ class HU01AlbumCatalogErrorE2ETest {
 
     private fun launchApp() {
         scenario = ActivityScenario.launch(MainActivity::class.java)
+        composeTestRule.enterAsVisitor()
     }
 
     @After

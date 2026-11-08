@@ -46,6 +46,12 @@ class HU01AlbumCatalogE2ETest {
     @get:Rule(order = 0) val hiltRule = HiltAndroidRule(this)
     @get:Rule(order = 1) val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    // La app siempre abre en «¿Cómo quieres ingresar?»: entrar como visitante antes de cada prueba.
+    @Before
+    fun enterApp() {
+        composeTestRule.enterAsVisitor()
+    }
+
     @Test
     fun tappingAnAlbumOpensItsDetail() {
         // 1. Esperar a que llegue la respuesta del backend
@@ -94,6 +100,7 @@ class HU01AlbumCatalogErrorE2ETest {
     fun serverErrorThenRetryLoadsTheCatalog() {
         backend.respondStatus("/albums", 500)                  // 1. el backend falla
         ActivityScenario.launch(MainActivity::class.java)      // 2. abrir la app
+        composeTestRule.enterAsVisitor()                       //    y entrar como visitante
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("error_view"), timeoutMillis = 15_000)
 
         backend.respondJson("/albums", FakeBackendData.albums) // 3. el backend se recupera
@@ -119,6 +126,8 @@ Reglas:
 
 ---
 
+> **Onboarding.** Desde la selección de perfil, la app abre en «¿Cómo quieres ingresar?» y no en Álbumes. Toda prueba que arranca la app debe llamar `composeTestRule.enterAsVisitor()` (en `e2e/E2EMatchers.kt`) antes de esperar `album_list`; en Kraken, el primer paso es `When I tap the element with id "role_visitor"`. Las pruebas del propio onboarding están en `Onboarding*E2ETest` y `e2e/kraken/features/ONB-*.feature`.
+
 ## 4. Escenario de Kraken
 
 Kraken maneja el APK instalado desde fuera, como un usuario. Se escribe en Gherkin (`Given` / `When` / `Then`).
@@ -129,6 +138,7 @@ Feature: HU03 - Consultar el listado de artistas
   @user1 @mobile
   Scenario: Como visitante filtro los artistas por tipo
     Given I wait for 5 seconds
+    When I tap the element with id "role_visitor"
     When I tap the element with id "nav_artists"
     Then I should see the element with id "artist_list"
     When I scroll to the text "<MUSICIAN>" in the element with id "artist_list"
@@ -162,6 +172,12 @@ Pasos disponibles:
 ---
 
 ## 5. Ejecutar
+
+**Atajo con backend local:** `./scripts/e2e-local.sh` revisa si BackVynils responde en `localhost:3000` (si no, lo levanta con Docker/Colima y carga `sql/data.sql` cuando la base está vacía), pone tu IP en `api.base.url` de `local.properties`, compila el APK, lo copia en `distributions/` y corre Compose y Kraken. Opciones: `--skip-tests`, `--skip-compose`, `--skip-kraken` y `--backend-dir=RUTA` (por defecto `../BackVynils`, al lado de este repo; también con la variable `BACKEND_DIR`); variable `HOST_IP` si la IP detectada no sirve.
+
+**Antes del release en `main`:** `./scripts/e2e-local.sh --release` quita `api.base.url` de `local.properties`, compila y copia en `distributions/` un APK que apunta al dominio por defecto (Render).
+
+Paso a paso:
 
 ```bash
 # 1. Emulador encendido
