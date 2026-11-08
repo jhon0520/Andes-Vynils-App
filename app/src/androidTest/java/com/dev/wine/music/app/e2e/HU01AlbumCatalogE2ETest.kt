@@ -26,9 +26,10 @@ import org.junit.runner.RunWith
 
 /**
  * HU01 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
- * Rubén Blades has "Buscando América" (Salsa) and Queen has "A Night at the Opera" (Rock).
+ * Rubén Blades has "Buscando América Prueba" (Salsa, id 100) and Queen has "A Night at the Opera" (Rock).
  * The checks only ask for these albums to exist, never for counts or order, so albums created by
- * other tests do not break them.
+ * other tests do not break them. Other teams add albums with repeated names (there are many
+ * "Buscando América" copies without performers), so cards are found with [firstNodeWithText].
  */
 @OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
@@ -61,9 +62,9 @@ class HU01AlbumCatalogE2ETest {
         waitForCatalog()
 
         scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.onNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
         scrollToAlbum(ROCK_ALBUM)
-        composeTestRule.onNodeWithText(ROCK_ALBUM).assertIsDisplayed()
+        composeTestRule.firstNodeWithText(ROCK_ALBUM).assertIsDisplayed()
     }
 
     @Test
@@ -81,7 +82,7 @@ class HU01AlbumCatalogE2ETest {
         )
         composeTestRule.onNodeWithText(SALSA_ALBUM).assertDoesNotExist()
         scrollToAlbum(ROCK_ALBUM)
-        composeTestRule.onNodeWithText(ROCK_ALBUM).assertIsDisplayed()
+        composeTestRule.firstNodeWithText(ROCK_ALBUM).assertIsDisplayed()
     }
 
     @Test
@@ -99,7 +100,7 @@ class HU01AlbumCatalogE2ETest {
             timeoutMillis = TIMEOUT,
         )
         scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.onNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
     }
 
     @Test
@@ -118,7 +119,7 @@ class HU01AlbumCatalogE2ETest {
 
         waitForCatalog()
         scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.onNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
     }
 
     @Test
@@ -126,9 +127,9 @@ class HU01AlbumCatalogE2ETest {
         waitForCatalog()
 
         scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.onNodeWithText(SALSA_ALBUM).performClick()
+        composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
 
-        composeTestRule.waitUntilAtLeastOneExists(hasText(context.getString(R.string.tracks)), timeoutMillis = TIMEOUT)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithTag("album_detail").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("back_button").performClick()
@@ -137,7 +138,7 @@ class HU01AlbumCatalogE2ETest {
 
     private companion object {
         const val TIMEOUT = 15_000L
-        const val SALSA_ALBUM = "Buscando América"
+        const val SALSA_ALBUM = "Buscando América Prueba"
         const val SALSA_PERFORMER = "Rubén Blades"
         const val ROCK_ALBUM = "A Night at the Opera"
         const val ROCK_PERFORMER = "Queen"

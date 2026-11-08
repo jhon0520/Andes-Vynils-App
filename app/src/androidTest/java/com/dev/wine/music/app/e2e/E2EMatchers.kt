@@ -4,7 +4,10 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -40,4 +43,25 @@ fun ComposeTestRule.waitUntilEveryItemMatches(
 fun ComposeTestRule.enterAsVisitor(timeoutMillis: Long = 15_000L) {
     waitUntilAtLeastOneExists(hasTestTag("role_visitor"), timeoutMillis)
     onNodeWithTag("role_visitor").performClick()
+}
+
+/**
+ * The first node with exactly this text. The shared backend repeats data (albums with the same
+ * name, the same track or review author several times in one album), and `onNodeWithText` fails
+ * when more than one node has the text. In a lazy list, scroll to the item first.
+ */
+fun ComposeTestRule.firstNodeWithText(text: String): SemanticsNodeInteraction =
+    onAllNodesWithText(text).onFirst()
+
+/**
+ * Enters as the first collector of the picker, so the test lands on the albums screen with a collector profile.
+ * Call it right after the app starts, before waiting for `album_list`.
+ */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeTestRule.enterAsCollector(timeoutMillis: Long = 15_000L) {
+    waitUntilAtLeastOneExists(hasTestTag("role_collector"), timeoutMillis)
+    onNodeWithTag("role_collector").performClick()
+    waitUntilAtLeastOneExists(hasTestTagPrefix("collector_row_"), timeoutMillis)
+    onAllNodes(hasTestTagPrefix("collector_row_")).onFirst().performClick()
+    onNodeWithTag("collector_continue").performClick()
 }

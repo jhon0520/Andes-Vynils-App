@@ -5,22 +5,28 @@
 #   2. Apunta la app a la IP de este computador (api.base.url en local.properties).
 #   3. Compila el APK debug y lo copia en distributions/.
 #   4. Corre las pruebas E2E: Compose (connectedDebugAndroidTest) y Kraken.
+#      Con --skip-tests, en vez de las pruebas instala el APK en el dispositivo.
 #
 # Uso:
 #   ./scripts/e2e-local.sh                       # todo
-#   ./scripts/e2e-local.sh --skip-tests          # solo backend + APK
+#   ./scripts/e2e-local.sh --skip-tests          # backend + APK + instalarlo en el dispositivo
+#   ./scripts/e2e-local.sh --skip-tests --device=SERIAL   # instala en ese dispositivo (ver adb devices)
 #   ./scripts/e2e-local.sh --skip-kraken         # sin Kraken
 #   ./scripts/e2e-local.sh --skip-compose        # sin pruebas de Compose
 #   ./scripts/e2e-local.sh --backend-dir=RUTA    # otra carpeta de BackVynils
-#   ./scripts/e2e-local.sh --release             # APK para el release en main (ver abajo)
+#   ./scripts/e2e-local.sh --release             # APK para el release en main, y lo instala (ver abajo)
+#   ./scripts/e2e-local.sh --release --device=SERIAL      # igual, instalando en ese dispositivo
 #
 # --release: quita api.base.url de local.properties para volver al dominio por defecto
-# (Render, en gradle.properties), compila el APK y lo copia en distributions/.
-# No toca el backend local ni corre pruebas.
+# (Render, en gradle.properties), compila el APK, lo copia en distributions/ y lo instala
+# en el dispositivo. No toca el backend local ni corre pruebas.
 #
 # Variables opcionales:
 #   BACKEND_DIR  ruta de BackVynils (también con --backend-dir)
 #   HOST_IP      IP a usar si la detección automática no sirve (por ejemplo 192.168.1.20)
+#
+# --device=SERIAL: dispositivo de adb donde instalar y correr las pruebas. Sin él se usa el único
+# conectado; si hay varios, hay que elegir uno.
 
 set -euo pipefail
 
@@ -38,6 +44,7 @@ LOCAL_PROPS="${APP_DIR}/local.properties"
 RUN_COMPOSE=true
 RUN_KRAKEN=true
 RELEASE=false
+DEVICE=""
 for arg in "$@"; do
   case "$arg" in
     --skip-tests)    RUN_COMPOSE=false; RUN_KRAKEN=false ;;
@@ -45,7 +52,8 @@ for arg in "$@"; do
     --skip-compose)  RUN_COMPOSE=false ;;
     --backend-dir=*) BACKEND_DIR="${arg#*=}" ;;
     --release)       RELEASE=true ;;
-    -h|--help)       sed -n '2,23p' "$0"; exit 0 ;;
+    --device=*)      DEVICE="${arg#*=}" ;;
+    -h|--help)       sed -n '2,30p' "$0"; exit 0 ;;
     *) echo "Opción desconocida: $arg (usa --help)"; exit 1 ;;
   esac
 done
@@ -67,6 +75,29 @@ build_apk() {
   ok "APK copiado en distributions/app-debug.apk"
 }
 
+# Elige el dispositivo: el de --device, o el único conectado. Lo exporta en ANDROID_SERIAL,
+# así adb y connectedDebugAndroidTest usan solo ese.
+select_device() {
+  local devices
+  devices="$(adb devices | awk 'NR > 1 && $2 == "device" { print $1 }')"
+  [[ -n "$devices" ]] || fail "No hay dispositivo ni emulador conectado (adb devices)"
+  if [[ -n "$DEVICE" ]]; then
+    grep -qx "$DEVICE" <<< "$devices" || fail "El dispositivo ${DEVICE} no está conectado. Conectados: $(echo "$devices" | tr '\n' ' ')"
+  elif [[ "$(wc -l <<< "$devices" | tr -d ' ')" -eq 1 ]]; then
+    DEVICE="$devices"
+  else
+    fail "Hay varios dispositivos conectados; elige uno con --device=SERIAL: $(echo "$devices" | tr '\n' ' ')"
+  fi
+  export ANDROID_SERIAL="$DEVICE"
+  ok "Dispositivo: ${DEVICE}"
+}
+
+install_apk() {
+  select_device
+  adb install -r "${APP_DIR}/distributions/app-debug.apk"
+  ok "APK instalado en ${DEVICE}"
+}
+
 # ---------------------------------------------------------------------------
 # --release: APK con el dominio por defecto (Render), sin backend local ni pruebas
 # ---------------------------------------------------------------------------
@@ -82,6 +113,9 @@ if $RELEASE; then
 
   step "Compilar APK debug"
   build_apk
+
+  step "Instalar APK"
+  install_apk
   exit 0
 fi
 
@@ -159,13 +193,12 @@ build_apk
 step "4/4 Pruebas E2E"
 
 if ! $RUN_COMPOSE && ! $RUN_KRAKEN; then
-  ok "Pruebas omitidas (--skip-tests)"
+  ok "Pruebas omitidas (--skip-tests); instalo el APK"
+  install_apk
   exit 0
 fi
 
-DEVICES="$(adb devices | awk 'NR > 1 && $2 == "device" { print $1 }')"
-[[ -n "$DEVICES" ]] || fail "No hay dispositivo ni emulador conectado (adb devices)"
-ok "Dispositivo(s): $(echo "$DEVICES" | tr '\n' ' ')"
+select_device
 
 COMPOSE_STATUS=0
 KRAKEN_STATUS=0

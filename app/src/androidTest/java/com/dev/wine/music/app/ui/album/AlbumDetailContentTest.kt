@@ -16,6 +16,7 @@ import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.Track
+import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.ui.album.detail.AlbumDetailContent
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
@@ -54,10 +55,22 @@ class AlbumDetailContentTest {
         ),
     )
 
-    private fun setContent(uiState: UiState<Album>, onBack: () -> Unit = {}, onRetry: () -> Unit = {}) {
+    private fun setContent(
+        uiState: UiState<Album>,
+        onBack: () -> Unit = {},
+        onRetry: () -> Unit = {},
+        session: UserSession? = UserSession.Visitor,
+        onAddTrackClick: () -> Unit = {},
+    ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
-                AlbumDetailContent(uiState = uiState, onBack = onBack, onRetry = onRetry)
+                AlbumDetailContent(
+                    uiState = uiState,
+                    onBack = onBack,
+                    onRetry = onRetry,
+                    session = session,
+                    onAddTrackClick = onAddTrackClick,
+                )
             }
         }
     }
@@ -68,10 +81,42 @@ class AlbumDetailContentTest {
 
         composeTestRule.onNodeWithText("Buscando América").assertIsDisplayed()
         composeTestRule.onNodeWithTag("album_performers").assertTextEquals("Rubén Blades")
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("Elektra")
+        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("ELEKTRA")
         composeTestRule.onNodeWithTag("album_release_date").assertTextEquals("01/08/1984")
-        composeTestRule.onNodeWithTag("album_genre").assertTextEquals(context.getString(R.string.genre_salsa))
-        composeTestRule.onNodeWithTag("album_track_count").assertTextEquals("3")
+        composeTestRule.onNodeWithTag("album_genre").assertTextEquals(context.getString(R.string.genre_salsa).uppercase())
+        composeTestRule.onNodeWithTag("album_track_count").assertTextEquals("3 TRACKS")
+    }
+
+    @Test
+    fun tracksAreGroupedBySide() {
+        setContent(UiState.Success(album))
+
+        composeTestRule.onNodeWithText(context.getString(R.string.album_side, "A").uppercase())
+            .performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.album_side, "B").uppercase())
+            .performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun collectorSeesAddTrackButton() {
+        var clicked = false
+        setContent(
+            UiState.Success(album),
+            session = UserSession.Collector(id = 100, name = "Manolo Bellon", email = "manollo@caracol.com.co"),
+            onAddTrackClick = { clicked = true },
+        )
+
+        composeTestRule.onNodeWithTag("add_track_button").performScrollTo().assertIsDisplayed().performClick()
+
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun visitorDoesNotSeeAddTrackButton() {
+        setContent(UiState.Success(album), session = UserSession.Visitor)
+
+        composeTestRule.onNodeWithTag("album_detail_body").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("add_track_button").assertDoesNotExist()
     }
 
     @Test
@@ -97,7 +142,7 @@ class AlbumDetailContentTest {
         setContent(UiState.Success(album))
 
         composeTestRule.onNodeWithTag("review_item_100").performScrollTo()
-        composeTestRule.onNodeWithText("The most relevant album of Ruben Blades").assertIsDisplayed()
+        composeTestRule.onNodeWithText("“The most relevant album of Ruben Blades”").assertIsDisplayed()
         composeTestRule.onNodeWithText("Manolo Bellon").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(
             context.getString(R.string.review_rating_description, 4, Comment.MAX_RATING),

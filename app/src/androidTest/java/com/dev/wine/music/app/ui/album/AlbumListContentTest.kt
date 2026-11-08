@@ -3,6 +3,7 @@ package com.dev.wine.music.app.ui.album
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -17,6 +18,7 @@ import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
+import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.ui.album.list.AlbumCatalog
 import com.dev.wine.music.app.ui.album.list.AlbumListContent
 import com.dev.wine.music.app.ui.common.UiState
@@ -56,6 +58,8 @@ class AlbumListContentTest {
         onClearFilters: () -> Unit = {},
         onAlbumClick: (Int) -> Unit = {},
         onRetry: () -> Unit = {},
+        session: UserSession? = null,
+        onCreateAlbumClick: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
@@ -68,6 +72,8 @@ class AlbumListContentTest {
                     onClearFilters = onClearFilters,
                     onAlbumClick = onAlbumClick,
                     onRetry = onRetry,
+                    session = session,
+                    onCreateAlbumClick = onCreateAlbumClick,
                 )
             }
         }
@@ -79,7 +85,7 @@ class AlbumListContentTest {
         setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)), onAlbumClick = { clickedId = it })
 
         composeTestRule.onNodeWithText("Rubén Blades").assertIsDisplayed()
-        composeTestRule.onNodeWithText("1984 · ${context.getString(R.string.genre_classical)}").assertIsDisplayed()
+        composeTestRule.onNodeWithText("1984 · ${context.getString(R.string.genre_classical).uppercase()}").assertIsDisplayed()
         composeTestRule.onNodeWithTag("album_item_7").performClick()
 
         assertEquals(7, clickedId)
@@ -87,7 +93,7 @@ class AlbumListContentTest {
 
     @Test
     fun albumWithoutCoverShowsTheSleeve() {
-        setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)))
+        setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)), session = UserSession.Visitor)
 
         // The clickable card merges its children, so the sleeve lives in the unmerged tree.
         composeTestRule.onNodeWithTag("album_sleeve_7", useUnmergedTree = true).assertIsDisplayed()
@@ -168,5 +174,45 @@ class AlbumListContentTest {
         composeTestRule.onNodeWithText(context.getString(R.string.retry)).performClick()
 
         assertTrue(retried)
+    }
+
+    @Test
+    fun collectorSeesTheCreateAlbumButtonAndItReportsClicks() {
+        var clicked = false
+        setContent(
+            UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)),
+            session = UserSession.Collector(id = 100, name = "Manolo Bellon", email = "manollo@caracol.com.co"),
+            onCreateAlbumClick = { clicked = true },
+        )
+
+        composeTestRule.onNodeWithText(context.getString(R.string.create_album)).assertIsDisplayed().performClick()
+
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun visitorDoesNotSeeTheCreateAlbumButton() {
+        setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)), session = UserSession.Visitor)
+
+        composeTestRule.onNodeWithTag("create_album_button").assertDoesNotExist()
+    }
+
+    @Test
+    fun headerShowsTheCollectorBadge() {
+        setContent(
+            UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)),
+            session = UserSession.Collector(id = 100, name = "Manolo Bellon", email = "manollo@caracol.com.co"),
+        )
+
+        composeTestRule.onNodeWithTag("profile_badge")
+            .assertContentDescriptionEquals(context.getString(R.string.profile_badge_collector_description, "Manolo Bellon"))
+    }
+
+    @Test
+    fun headerShowsTheVisitorBadge() {
+        setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)), session = UserSession.Visitor)
+
+        composeTestRule.onNodeWithTag("profile_badge")
+            .assertContentDescriptionEquals(context.getString(R.string.profile_badge_visitor_description))
     }
 }

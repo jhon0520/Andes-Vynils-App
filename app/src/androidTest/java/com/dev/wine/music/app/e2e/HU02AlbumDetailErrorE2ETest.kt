@@ -70,7 +70,7 @@ class HU02AlbumDetailErrorE2ETest {
         composeTestRule.onNodeWithTag("retry_button").performClick()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals(FakeBackendData.ALBUM_LABEL)
+        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals(FakeBackendData.ALBUM_LABEL.uppercase())
     }
 
     @Test
@@ -90,7 +90,7 @@ class HU02AlbumDetailErrorE2ETest {
         openAlbumDetail()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals(FakeBackendData.ALBUM_LABEL)
+        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals(FakeBackendData.ALBUM_LABEL.uppercase())
     }
 
     private companion object {

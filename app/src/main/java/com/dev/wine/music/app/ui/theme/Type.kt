@@ -43,3 +43,13 @@ val LabelMono = TextStyle(
     fontSize = 12.sp,
     letterSpacing = 2.4.sp,
 )
+
+/** Plain sans text from the catalog mockup: performers, search and tabs. */
+val SansBody = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontSize = 16.sp,
+    lineHeight = 22.sp,
+)
+
+/** Monospaced caps for card details ("1984 · SALSA"), tighter than [LabelMono]. */
+val DetailMono = LabelMono.copy(fontSize = 13.sp, letterSpacing = 1.sp)

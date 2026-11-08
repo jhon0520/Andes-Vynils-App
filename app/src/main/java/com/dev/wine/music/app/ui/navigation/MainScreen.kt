@@ -1,12 +1,30 @@
 package com.dev.wine.music.app.ui.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.dev.wine.music.app.ui.theme.NavBarBackground
+import com.dev.wine.music.app.ui.theme.NavBarDivider
+import com.dev.wine.music.app.ui.theme.NavBarInactive
+import com.dev.wine.music.app.ui.theme.RecordBlack
+import com.dev.wine.music.app.ui.theme.Terracotta
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,17 +72,10 @@ fun MainScreen(
             .semantics { testTagsAsResourceId = true },
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    TopLevelDestination.entries.forEach { destination ->
-                        NavigationBarItem(
-                            selected = currentDestination.isOn(destination),
-                            onClick = { navController.navigateToTopLevel(destination) },
-                            icon = { Icon(destination.icon, contentDescription = null) },
-                            label = { Text(stringResource(destination.labelRes)) },
-                            modifier = Modifier.testTag("nav_${destination.name.lowercase()}"),
-                        )
-                    }
-                }
+                VinylBottomBar(
+                    isSelected = { currentDestination.isOn(it) },
+                    onSelect = { navController.navigateToTopLevel(it) },
+                )
             }
         },
     ) { innerPadding ->
@@ -72,6 +83,58 @@ fun MainScreen(
             navController = navController,
             modifier = Modifier.padding(innerPadding),
         )
+    }
+}
+
+/** Bottom bar from the catalog mockup: outlined icons, dark ink when selected and a terracotta underline. */
+@Composable
+private fun VinylBottomBar(
+    isSelected: (TopLevelDestination) -> Boolean,
+    onSelect: (TopLevelDestination) -> Unit,
+) {
+    // The mockup only defines the light palette; dark mode keeps the theme colors.
+    val dark = isSystemInDarkTheme()
+    val container = if (dark) MaterialTheme.colorScheme.surfaceContainer else NavBarBackground
+    val divider = if (dark) MaterialTheme.colorScheme.outlineVariant else NavBarDivider
+    val active = if (dark) MaterialTheme.colorScheme.onSurface else RecordBlack
+    val inactive = if (dark) MaterialTheme.colorScheme.onSurfaceVariant else NavBarInactive
+    val itemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor = active,
+        selectedTextColor = active,
+        unselectedIconColor = inactive,
+        unselectedTextColor = inactive,
+        // No pill behind the icon: the underline below the label marks the selected tab.
+        indicatorColor = Color.Transparent,
+    )
+    Column {
+        HorizontalDivider(color = divider)
+        NavigationBar(containerColor = container) {
+            TopLevelDestination.entries.forEach { destination ->
+                val selected = isSelected(destination)
+                NavigationBarItem(
+                    selected = selected,
+                    onClick = { onSelect(destination) },
+                    icon = { Icon(painterResource(destination.iconRes), contentDescription = null) },
+                    label = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = stringResource(destination.labelRes),
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 4.dp)
+                                    .size(width = 32.dp, height = 3.dp)
+                                    .background(if (selected) Terracotta else Color.Transparent),
+                            )
+                        }
+                    },
+                    alwaysShowLabel = true,
+                    colors = itemColors,
+                    modifier = Modifier.testTag("nav_${destination.name.lowercase()}"),
+                )
+            }
+        }
     }
 }
 
