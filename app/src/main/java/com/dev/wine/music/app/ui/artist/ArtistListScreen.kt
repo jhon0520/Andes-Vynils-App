@@ -123,7 +123,7 @@ private fun TypeTabs(selectedType: ArtistType?, onTypeSelect: (ArtistType?) -> U
 
 @StringRes
 private fun ArtistType?.tabLabelRes(): Int = when (this) {
-    null -> R.string.artist_type_all
+    null -> R.string.filter_all
     ArtistType.MUSICIAN -> R.string.artist_type_musicians
     ArtistType.BAND -> R.string.artist_type_bands
 }

@@ -97,6 +97,13 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+    lint {
+        checkAllWarnings = true
+        checkDependencies = true
+        error += setOf("UnusedResources", "Overdraw", "UselessParent", "UselessLeaf", "UseCompoundDrawables")
+        htmlReport = true
+        xmlReport = true
+    }
 }
 
 androidComponents {

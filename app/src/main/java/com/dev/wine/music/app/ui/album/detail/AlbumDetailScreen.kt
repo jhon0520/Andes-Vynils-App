@@ -164,7 +164,7 @@ private fun AlbumFacts(album: Album) {
             album.genreType?.let { stringResource(it.labelRes()) } ?: album.genre,
             "album_genre",
         )
-        Fact(stringResource(R.string.album_track_count), album.tracks.size.toString(), "album_track_count")
+        Fact(stringResource(R.string.tracks), album.tracks.size.toString(), "album_track_count")
     }
 }
 
