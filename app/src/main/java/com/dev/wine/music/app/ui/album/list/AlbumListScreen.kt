@@ -185,7 +185,7 @@ private fun GenreTabs(selectedGenre: AlbumGenre?, onGenreSelect: (AlbumGenre?) -
             Tab(
                 selected = genre == selectedGenre,
                 onClick = { onGenreSelect(genre) },
-                text = { Text(stringResource(genre?.labelRes() ?: R.string.genre_all)) },
+                text = { Text(stringResource(genre?.labelRes() ?: R.string.filter_all)) },
                 modifier = Modifier.testTag("album_genre_tab_${genre?.name?.lowercase() ?: "all"}"),
             )
         }
