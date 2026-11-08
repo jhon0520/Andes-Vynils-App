@@ -23,16 +23,10 @@ import com.dev.wine.music.app.ui.theme.SansBody
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import com.dev.wine.music.app.ui.theme.RecordBlack
 import com.dev.wine.music.app.ui.theme.SleeveText
 import com.dev.wine.music.app.ui.theme.Terracotta
 import androidx.compose.foundation.layout.Column
@@ -73,6 +67,7 @@ import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
 import com.dev.wine.music.app.ui.components.NoResultsView
+import com.dev.wine.music.app.ui.components.TerracottaAddButton
 import com.dev.wine.music.app.ui.components.labelRes
 
 /** "Todos" first, then every genre the backend accepts. */
@@ -209,28 +204,13 @@ private fun AlbumCatalogBody(
     }
 }
 
-/** Terracotta button from the catalog mockup, with a darker bottom edge like a pressed key. */
 @Composable
 private fun CreateAlbumButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val shape = RoundedCornerShape(4.dp)
-    Button(
+    TerracottaAddButton(
+        text = stringResource(R.string.create_album),
         onClick = onClick,
-        shape = shape,
-        colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = SleeveText),
-        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp),
-        modifier = modifier
-            .background(RecordBlack, shape)
-            .padding(bottom = 3.dp)
-            .testTag("create_album_button"),
-    ) {
-        Icon(Icons.Filled.Add, contentDescription = null)
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            text = stringResource(R.string.create_album),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-        )
-    }
+        modifier = modifier.testTag("create_album_button"),
+    )
 }
 
 @Composable

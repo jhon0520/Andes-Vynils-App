@@ -49,7 +49,11 @@ fun WineMusicNavHost(
             )
         }
         composable<AlbumDetailRoute> {
-            AlbumDetailScreen(onBack = dropUnlessResumed { navController.popBackStack() })
+            AlbumDetailScreen(
+                onBack = dropUnlessResumed { navController.popBackStack() },
+                // TODO: navigate to the add track form when its HU is implemented.
+                onAddTrackClick = {},
+            )
         }
         composable<ArtistsRoute> {
             ArtistListScreen()

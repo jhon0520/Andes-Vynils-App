@@ -52,9 +52,16 @@ class HU02AlbumDetailE2ETest {
     fun detailShowsLabelAndReleaseDateFromTheBackend() {
         openSalsaAlbum()
 
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("Elektra")
+        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("ELEKTRA")
         composeTestRule.onNodeWithTag("album_release_date").assertTextEquals("01/08/1984")
         composeTestRule.onNodeWithTag("album_performers").assertIsDisplayed()
+    }
+
+    @Test
+    fun visitorDoesNotSeeTheAddTrackButton() {
+        openSalsaAlbum()
+
+        composeTestRule.onNodeWithTag("add_track_button").assertDoesNotExist()
     }
 
     @Test

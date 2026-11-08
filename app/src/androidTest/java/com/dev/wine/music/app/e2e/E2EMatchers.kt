@@ -52,3 +52,16 @@ fun ComposeTestRule.enterAsVisitor(timeoutMillis: Long = 15_000L) {
  */
 fun ComposeTestRule.firstNodeWithText(text: String): SemanticsNodeInteraction =
     onAllNodesWithText(text).onFirst()
+
+/**
+ * Enters as the first collector of the picker, so the test lands on the albums screen with a collector profile.
+ * Call it right after the app starts, before waiting for `album_list`.
+ */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeTestRule.enterAsCollector(timeoutMillis: Long = 15_000L) {
+    waitUntilAtLeastOneExists(hasTestTag("role_collector"), timeoutMillis)
+    onNodeWithTag("role_collector").performClick()
+    waitUntilAtLeastOneExists(hasTestTagPrefix("collector_row_"), timeoutMillis)
+    onAllNodes(hasTestTagPrefix("collector_row_")).onFirst().performClick()
+    onNodeWithTag("collector_continue").performClick()
+}

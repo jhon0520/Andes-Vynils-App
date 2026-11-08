@@ -129,7 +129,7 @@ class HU01AlbumCatalogE2ETest {
         scrollToAlbum(SALSA_ALBUM)
         composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
 
-        composeTestRule.waitUntilAtLeastOneExists(hasText(context.getString(R.string.tracks)), timeoutMillis = TIMEOUT)
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithTag("album_detail").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("back_button").performClick()

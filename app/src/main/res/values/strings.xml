@@ -25,13 +25,18 @@
     <string name="album_no_results_genre">No hay álbumes de este género todavía.</string>
     <string name="error_network">No hay conexión. Revisa tu red e intenta de nuevo.</string>
     <string name="error_not_found">No encontramos lo que buscas. Puede que ya no exista.</string>
-    <string name="album_record_label">Sello</string>
-    <string name="album_release_date">Lanzamiento</string>
-    <string name="album_genre">Género</string>
+    <string name="album_detail_eyebrow">Ficha del álbum</string>
+    <string name="album_performers_prefix">por</string>
+    <plurals name="album_track_count">
+        <item quantity="one">%1$d track</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
+    <string name="album_side">Lado %1$s</string>
+    <string name="add_track">Agregar track</string>
     <string name="read_more">Leer más</string>
     <string name="read_less">Leer menos</string>
     <string name="album_tracks_empty">Este álbum aún no tiene tracks.</string>
-    <string name="album_reviews">Reseñas</string>
+    <string name="album_reviews_count">Reseñas · %1$d</string>
     <string name="album_reviews_empty">Aún no hay reseñas de este álbum.</string>
     <string name="review_anonymous">Anónimo</string>
     <string name="review_rating_description">Calificación: %1$d de %2$d</string>
