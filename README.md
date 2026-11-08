@@ -43,6 +43,26 @@ Puedes descargar la aplicación desde ./distributions/app-debug.apk
 
 ## Cómo construir y ejecutar la app
 
+### Atajo: todo en un comando (backend local)
+
+[`scripts/e2e-local.sh`](scripts/e2e-local.sh) deja la app lista contra un BackVynils local y corre las pruebas E2E:
+
+1. Revisa si el backend responde en `localhost:3000`; si no, lo levanta con Docker (Colima) y carga `sql/data.sql` si la base está vacía.
+2. Pone la IP de tu computador en `api.base.url` de `local.properties` (no se sube a git).
+3. Compila el APK debug y lo copia en `distributions/`.
+4. Corre las pruebas E2E de Compose y Kraken (necesita un emulador o teléfono conectado).
+
+```bash
+./scripts/e2e-local.sh                      # todo
+./scripts/e2e-local.sh --skip-tests         # solo backend + APK
+./scripts/e2e-local.sh --skip-compose       # sin pruebas de Compose
+./scripts/e2e-local.sh --skip-kraken        # sin Kraken
+./scripts/e2e-local.sh --backend-dir=RUTA   # BackVynils en otra carpeta (por defecto ../BackVynils)
+./scripts/e2e-local.sh --release            # APK con el dominio por defecto (Render), para el release en main
+```
+
+Si la IP detectada no sirve, pásala a mano: `HOST_IP=192.168.x.x ./scripts/e2e-local.sh`. El script está pensado para macOS (usa `ipconfig getifaddr` y `sed -i ''`). Los pasos manuales están abajo.
+
 ### Requisitos
 
 | Herramienta | Versión |
