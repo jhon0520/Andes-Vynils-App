@@ -40,4 +40,20 @@
     <string name="artist_no_band">Sin banda</string>
     <string name="artist_no_results_type">No hay artistas de este tipo todavía.</string>
     <string name="artist_show_all">Ver todos</string>
+    <!-- Onboarding: selección de perfil -->
+    <string name="onboarding_brand">Vinilos</string>
+    <string name="onboarding_side_a">LADO A · 33⅓</string>
+    <string name="onboarding_tagline">Compra, vende e intercambia discos de vinilo.</string>
+    <string name="onboarding_how_to_enter">¿CÓMO QUIERES INGRESAR?</string>
+    <string name="role_visitor">Visitante</string>
+    <string name="role_visitor_description">Explora álbumes, artistas y coleccionistas</string>
+    <string name="role_collector">Coleccionista</string>
+    <string name="role_collector_description">Comenta, marca favoritos y gestiona tu colección</string>
+    <string name="collector_profile_title">PERFIL DE COLECCIONISTA</string>
+    <string name="collector_picker_question">¿Quién eres?</string>
+    <string name="collector_search_hint">Buscar por nombre o correo</string>
+    <string name="collector_no_results_query">No encontramos coleccionistas para «%1$s».</string>
+    <string name="collector_change_later">Podrás cambiar de perfil luego.</string>
+    <string name="collector_continue_as">Continuar como %1$s</string>
+    <string name="collector_continue">Continuar</string>
 </resources>

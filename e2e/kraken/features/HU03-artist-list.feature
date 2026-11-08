@@ -3,6 +3,8 @@ Feature: HU03 - Browse the list of artists
   @user1 @mobile
   Scenario: As a visitor I see the artists and filter them by type
     Given I wait for 5 seconds
+    # The app always opens on the role selection screen
+    When I tap the element with id "role_visitor"
     When I tap the element with id "nav_artists"
     Then I should see the element with id "artist_list"
     # Both artists are on screen first so that their absence after filtering is meaningful
