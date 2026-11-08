@@ -5,6 +5,9 @@
 ---
 
 #### Inception (semanas 1–2)
+- Actas de reunión
+  - [Semana 1](Inception-Acta-Semana-1)
+  - [Semana 2](Inception-Acta-Semana-2)
 - [Retrospectiva del inception](Inception-Retrospectiva)
 
 #### Sprint 1 (semanas 3–4)

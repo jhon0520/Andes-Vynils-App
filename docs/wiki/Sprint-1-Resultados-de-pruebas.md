@@ -45,6 +45,7 @@ Completar después de la corrida oficial (backend en datos semilla y animaciones
 
 | Fecha | Suite | Comando | Dispositivo / emulador | API | Pasaron | Fallaron | Evidencia |
 |---|---|---|---|---|---:|---:|---|
+| 2026-11-01 | Unitarias + instrumentadas + Kraken (cierre del sprint, ver [acta semana 4](Sprint-1-Acta-Semana-4)) | `./gradlew test`, `./gradlew connectedAndroidTest`, `npm run start` | ✏️ | ✏️ | 50 + 37 + 4 | 0 | ✏️ adjuntar reportes |
 | AAAA-MM-DD | Unitarias | `./gradlew test` | JVM | — | | | `app/build/reports/tests/testDebugUnitTest/index.html` |
 | AAAA-MM-DD | Instrumentadas + E2E | `./gradlew connectedAndroidTest` | Emulador Pixel | 21 | | | `app/build/reports/androidTests/connected/` |
 | AAAA-MM-DD | Instrumentadas + E2E | `./gradlew connectedAndroidTest` | Emulador Pixel | 35 | | | `app/build/reports/androidTests/connected/` |

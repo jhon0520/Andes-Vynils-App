@@ -1,45 +1,36 @@
 # Sprint 1 · Acta de reunión · Semana 4
 
-> ✏️ **Completar con los datos reales de la reunión.** Lo que no lleva ✏️ se tomó de la actividad del repositorio en esa semana (2 – 8 nov 2026) y sirve como guía.
-
 | Campo | Valor |
 |---|---|
-| Fecha y hora | ✏️ Lunes 2026-11-02, hh:mm |
-| Medio | ✏️ Meet / Teams · enlace a la grabación |
-| Asistentes | ✏️ Jhon Edman Linares Rivera · Nicolas Zambrano Madero · Jesus Enrique Quesada Diaz · Juan Martin Santos Ayala |
-| Ausentes | ✏️ |
-| Moderador / secretario | ✏️ |
+| Fecha | Domingo 1 de noviembre de 2026 |
+| Medio | Reunión sincrónica del equipo |
+| Asistentes | Jhon Edman Linares Rivera · Jesús Enrique Quesada Díaz · Nicolas Zambrano Madero |
+| Ausentes | Juan Martin Santos Ayala |
+| Evidencia | Captura de la reunión en el [documento de actas del equipo](https://docs.google.com/document/d/18FE3xbBaMrto_UNlFDcZVraxfUT13bbsTulDw_RbJc0/edit?tab=t.0) |
 
-## Agenda
+## Tema: avance y cierre del sprint 1
 
-1. Revisión del avance del sprint 1 y de los compromisos de la semana 3.
-2. Retroalimentación de la entrega de la iteración 1.
-3. Plan de cierre: release, APK, wiki y pruebas.
+- Se revisó el estado del repositorio frente a la rúbrica de la entrega “Primera versión de Vinilos” y se identificaron los puntos pendientes.
+- Se documentaron en la wiki el [diseño arquitectónico](Sprint-1-Diseno-arquitectonico) del sprint (diagramas de componentes, paquetes, clases y secuencia de HU01–HU03) y la [estrategia de pruebas](Sprint-1-Estrategia-de-pruebas).
+- Se completaron la HU02 (detalle de álbum) y la HU03 (listado de artistas), cada una en su rama `feature/*` desde `develop`.
+- Se incorporó el manejo de errores por tipo (sin red, recurso no encontrado, validación y servidor) en todas las pantallas.
+- Se levantó BackVynils en Docker de forma local para ejecutar las pruebas E2E contra la API real.
+- Se ejecutaron las pruebas automatizadas: **50 unitarias, 37 instrumentadas (Compose/Espresso y E2E) y 4 escenarios Kraken, todas en verde**.
+- Se corrigieron problemas del entorno de pruebas (Espresso en Android 14+, Kraken con Node 20+) y quedaron documentados en la guía E2E.
 
-## Avance revisado
+## Seguimiento de compromisos de la retrospectiva
 
-| HU / tarea | Responsable | Estado | Evidencia |
-|---|---|---|---|
-| Release de la iteración 1 (`develop → release → main`) | Nicolas Zambrano / Jhon Linares | Hecho | PR #23, #25, #26, #27 |
-| `minSdk 21` para soportar Android L | Juan Martin Santos | Hecho | Commit `262a0db` (PR #31) |
-| R8, `shrinkResources` y lint estricto | Juan Martin Santos | Hecho | PR #31 |
-| Estrategia de pruebas con la plantilla del curso | ✏️ | En revisión | [Estrategia](Sprint-1-Estrategia-de-pruebas) |
-| Diagramas UML de componentes y paquetes en inglés | ✏️ | En revisión | [Diseño arquitectónico](Sprint-1-Diseno-arquitectonico) |
-| HU05 · Listado de coleccionistas (pruebas pendientes) | ✏️ | ✏️ | ✏️ |
+Se revisaron los compromisos de crear issues bloqueantes por HU y de planear mejor las reuniones sincrónicas (ambos se dieron por cumplidos en la [retrospectiva del sprint 1](Sprint-1-Retrospectiva)).
 
-## Decisiones
+## Resultados
 
-- Atender la retroalimentación de la iteración 1: `minSdk 21`, estrategia con TNT, retrospectiva del inception, UML, wiki por sprint y artefactos en inglés.
-- ✏️
+- HU01, HU02 y HU03 quedan implementadas y con pruebas automatizadas en verde.
+- La wiki del sprint 1 cuenta con la arquitectura y la estrategia de pruebas.
 
-## Compromisos
+## Tareas pendientes para el cierre de la entrega
 
-| Compromiso | Responsable | Fecha |
-|---|---|---|
-| Generar un APK nuevo con `minSdk 21`, probarlo en un emulador API 21 y publicar el release `v1.0-sprint1` | ✏️ | ✏️ |
-| Ejecutar la suite completa y llenar [Resultados de pruebas](Sprint-1-Resultados-de-pruebas) | ✏️ | ✏️ |
-| ✏️ | ✏️ | ✏️ |
-
-## Impedimentos
-
-- ✏️
+| Tarea | Estado posterior |
+|---|---|
+| Abrir los PR de HU02 y HU03 para revisión y hacer *squash merge* a `develop` | Hecho (PR #20, #21, #22) |
+| Generar el release etiquetado en `main` con el APK en `distributions/` | PR #23 y #25 |
+| Registrar los resultados de pruebas y los defectos como issues | [Resultados de pruebas](Sprint-1-Resultados-de-pruebas) |

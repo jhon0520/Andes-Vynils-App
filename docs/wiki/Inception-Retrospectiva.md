@@ -11,6 +11,8 @@
 | Técnica | Empezar · Dejar · Continuar, con votación y análisis de causa raíz |
 | Foco | Mejora continua de la participación del equipo |
 | Participación | 3 de 4 integrantes (check-ins) · 8 notas |
+| Asistentes | Jhon Edman Linares Rivera · Jesús Enrique Quesada Díaz · Nicolas Zambrano Madero (ausente: Juan Martin Santos Ayala) |
+| Acta | [Sprint 1 · Acta semana 3](Sprint-1-Acta-Semana-3) |
 | ROTI (retorno del tiempo invertido) | **5.0 / 5** |
 
 ## 2. Qué se entregó en el inception

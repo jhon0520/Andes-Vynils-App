@@ -8,7 +8,7 @@ La documentación está ordenada por sprint en la barra lateral.
 
 | Etapa | Semanas | Páginas |
 |---|---|---|
-| Inception | 1–2 | [Retrospectiva del inception](Inception-Retrospectiva) |
+| Inception | 1–2 | [Acta semana 1](Inception-Acta-Semana-1) · [Acta semana 2](Inception-Acta-Semana-2) · [Retrospectiva del inception](Inception-Retrospectiva) |
 | Sprint 1 | 3–4 | [Diseño arquitectónico](Sprint-1-Diseno-arquitectonico) · [Estrategia de pruebas](Sprint-1-Estrategia-de-pruebas) · [Resultados de pruebas](Sprint-1-Resultados-de-pruebas) · [Acta semana 3](Sprint-1-Acta-Semana-3) · [Acta semana 4](Sprint-1-Acta-Semana-4) · [Retrospectiva](Sprint-1-Retrospectiva) |
 | Sprint 2 | 5–6 | *pendiente* |
 | Sprint 3 | 7–8 | *pendiente* |

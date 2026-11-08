@@ -1,42 +1,34 @@
 # Sprint 1 · Acta de reunión · Semana 3
 
-> ✏️ **Completar con los datos reales de la reunión.** Lo que no lleva ✏️ se tomó de la actividad del repositorio en esa semana (26 oct – 1 nov 2026) y sirve como guía.
-
 | Campo | Valor |
 |---|---|
-| Fecha y hora | ✏️ Lunes 2026-10-26, hh:mm |
-| Medio | ✏️ Meet / Teams · enlace a la grabación |
-| Asistentes | ✏️ Jhon Edman Linares Rivera · Nicolas Zambrano Madero · Jesus Enrique Quesada Diaz · Juan Martin Santos Ayala |
-| Ausentes | ✏️ |
-| Moderador / secretario | ✏️ |
+| Fecha | Domingo 25 de octubre de 2026 |
+| Medio | Reunión sincrónica (retrospectiva), facilitada por Nicolas Zambrano Madero |
+| Asistentes | Jhon Edman Linares Rivera · Jesús Enrique Quesada Díaz · Nicolas Zambrano Madero |
+| Ausentes | Juan Martin Santos Ayala |
+| Evidencia | Captura de la reunión en el [documento de actas del equipo](https://docs.google.com/document/d/18FE3xbBaMrto_UNlFDcZVraxfUT13bbsTulDw_RbJc0/edit?tab=t.0) |
 
-## Agenda
+## Tema: retrospectiva del inception
 
-1. Retrospectiva del inception ([ver página](Inception-Retrospectiva)).
-2. Planeación del sprint 1: HU comprometidas, responsables y tareas en el tablero.
-3. Acuerdos técnicos (arquitectura, pruebas, GitFlow).
+La reunión de la semana 3 fue la retrospectiva del inception, con la técnica Empezar · Dejar · Continuar. El detalle completo (votos, causa raíz, compromisos y seguimiento) está en **[Inception · Retrospectiva](Inception-Retrospectiva)**.
 
-## Avance revisado
+## Resultados
 
-| HU / tarea | Responsable | Estado al cierre de la semana | Evidencia |
-|---|---|---|---|
-| HU01 · Catálogo de álbumes | Nicolas Zambrano | Implementada con pruebas | PR #19 |
-| HU02 · Detalle de álbum | Jhon Linares | Implementada, en revisión | PR #21, #22 |
-| HU03 · Listado de artistas | ✏️ | Implementada con E2E y Kraken | PR #20 |
-| Skills y documentación E2E | Jhon Linares / Nicolas Zambrano | Hecho | PR #18, `docs/E2E-testing-guide.md` |
-
-## Decisiones
-
-- ✏️ Ej.: se mantiene una HU por integrante; HU05 queda como objetivo adicional del sprint.
-- ✏️ Ej.: Espresso 3.7.0 para correr pruebas de UI en Android 14+.
-- ✏️
+| Categoría | Nota | Votos |
+|---|---|:---:|
+| Empezar | Asistir a las reuniones | 2 |
+| Empezar | Creación de bloqueantes en las HU | 1 |
+| Empezar | Respetar las sesiones de equipo para mejorar la comunicación | 1 |
+| Dejar de hacer | Dejar de faltar a los compromisos del equipo | 2 |
+| Continuar | La buena comunicación | 4 |
+| Continuar | Trabajo en equipo | 1 |
+| Continuar | Iteraciones continuas para mejorar nuestros trabajos | 1 |
 
 ## Compromisos
 
-| Compromiso | Responsable | Fecha |
-|---|---|---|
-| ✏️ | ✏️ | ✏️ |
-
-## Impedimentos
-
-- ✏️
+| Compromiso | Responsable | Fecha | Criterio de éxito |
+|---|---|---|---|
+| Revisar nuestro trabajo y encontrar mejoras para iterar y mejorar | Nicolas | 28/11/2026 | Calidad de las entregas de las HU |
+| Crear un issue bloqueante en cada HU apenas aparezca y sea relevante | Jesús, Jhon, Nicolas | 26/10/2026 | Los puntos en *carry over* se explican con los bloqueantes de cada HU |
+| Asistir a los compromisos del equipo | Juan Martin | 28/11/2026 | Demuestra interés por los compromisos |
+| Planear mejor las reuniones sincrónicas | Jhon, Jesús, Nicolas | 30/10/2026 | Se aprecia una alta participación |
