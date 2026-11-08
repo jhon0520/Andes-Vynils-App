@@ -1,19 +1,17 @@
 # Inception · Retrospectiva
 
-**Wine Music (Vinilos)** · Equipo 10 · Realizada al inicio del sprint 1 (semana 3)
-
-> ✏️ **Completar con el equipo.** Las secciones marcadas con ✏️ deben llenarse con lo que se dijo en la reunión de retrospectiva (fecha, asistentes, votos y comentarios reales). Lo demás se armó a partir de la evidencia del repositorio (commits, PR y documentos del inception) y debe validarse en la reunión.
+**Wine Music (Vinilos)** · Equipo 10 · Cierre del inception, antes de iniciar el sprint 1
 
 ## 1. Datos de la sesión
 
 | Campo | Valor |
 |---|---|
-| Fecha y hora | ✏️ AAAA-MM-DD, hh:mm (franja del lunes) |
-| Medio | ✏️ Meet / Teams (enlace a la grabación si existe) |
-| Facilitador | ✏️ |
-| Asistentes | ✏️ Jhon Edman Linares Rivera · Nicolas Zambrano Madero · Jesus Enrique Quesada Diaz · Juan Martin Santos Ayala |
-| Dinámica | *Start · Stop · Continue* + valoración 1–5 por dimensión |
-| Duración | ✏️ 45 min |
+| Fecha | 25/10/2026 |
+| Facilitación | Nicolas Zambrano Madero |
+| Técnica | Empezar · Dejar · Continuar, con votación y análisis de causa raíz |
+| Foco | Mejora continua de la participación del equipo |
+| Participación | 3 de 4 integrantes (check-ins) · 8 notas |
+| ROTI (retorno del tiempo invertido) | **5.0 / 5** |
 
 ## 2. Qué se entregó en el inception
 
@@ -29,51 +27,61 @@
 
 ## 3. Valoración del proceso por el equipo
 
-Escala 1 (muy mal) – 5 (muy bien). ✏️ Reemplazar los valores con el promedio de los votos de los cuatro integrantes.
+El equipo valoró la sesión con un **ROTI de 5.0 / 5**. La mayor parte de los votos (4) fue para **la buena comunicación** como lo que mejor funcionó del inception. Los puntos débiles fueron la **asistencia a las reuniones** y el **cumplimiento de los compromisos del equipo** (2 votos cada uno): no todos los integrantes asistieron siempre, y eso dificultó repartir tareas y resolver bloqueantes a tiempo.
 
-| Dimensión | Valoración (1–5) | Comentario del equipo |
-|---|:---:|---|
-| Planeación y estimación del backlog | ✏️ | ✏️ ¿Los puntos asignados a HU01–HU08 reflejan el esfuerzo esperado? |
-| Comunicación y reuniones semanales | ✏️ | ✏️ ¿Se cumplió la franja del lunes? ¿Se dejaron actas? |
-| Uso del tablero e issues | ✏️ | ✏️ ¿Cada tarea tenía responsable y estado actualizado? |
-| GitFlow y revisión de PR | ✏️ | ✏️ ¿Todos abrieron PR y otro integrante los revisó? |
-| Diseño (wireframes) | ✏️ | ✏️ ¿El wireframe cubrió todas las HU y estados (carga, error, vacío)? |
-| Documentación en la wiki | ✏️ | ✏️ La wiki no estaba organizada por sprint ni tenía actas. |
-| Distribución del trabajo | ✏️ | ✏️ |
-| **Promedio** | ✏️ | |
+| Categoría | Nota | Votos |
+|---|---|:---:|
+| **Continuar** | La buena comunicación | 4 |
+| Continuar | Trabajo en equipo | 1 |
+| Continuar | Iteraciones continuas para mejorar nuestros trabajos | 1 |
+| Continuar | Comunicación | 0 |
+| **Empezar** | Asistir a las reuniones | 2 |
+| Empezar | Creación de bloqueantes en las HU | 1 |
+| Empezar | Respetar las sesiones de equipo para mejorar la comunicación | 1 |
+| **Dejar de hacer** | Dejar de faltar a los compromisos del equipo | 2 |
 
-## 4. Qué salió bien (Continue)
+## 4. Temas priorizados y causa raíz
 
-- La arquitectura base (MVVM + Clean Architecture con Hilt, Retrofit y Compose) quedó lista antes del sprint 1, lo que permitió desarrollar HU01, HU02 y HU03 en paralelo con la misma estructura.
-- GitFlow quedó documentado (`docs/gitflow.md`) y se usó desde el inicio con PR hacia `develop`.
-- El README explica cómo compilar y apuntar la app a BackVynils.
-- ✏️ Agregar lo que el equipo mencione.
+1. **La buena comunicación (4 votos).**
+   - Al compartir expectativas, compromisos y metas se puede trazar un plan claro.
+   - Permite sacar mejores conclusiones sobre las ideas y entregar un trabajo en conjunto.
+   - Con buena comunicación hay mejor desempeño.
+2. **Asistir a las reuniones (2 votos).**
+   - Permite organizarse mejor en las tareas y recibir apoyo con los bloqueantes.
+   - Todos tienen compromisos personales, pero todos deben comprometerse con el estudio.
+3. **Dejar de faltar a los compromisos del equipo (2 votos).**
+   - Es la manera más efectiva de comunicar los bloqueantes a todo el equipo.
 
-## 5. Qué se debe mejorar (Start / Stop)
+## 5. Decisiones tomadas
 
-- **Start:** dejar acta de cada reunión semanal en la wiki el mismo día.
-- **Start:** organizar la wiki por sprint en la barra lateral (`_Sidebar`).
-- **Start:** definir la estrategia de pruebas con la plantilla del curso al inicio de cada sprint, no al final.
-- **Stop:** subir commits directos o PR sin revisión de otro integrante.
-- **Stop:** dejar los diagramas y el código con nombres en español; todo artefacto técnico va en inglés.
-- ✏️ Agregar lo que el equipo mencione.
+### 5.1 Compromisos de la retrospectiva
 
-## 6. Decisiones tomadas
+| # | Compromiso | Responsable | Fecha | Criterio de éxito |
+|---|---|---|---|---|
+| C1 | Revisar nuestro trabajo y encontrar mejoras para iterar y mejorar | Nicolas | 28/11/2026 | Calidad de las entregas de las HU |
+| C2 | Crear un issue bloqueante en cada HU apenas aparezca y sea relevante | Jesús, Jhon, Nicolas | 26/10/2026 | Los puntos en *carry over* se explican con los bloqueantes que tuvo cada HU |
+| C3 | Asistir a los compromisos del equipo | Juan Martin | 28/11/2026 | Demuestra interés por los compromisos |
+| C4 | Planear mejor las reuniones sincrónicas | Jhon, Jesús, Nicolas | 30/10/2026 | Se aprecia una alta participación |
 
-| # | Decisión | Motivo | Responsable | Fecha límite | Criterio de éxito |
-|---|---|---|---|---|---|
-| D1 | Usar Jetpack Compose + MVVM + Repository + Service Adapter (Retrofit) con Hilt | Lo exige la rúbrica (10 + 10 puntos) y permite probar cada capa por separado | Todo el equipo | Inicio S1 | HU01–HU03 implementadas con la misma estructura |
-| D2 | Aplicar GitFlow: `feature/*` desde `develop`, PR revisado por otro integrante, *squash and merge* | Trazabilidad y nota de prácticas ágiles | Todo el equipo | Continuo | Todos los integrantes con al menos un PR por sprint |
-| D3 | Asignar una HU por integrante en el sprint 1 | Avanzar en paralelo y que todos aporten código | ✏️ | S3 | Cada HU con su PR |
-| D4 | Escribir pruebas unitarias y E2E (Espresso/Compose + Kraken) dentro de la misma HU | Definición de terminado: una HU sin pruebas en verde no se cierra | Responsable de cada HU | Fin de S4 | Cada HU con E2E en verde |
-| D5 | Publicar el APK en `distributions/` y un release etiquetado en `main` por sprint | Requisito de la entrega | ✏️ | Domingo de S4 | Release `v1.0-sprint1` con el APK adjunto |
-| D6 | Mantener toda la documentación en la wiki ordenada por sprint, con actas semanales | Retroalimentación del inception | Nicolas Zambrano | Cada lunes | Acta publicada el mismo día |
-| D7 | ✏️ | ✏️ | ✏️ | ✏️ | ✏️ |
+### 5.2 Decisiones técnicas y de proceso del inception
 
-## 7. Seguimiento
+Tomadas por el equipo durante el inception (evidencia en el repositorio):
 
-Los compromisos de esta retrospectiva se revisan al inicio de la [retrospectiva del sprint 1](Sprint-1-Retrospectiva).
-
-| Compromiso | ¿Se cumplió? | Comentario |
+| # | Decisión | Motivo |
 |---|---|---|
-| D1–D6 | ✏️ se diligencia en la retro del sprint 1 | |
+| D1 | Jetpack Compose + MVVM + Repository + Service Adapter (Retrofit) con Hilt | Lo exige la rúbrica y permite probar cada capa por separado |
+| D2 | GitFlow: `feature/*` desde `develop`, PR revisado por otro integrante, *squash and merge* | Trazabilidad del trabajo de cada integrante |
+| D3 | Una HU por integrante en el sprint 1 | Avanzar en paralelo y que todos aporten código |
+| D4 | Pruebas unitarias y E2E (Espresso/Compose + Kraken) dentro de la misma HU | Una HU sin pruebas en verde no se considera terminada |
+| D5 | APK en `distributions/` y release etiquetado en `main` por sprint | Requisito de la entrega |
+
+## 6. Seguimiento
+
+Revisado al inicio de la [retrospectiva del sprint 1](Sprint-1-Retrospectiva) (08/11/2026): **2 de 4 compromisos cumplidos**.
+
+| Compromiso | Estado al 08/11/2026 |
+|---|---|
+| C1 · Revisar nuestro trabajo para iterar y mejorar | 🟡 En curso |
+| C2 · Issue bloqueante en cada HU | ✅ Cumplido |
+| C3 · Asistir a los compromisos del equipo | 🟡 En curso |
+| C4 · Planear mejor las reuniones sincrónicas | ✅ Cumplido |

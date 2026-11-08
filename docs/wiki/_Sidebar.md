@@ -17,9 +17,9 @@
 - Actas de reunión
   - [Semana 3](Sprint-1-Acta-Semana-3)
   - [Semana 4](Sprint-1-Acta-Semana-4)
+- [Retrospectiva del sprint 1](Sprint-1-Retrospectiva)
 
 #### Sprint 2 (semanas 5–6)
-- Retrospectiva del sprint 1 *(pendiente)*
 - Reflexión de estimación y burndown *(pendiente)*
 
 #### Sprint 3 (semanas 7–8)
