@@ -150,6 +150,9 @@ dependencies {
     // Images
     implementation(libs.coil.compose)
 
+    // Memory-efficient collections (LruCache, SparseArrayCompat); already pulled in by Compose
+    implementation(libs.androidx.collection)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)

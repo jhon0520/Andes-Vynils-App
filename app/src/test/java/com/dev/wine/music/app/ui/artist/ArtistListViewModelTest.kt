@@ -5,6 +5,7 @@ import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.usecase.GetArtistsUseCase
 import com.dev.wine.music.app.fakes.FakeArtistRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.util.MainDispatcherRule
@@ -34,7 +35,7 @@ class ArtistListViewModelTest {
     )
 
     /** uiState uses stateIn(WhileSubscribed): it only computes while someone collects it. */
-    private fun TestScope.createViewModel() = ArtistListViewModel(GetArtistsUseCase(repository)).also { viewModel ->
+    private fun TestScope.createViewModel() = ArtistListViewModel(GetArtistsUseCase(repository, testDispatcher)).also { viewModel ->
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
     }
 

@@ -341,14 +341,31 @@ interface AlbumRepository {
     suspend fun getAlbum(albumId: Int): Album
 }
 
-// data/repository
+// data/repository: answers from the cache first; network, parsing and mapping on IO
 class AlbumRepositoryImpl @Inject constructor(
     private val api: AlbumApi,
+    private val cache: RepositoryCache,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : AlbumRepository {
-    override suspend fun getAlbums(): List<Album> = api.getAlbums().map { it.toDomain() }
-    override suspend fun getAlbum(albumId: Int): Album = api.getAlbum(albumId).toDomain()
+    override suspend fun getAlbums(): List<Album> {
+        cache.albums?.let { return it }
+        val albums = withContext(ioDispatcher) {
+            safeApiCall { api.getAlbums().fastMap { it.toDomain() } }
+        }
+        cache.albums = albums
+        return albums
+    }
+    // getAlbum(id) does the same with cache.albumDetails (LruCache, 20 entries)
 }
 ```
+
+### Desempeño (sprint 2)
+
+Reglas para todo código nuevo. El detalle y la justificación están en la wiki: [SP02 · Micro-optimizaciones](https://github.com/jhon0520/Andes-Vynils-App/wiki/SP02%E2%80%90Micro%E2%80%90optimizaciones).
+
+- **ANR:** los repositorios reciben `@IoDispatcher` y hacen la red y el mapeo en `withContext(ioDispatcher)`. Los casos de uso que ordenan o cruzan listas reciben `@DefaultDispatcher`. En las pruebas se pasa `testDispatcher` (`fakes/TestDispatchers.kt`).
+- **Memoria:** los repositorios de lectura consultan `RepositoryCache` antes de ir a la red y guardan solo las respuestas exitosas. **Toda HU que escriba datos (HU07 en adelante) debe llamar a `RepositoryCache.invalidateAlbums()`** (o limpiar la lista que corresponda) después de un POST exitoso. Coil se configura en `WineMusicApp` (caché de memoria y de disco, RGB_565) y `onTrimMemory` vacía `RepositoryCache`.
+- **Micro-optimizaciones:** usar `fastMap` y `fastForEach` (`util/FastCollections.kt`) en listas que se recorren en cada carga; usar `SparseArrayCompat` para mapas con claves `Int`; ordenar con `String.CASE_INSENSITIVE_ORDER` en lugar de `lowercase()`; sacar de los ciclos todo cálculo que no dependa del elemento.
 
 ### Caso de uso y ViewModel
 
@@ -487,6 +504,7 @@ El código es coherente con el diseño cuando los paquetes y clases coinciden co
 - [ ] La pantalla tiene su función `Content` sin estado y muestra carga, error y vacío.
 - [ ] Las acciones de coleccionista solo aparecen con ese perfil.
 - [ ] Hay pruebas del caso de uso y del ViewModel con los repositorios falsos de `fakes`.
+- [ ] Red y mapeo en `@IoDispatcher`, y orden o cruces en `@DefaultDispatcher`; si la HU escribe datos, invalida `RepositoryCache`.
 - [ ] Si se agregó una clase, ya está en el diagrama de clases.
 - [ ] La app compila y corre siguiendo solo el README.
 

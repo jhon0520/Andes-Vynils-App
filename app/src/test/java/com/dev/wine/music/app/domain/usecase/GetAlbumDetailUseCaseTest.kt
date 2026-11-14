@@ -3,6 +3,7 @@ package com.dev.wine.music.app.domain.usecase
 import com.dev.wine.music.app.fakes.FakeAlbumRepository
 import com.dev.wine.music.app.fakes.FakeCollectorRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -26,7 +27,7 @@ class GetAlbumDetailUseCaseTest {
         ),
     )
 
-    private val useCase = GetAlbumDetailUseCase(albumRepository, collectorRepository)
+    private val useCase = GetAlbumDetailUseCase(albumRepository, collectorRepository, testDispatcher)
 
     @Test
     fun `fills each review author from the collector who wrote it`() = runTest {

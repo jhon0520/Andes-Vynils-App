@@ -40,6 +40,16 @@ When('I scroll to the text {kraken-string} in the element with id {kraken-string
   await el.waitForDisplayed({ timeout: TIMEOUT });
 });
 
+// Same as above, but finds the item by its id (testTag). Use it for items whose text changes between
+// backends, like the seed album: its id (album_item_100) is the same everywhere, its name is not.
+When('I scroll to the element with id {kraken-string} in the element with id {kraken-string}', async function (itemId, containerId) {
+  await (await this.driver.$(byId(containerId))).waitForDisplayed({ timeout: TIMEOUT });
+  const el = await this.driver.$(
+    `android=new UiScrollable(new UiSelector().resourceId("${containerId}")).scrollIntoView(new UiSelector().resourceId("${itemId}"))`,
+  );
+  await el.waitForDisplayed({ timeout: TIMEOUT });
+});
+
 When('I hide the keyboard', async function () {
   if (await this.driver.isKeyboardShown()) {
     await this.driver.hideKeyboard();

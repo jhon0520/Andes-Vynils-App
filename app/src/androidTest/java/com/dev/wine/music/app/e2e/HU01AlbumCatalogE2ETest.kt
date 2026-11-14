@@ -1,6 +1,7 @@
 package com.dev.wine.music.app.e2e
 
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasAnyDescendant
@@ -26,10 +27,13 @@ import org.junit.runner.RunWith
 
 /**
  * HU01 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
- * Rubén Blades has "Buscando América Prueba" (Salsa, id 100) and Queen has "A Night at the Opera" (Rock).
+ * Rubén Blades has "Buscando América" (Salsa, id 100) and Queen has "A Night at the Opera" (Rock).
  * The checks only ask for these albums to exist, never for counts or order, so albums created by
- * other tests do not break them. Other teams add albums with repeated names (there are many
- * "Buscando América" copies without performers), so cards are found with [firstNodeWithText].
+ * other tests do not break them.
+ *
+ * The salsa album is found by its card tag (`album_item_100`), not by its name: the seed id is the
+ * same in every BackVynils, but its name is not (some shared backends renamed it, e.g.
+ * "Buscando América Prueba", and other teams add copies with the same name and no performers).
  */
 @OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
@@ -57,12 +61,19 @@ class HU01AlbumCatalogE2ETest {
         composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText(name))
     }
 
+    /** Scrolls to the seed salsa album by its id and checks that its card shows its name. */
+    private fun scrollToSalsaAlbum() {
+        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasTestTag(SALSA_ALBUM_TAG))
+        composeTestRule.onNodeWithTag(SALSA_ALBUM_TAG, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assert(hasAnyDescendant(hasText(SALSA_ALBUM_NAME, substring = true)))
+    }
+
     @Test
     fun catalogShowsTheAlbumsFromTheBackendWithTheirPerformer() {
         waitForCatalog()
 
-        scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        scrollToSalsaAlbum()
         scrollToAlbum(ROCK_ALBUM)
         composeTestRule.firstNodeWithText(ROCK_ALBUM).assertIsDisplayed()
     }
@@ -80,7 +91,7 @@ class HU01AlbumCatalogE2ETest {
             matcher = hasAnyDescendant(hasText(ROCK_PERFORMER, substring = true)),
             timeoutMillis = TIMEOUT,
         )
-        composeTestRule.onNodeWithText(SALSA_ALBUM).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(SALSA_ALBUM_TAG).assertDoesNotExist()
         scrollToAlbum(ROCK_ALBUM)
         composeTestRule.firstNodeWithText(ROCK_ALBUM).assertIsDisplayed()
     }
@@ -99,8 +110,7 @@ class HU01AlbumCatalogE2ETest {
             matcher = hasAnyDescendant(hasText(SALSA_PERFORMER, substring = true)),
             timeoutMillis = TIMEOUT,
         )
-        scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        scrollToSalsaAlbum()
     }
 
     @Test
@@ -118,16 +128,15 @@ class HU01AlbumCatalogE2ETest {
         composeTestRule.onNodeWithTag("album_genre_tab_all").assertIsSelected()
 
         waitForCatalog()
-        scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).assertIsDisplayed()
+        scrollToSalsaAlbum()
     }
 
     @Test
     fun tappingAnAlbumOpensItsDetailAndBackReturnsToTheCatalog() {
         waitForCatalog()
 
-        scrollToAlbum(SALSA_ALBUM)
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
+        scrollToSalsaAlbum()
+        composeTestRule.onNodeWithTag(SALSA_ALBUM_TAG).performClick()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
         composeTestRule.onNodeWithTag("album_detail").assertIsDisplayed()
@@ -138,7 +147,9 @@ class HU01AlbumCatalogE2ETest {
 
     private companion object {
         const val TIMEOUT = 15_000L
-        const val SALSA_ALBUM = "Buscando América Prueba"
+        const val SALSA_ALBUM_TAG = "album_item_100"
+        /** Prefix of the seed name, so it also matches renamed copies like "Buscando América Prueba". */
+        const val SALSA_ALBUM_NAME = "Buscando América"
         const val SALSA_PERFORMER = "Rubén Blades"
         const val ROCK_ALBUM = "A Night at the Opera"
         const val ROCK_PERFORMER = "Queen"

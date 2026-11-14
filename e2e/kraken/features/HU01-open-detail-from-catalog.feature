@@ -7,8 +7,9 @@ Feature: HU01 - Tapping an album in the catalog opens its detail
     When I tap the element with id "role_visitor"
     When I type "<ALBUM_QUERY>" into the element with id "album_search_input"
     And I hide the keyboard
-    And I scroll to the text "<SALSA_ALBUM>" in the element with id "album_list"
-    And I tap the text "<SALSA_ALBUM>"
+    # The seed album is found by its id: its name differs between backends
+    And I scroll to the element with id "<SALSA_ALBUM_ID>" in the element with id "album_list"
+    And I tap the element with id "<SALSA_ALBUM_ID>"
     Then I should see the element with id "album_detail"
     When I tap the element with id "back_button"
     Then I should see the element with id "album_list"

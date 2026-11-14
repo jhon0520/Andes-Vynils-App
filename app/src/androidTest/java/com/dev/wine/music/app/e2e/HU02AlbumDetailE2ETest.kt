@@ -4,7 +4,6 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -21,9 +20,11 @@ import org.junit.runner.RunWith
 
 /**
  * HU02 against the real BackVynils (api.base.url in gradle.properties) and its seed data:
- * "Buscando América Prueba" (id 100, Elektra, 01/08/1984) opens with "Decisiones" (5:05) and a review
- * by Manolo Bellon. The many "Buscando América" copies in the backend have no tracks or reviews,
- * and this album repeats tracks and authors, so texts are found with [firstNodeWithText].
+ * the album with id 100 ("Buscando América", Elektra, 01/08/1984) opens with "Decisiones" (5:05)
+ * and a review by Manolo Bellon. It is opened by its card tag (`album_item_100`), not by its name:
+ * the seed id is the same in every BackVynils but the name is not (some shared backends renamed it,
+ * and other teams add copies with the same name and no tracks). This album repeats tracks and
+ * authors, so texts are found with [firstNodeWithText].
  */
 @OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
@@ -43,8 +44,8 @@ class HU02AlbumDetailE2ETest {
 
     private fun openSalsaAlbum() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText(SALSA_ALBUM))
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
+        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasTestTag(SALSA_ALBUM_TAG))
+        composeTestRule.onNodeWithTag(SALSA_ALBUM_TAG).performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
     }
 
@@ -91,7 +92,7 @@ class HU02AlbumDetailE2ETest {
 
     private companion object {
         const val TIMEOUT = 15_000L
-        const val SALSA_ALBUM = "Buscando América Prueba"
+        const val SALSA_ALBUM_TAG = "album_item_100"
         const val FIRST_TRACK = "Decisiones"
         const val REVIEW_AUTHOR = "Manolo Bellon"
     }

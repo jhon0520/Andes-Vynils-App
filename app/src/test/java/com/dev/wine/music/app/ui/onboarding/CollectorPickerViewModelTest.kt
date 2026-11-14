@@ -8,6 +8,7 @@ import com.dev.wine.music.app.domain.usecase.SelectCollectorUseCase
 import com.dev.wine.music.app.fakes.FakeCollectorRepository
 import com.dev.wine.music.app.fakes.FakeSessionRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.util.MainDispatcherRule
@@ -39,7 +40,7 @@ class CollectorPickerViewModelTest {
 
     private fun TestScope.createViewModel(savedState: SavedStateHandle = SavedStateHandle()) =
         CollectorPickerViewModel(
-            GetCollectorsUseCase(collectorRepository),
+            GetCollectorsUseCase(collectorRepository, testDispatcher),
             SelectCollectorUseCase(sessionRepository),
             savedState,
         ).also { viewModel ->
