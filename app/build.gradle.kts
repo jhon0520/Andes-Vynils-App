@@ -82,6 +82,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+        // Release code (R8, no debug logging) that the Android Studio Profiler can attach to.
+        // Debug builds of Compose are not optimized and overstate CPU use and jank.
+        // Profile with `./gradlew installProfiling`; see docs/performance/README.md.
+        create("profiling") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

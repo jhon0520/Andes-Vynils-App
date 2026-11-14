@@ -58,16 +58,32 @@ class ArtistRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getArtist(artistId: Int, type: ArtistType): ArtistDetail = withContext(ioDispatcher) {
-        safeApiCall {
-            when (type) {
-                ArtistType.MUSICIAN -> api.getMusician(artistId)
-                ArtistType.BAND -> api.getBand(artistId)
-            }.toDetail(type)
+    /** Reopening an artist answers from [cache]: no second request for the detail. */
+    override suspend fun getArtist(artistId: Int, type: ArtistType): ArtistDetail {
+        val details = when (type) {
+            ArtistType.MUSICIAN -> cache.musicianDetails
+            ArtistType.BAND -> cache.bandDetails
         }
+        details[artistId]?.let { return it }
+        val detail = withContext(ioDispatcher) {
+            safeApiCall {
+                when (type) {
+                    ArtistType.MUSICIAN -> api.getMusician(artistId)
+                    ArtistType.BAND -> api.getBand(artistId)
+                }.toDetail(type)
+            }
+        }
+        details.put(artistId, detail)
+        return detail
     }
 
-    override suspend fun getPerformerPrizes(): List<ArtistPrize> = withContext(ioDispatcher) {
-        safeApiCall { api.getPerformerPrizes().fastMap { it.toDomain() } }
+    /** Every artist detail needs the whole prize catalog, so it is fetched once and kept in [cache]. */
+    override suspend fun getPerformerPrizes(): List<ArtistPrize> {
+        cache.performerPrizes?.let { return it }
+        val prizes = withContext(ioDispatcher) {
+            safeApiCall { api.getPerformerPrizes().fastMap { it.toDomain() } }
+        }
+        cache.performerPrizes = prizes
+        return prizes
     }
 }

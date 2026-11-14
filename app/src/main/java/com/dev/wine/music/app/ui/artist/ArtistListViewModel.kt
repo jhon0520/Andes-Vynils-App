@@ -3,6 +3,7 @@ package com.dev.wine.music.app.ui.artist
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.usecase.GetArtistsUseCase
@@ -10,11 +11,13 @@ import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +32,7 @@ data class ArtistCatalog(
 @HiltViewModel
 class ArtistListViewModel @Inject constructor(
     private val getArtists: GetArtistsUseCase,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val loadedArtists = MutableStateFlow<UiState<List<Artist>>>(UiState.Loading)
@@ -37,6 +41,7 @@ class ArtistListViewModel @Inject constructor(
     val selectedType: StateFlow<ArtistType?> = _selectedType.asStateFlow()
 
     // The type filter works on the list already in memory, so switching tabs never calls the API.
+    // flowOn runs the filtering on the Default dispatcher; the screen still collects on main.
     val uiState: StateFlow<UiState<ArtistCatalog>> =
         combine(loadedArtists, _selectedType) { state, type ->
             when (state) {
@@ -49,7 +54,9 @@ class ArtistListViewModel @Inject constructor(
                     ),
                 )
             }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Loading)
+        }
+            .flowOn(defaultDispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Loading)
 
     init {
         loadArtists()

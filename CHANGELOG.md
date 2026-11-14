@@ -6,6 +6,13 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 
 ### Agregado
 
+- **Rendimiento (sprint 2), sobre la base de `RepositoryCache` y los dispatchers inyectados**
+  - Los filtros de HU01, HU03 y del selector de coleccionista corren fuera del hilo principal (`flowOn`).
+  - La búsqueda de HU01 normaliza los nombres una sola vez al cargar el catálogo, no en cada tecla.
+  - Caché del detalle de artista y del catálogo de premios (HU04), con `invalidateArtists()` para las HU de escritura.
+  - `onTrimMemory` también vacía la caché con `TRIM_MEMORY_RUNNING_CRITICAL`.
+  - StrictMode en el build debug.
+  - Build type `profiling`, script `scripts/perf-capture.sh` y guías en `docs/performance/` y `docs/emuladores-terminal.md`.
 - **HU01 · Catálogo de álbumes completo**
   - Búsqueda por nombre de álbum o de intérprete sobre la lista ya cargada, sin nuevas llamadas al backend. Ignora mayúsculas y tildes («ruben» encuentra «Rubén»).
   - Filtro por género (Todos, Salsa, Rock, Clásica, Folk) que se combina con la búsqueda.
