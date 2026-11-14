@@ -150,9 +150,84 @@ const REQUEST = /-->\s+(GET|POST|PUT|PATCH|DELETE)\s+(\S+)/;
 const RESPONSE = /<--\s+(\d{3})\b.*?\s(https?:\/\/\S+)\s+\((\d+)ms/;
 const urlPath = (url) => url.replace(/^https?:\/\/[^/]+/, '');
 
-// The OkHttp logging interceptor (debug builds) writes "--> GET <url>" for each API call.
-// Covers are loaded by Coil with its own client, so they are not counted here.
+// ---------- API requests ----------
+// With a local backend the phone reaches it through `adb reverse`. A small proxy on this computer sits
+// in that path and records every API call: logcat is not reliable for this (some phones, like the
+// HONOR of DEV-1, drop app log lines when the app logs a lot, and the OkHttp bodies are long).
+// Covers are loaded by Coil from other hosts, so they are not counted.
+const PROXY_PORT = Number(process.env.PROFILE_PROXY_PORT || 3999);
+const REPO_ROOT = path.resolve(__dirname, '../../../../..');
+
+function localBackendPort() {
+  for (const file of ['local.properties', 'gradle.properties']) {
+    const p = path.join(REPO_ROOT, file);
+    if (!fs.existsSync(p)) continue;
+    const m = fs.readFileSync(p, 'utf8').match(/^\s*api\.base\.url\s*=\s*(\S+)/m);
+    if (!m) continue;
+    const local = m[1].match(/^http:\/\/(?:localhost|127\.0\.0\.1):(\d+)\//);
+    return local ? Number(local[1]) : null;
+  }
+  return null;
+}
+
+const proxy = { server: null, sockets: new Set(), requests: [], backendPort: null };
+
+function startProxy(serial) {
+  const backendPort = localBackendPort();
+  if (!backendPort) return Promise.resolve(false);
+  proxy.backendPort = backendPort;
+  proxy.requests = [];
+  const http = require('http');
+  proxy.server = http.createServer((req, res) => {
+    const entry = { method: req.method, path: req.url, at: Date.now() };
+    proxy.requests.push(entry);
+    const upstream = http.request(
+      { host: '127.0.0.1', port: backendPort, method: req.method, path: req.url, headers: req.headers },
+      (up) => {
+        entry.status = up.statusCode;
+        up.on('end', () => { entry.ms = Date.now() - entry.at; });
+        res.writeHead(up.statusCode, up.headers);
+        up.pipe(res);
+      },
+    );
+    upstream.on('error', (e) => { res.writeHead(502); res.end(String(e)); });
+    req.pipe(upstream);
+  });
+  proxy.server.on('connection', (s) => { proxy.sockets.add(s); s.on('close', () => proxy.sockets.delete(s)); });
+  return new Promise((resolve) => {
+    proxy.server.listen(PROXY_PORT, '127.0.0.1', () => {
+      // From now on the app's calls to localhost:<backend> go through the proxy.
+      execFileSync('adb', ['-s', serial, 'reverse', `tcp:${backendPort}`, `tcp:${PROXY_PORT}`]);
+      resolve(true);
+    });
+  });
+}
+
+async function stopProxy(serial) {
+  if (!proxy.server) return;
+  try {
+    execFileSync('adb', ['-s', serial, 'reverse', `tcp:${proxy.backendPort}`, `tcp:${proxy.backendPort}`]);
+  } catch (e) {
+    // The next scenario sets the reverse again in its Before hook.
+  }
+  for (const s of proxy.sockets) s.destroy();
+  await new Promise((resolve) => proxy.server.close(resolve));
+  proxy.server = null;
+}
+
 function readNetwork(profile) {
+  if (proxy.server) {
+    return {
+      source: 'proxy',
+      requests: proxy.requests.map(({ method, path: p }) => ({ method, path: p })),
+      responses: proxy.requests.filter((r) => r.ms !== undefined).map(({ status, path: p, ms }) => ({ status, path: p, ms })),
+    };
+  }
+  return readNetworkFromLogcat(profile);
+}
+
+// Fallback for a remote backend: the OkHttp logging interceptor (debug builds) writes "--> GET <url>".
+function readNetworkFromLogcat(profile) {
   const out = tryShell(profile.serial, `logcat -d -v brief --pid=${profile.pid}`);
   const requests = [];
   const responses = [];
@@ -162,7 +237,7 @@ function readNetwork(profile) {
     const res = line.match(RESPONSE);
     if (res) responses.push({ status: Number(res[1]), path: urlPath(res[2]), ms: Number(res[3]) });
   }
-  return { requests, responses };
+  return { source: 'logcat', requests, responses };
 }
 
 // ---------- dumpsys ----------
@@ -240,6 +315,7 @@ When('I start profiling {kraken-string}', async function (scenario) {
   tryShell(serial, 'logcat -b all -c');
   tryShell(serial, `dumpsys gfxinfo ${PKG} reset`);
   const start = parseStat(shell(serial, statCommand(pid)));
+  await startProxy(serial);
   this.profile = {
     scenario, serial, pid, facts, start,
     startedAt: Date.now(),
@@ -322,6 +398,7 @@ After(async function ({ result }) {
     p.sampler.running = false;
     await p.sampler.done;
   }
+  if (this.device && this.device.id) await stopProxy(this.device.id);
   if (result.status === Status.FAILED && this.device && this.device.id) {
     fs.mkdirSync(FAILURES_DIR, { recursive: true });
     const name = `${BUILD}-${p ? p.scenario : 'escenario'}-run${RUN}-${Date.now()}.log`;
@@ -382,6 +459,7 @@ Then('I save the profiling', async function () {
     },
     frames,
     network: {
+      source: network.source,
       apiRequests: network.requests.length,
       requests: network.requests,
       responses: network.responses,
