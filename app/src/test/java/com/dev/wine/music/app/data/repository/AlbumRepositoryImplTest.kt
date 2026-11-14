@@ -1,5 +1,6 @@
 package com.dev.wine.music.app.data.repository
 
+import com.dev.wine.music.app.data.cache.RepositoryCache
 import com.dev.wine.music.app.data.remote.api.AlbumApi
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
 import com.dev.wine.music.app.domain.model.AppError
@@ -20,11 +21,21 @@ class AlbumRepositoryImplTest {
     /** Answers with [albums], or throws [error] when it is set. */
     private class FakeAlbumApi(
         private val albums: List<AlbumDto> = emptyList(),
-        private val error: Exception? = null,
+        var error: Exception? = null,
     ) : AlbumApi {
-        override suspend fun getAlbums(): List<AlbumDto> = error?.let { throw it } ?: albums
-        override suspend fun getAlbum(albumId: Int): AlbumDto =
-            error?.let { throw it } ?: albums.first { it.id == albumId }
+        /** How many requests reached the "network". */
+        var calls = 0
+            private set
+
+        override suspend fun getAlbums(): List<AlbumDto> {
+            calls++
+            return error?.let { throw it } ?: albums
+        }
+
+        override suspend fun getAlbum(albumId: Int): AlbumDto {
+            calls++
+            return error?.let { throw it } ?: albums.first { it.id == albumId }
+        }
     }
 
     private fun httpError(code: Int) = HttpException(
@@ -35,7 +46,7 @@ class AlbumRepositoryImplTest {
 
     @Test
     fun `maps the albums from the api`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), testDispatcher)
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), RepositoryCache(), testDispatcher)
 
         assertEquals("Buscando América", repository.getAlbums().single().name)
         assertEquals(100, repository.getAlbum(100).id)
@@ -44,7 +55,7 @@ class AlbumRepositoryImplTest {
     @Test
     fun `the network call and the mapping run on the io dispatcher`() = runTest {
         val io = RecordingDispatcher()
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), io)
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), RepositoryCache(), io)
 
         repository.getAlbums()
 
@@ -53,22 +64,73 @@ class AlbumRepositoryImplTest {
 
     @Test
     fun `no connection while loading the catalog becomes Network`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = IOException("timeout")), testDispatcher)
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = IOException("timeout")), RepositoryCache(), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbums() } is AppError.Network)
     }
 
     @Test
     fun `a missing album becomes NotFound`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(404)), testDispatcher)
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(404)), RepositoryCache(), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbum(999) } is AppError.NotFound)
     }
 
     @Test
     fun `a server error becomes Server`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(500)), testDispatcher)
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(500)), RepositoryCache(), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbums() } is AppError.Server)
+    }
+
+    private val buscandoAmerica = AlbumDto(id = 100, name = "Buscando América")
+
+    @Test
+    fun `the second time the catalog comes from the cache without calling the api`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(buscandoAmerica))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+
+        repository.getAlbums()
+        val again = repository.getAlbums()
+
+        assertEquals("Buscando América", again.single().name)
+        assertEquals(1, api.calls)
+    }
+
+    @Test
+    fun `an album already opened comes from the cache`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(buscandoAmerica))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+
+        repository.getAlbum(100)
+        repository.getAlbum(100)
+
+        assertEquals(1, api.calls)
+    }
+
+    @Test
+    fun `a failed load is not cached so retrying calls the api again`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(buscandoAmerica), error = IOException("timeout"))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+        failureOf { repository.getAlbums() }
+
+        api.error = null
+        val albums = repository.getAlbums()
+
+        assertEquals(1, albums.size)
+        assertEquals(2, api.calls)
+    }
+
+    @Test
+    fun `after the cache is cleared the catalog is fetched again`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(buscandoAmerica))
+        val cache = RepositoryCache()
+        val repository = AlbumRepositoryImpl(api, cache, testDispatcher)
+        repository.getAlbums()
+
+        cache.clear()
+        repository.getAlbums()
+
+        assertEquals(2, api.calls)
     }
 }
