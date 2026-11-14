@@ -49,6 +49,8 @@ FAILED=0
 for run in $(seq 1 "$RUNS"); do
   echo "== Corrida $run de $RUNS · $BUILD · $(adb shell getprop ro.product.model | tr -d '\r') =="
   PROFILE_BUILD="$BUILD" PROFILE_RUN="$run" kraken-node run || FAILED=1
+  # Nothing of a run may stay alive into the next one.
+  pkill -f "kraken-node/bin/cucumber" 2>/dev/null || true
 done
 
 node "$HERE/summarize.js"

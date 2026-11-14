@@ -11,7 +11,7 @@ const { promisify } = require('util');
 
 // Same cucumber instance as Kraken: it lives in e2e/kraken/node_modules.
 const KRAKEN_DIR = path.resolve(__dirname, '../../../../kraken');
-const { Given, When, Then } = require(require.resolve('@cucumber/cucumber', { paths: [KRAKEN_DIR] }));
+const { Given, When, Then, After, Status } = require(require.resolve('@cucumber/cucumber', { paths: [KRAKEN_DIR] }));
 
 const PKG = 'com.dev.wine.music.app';
 const ACTIVITY = `${PKG}/.MainActivity`;
@@ -20,6 +20,7 @@ const TIMEOUT = 20000;
 const POLL_MS = 50;
 const SAMPLE_MS = 500;
 const RESULTS_DIR = path.resolve(__dirname, '../../../results');
+const FAILURES_DIR = path.resolve(__dirname, '../../../reports/fallas');
 const BUILD = process.env.PROFILE_BUILD || 'sin-etiqueta';
 const RUN = Number(process.env.PROFILE_RUN || 1);
 
@@ -290,6 +291,7 @@ When('I mark the network checkpoint {kraken-string}', function (name) {
   this.profile.checkpoints.push({ name, requestsBefore: readNetwork(this.profile).requests.length });
 });
 
+// A real finger swipe with `adb shell input swipe` (Appium 1.22 does not take W3C actions here).
 When('I swipe up {int} times in the element with id {kraken-string}', async function (times, id) {
   const el = await this.driver.$(byId(id));
   await el.waitForDisplayed({ timeout: TIMEOUT });
@@ -299,19 +301,7 @@ When('I swipe up {int} times in the element with id {kraken-string}', async func
   const from = Math.round(y + height * 0.8);
   const to = Math.round(y + height * 0.25);
   for (let i = 0; i < times; i++) {
-    await this.driver.performActions([{
-      type: 'pointer',
-      id: 'finger',
-      parameters: { pointerType: 'touch' },
-      actions: [
-        { type: 'pointerMove', duration: 0, x: cx, y: from },
-        { type: 'pointerDown', button: 0 },
-        { type: 'pause', duration: 50 },
-        { type: 'pointerMove', duration: 250, x: cx, y: to },
-        { type: 'pointerUp', button: 0 },
-      ],
-    }]);
-    await this.driver.releaseActions();
+    shell(this.device.id, `input swipe ${cx} ${from} ${cx} ${to} 250`);
     await sleep(700);
   }
 });
@@ -322,6 +312,27 @@ When('I tap the element with id {kraken-string} if it is shown', async function 
   const shown = await el.waitForDisplayed({ timeout: 3000 }).catch(() => false);
   if (shown) await el.click();
   if (this.profile) this.profile.notes.push(`${id}: ${shown ? 'tocado' : 'no estaba en pantalla'}`);
+});
+
+// The sampler loop must always stop: while it runs, cucumber and Kraken never exit.
+// When the scenario fails, the log of the device is kept to see why.
+After(async function ({ result }) {
+  const p = this.profile;
+  if (p && p.sampler.running) {
+    p.sampler.running = false;
+    await p.sampler.done;
+  }
+  if (result.status === Status.FAILED && this.device && this.device.id) {
+    fs.mkdirSync(FAILURES_DIR, { recursive: true });
+    const name = `${BUILD}-${p ? p.scenario : 'escenario'}-run${RUN}-${Date.now()}.log`;
+    const log = [
+      `# ${result.message || ''}`,
+      '# --- crash ---', tryShell(this.device.id, 'logcat -d -b crash'),
+      '# --- app ---', p ? tryShell(this.device.id, `logcat -d -v time --pid=${p.pid}`) : '',
+      '# --- últimas líneas del sistema ---', tryShell(this.device.id, 'logcat -d -v time -t 300'),
+    ].join('\n');
+    fs.writeFileSync(path.join(FAILURES_DIR, name), log);
+  }
 });
 
 Then('I save the profiling', async function () {
