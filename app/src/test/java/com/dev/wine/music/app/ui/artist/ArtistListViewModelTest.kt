@@ -35,7 +35,7 @@ class ArtistListViewModelTest {
     )
 
     /** uiState uses stateIn(WhileSubscribed): it only computes while someone collects it. */
-    private fun TestScope.createViewModel() = ArtistListViewModel(GetArtistsUseCase(repository, testDispatcher)).also { viewModel ->
+    private fun TestScope.createViewModel() = ArtistListViewModel(GetArtistsUseCase(repository, testDispatcher), testDispatcher).also { viewModel ->
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
     }
 

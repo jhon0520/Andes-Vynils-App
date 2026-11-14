@@ -6,6 +6,7 @@ import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.domain.usecase.GetAlbumsUseCase
 import com.dev.wine.music.app.domain.usecase.ObserveSessionUseCase
 import com.dev.wine.music.app.fakes.FakeAlbumRepository
+import com.dev.wine.music.app.fakes.RecordingDispatcher
 import com.dev.wine.music.app.fakes.FakeSessionRepository
 import com.dev.wine.music.app.fakes.TestData
 import com.dev.wine.music.app.fakes.testDispatcher
@@ -41,8 +42,11 @@ class AlbumListViewModelTest {
 
     private val sessionRepository = FakeSessionRepository()
 
+    /** Runs in place like testDispatcher, and counts how often the ViewModel moved work to it. */
+    private val defaultDispatcher = RecordingDispatcher()
+
     /** uiState uses stateIn(WhileSubscribed): it only computes while someone collects it. */
-    private fun TestScope.createViewModel() = AlbumListViewModel(GetAlbumsUseCase(repository, testDispatcher), ObserveSessionUseCase(sessionRepository)).also { viewModel ->
+    private fun TestScope.createViewModel() = AlbumListViewModel(GetAlbumsUseCase(repository, testDispatcher), ObserveSessionUseCase(sessionRepository), defaultDispatcher).also { viewModel ->
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
     }
 
@@ -159,5 +163,17 @@ class AlbumListViewModelTest {
 
         sessionRepository.selectCollector(TestData.collector(id = 100, name = "Manolo Bellon"))
         assertTrue(viewModel.session.value is UserSession.Collector)
+    }
+
+    @Test
+    fun `loading and filtering run on the default dispatcher, off the main thread`() = runTest {
+        val viewModel = createViewModel()
+        val afterLoad = defaultDispatcher.dispatchCount
+        assertTrue(afterLoad > 0)
+
+        viewModel.onQueryChange("queen")
+
+        assertTrue(defaultDispatcher.dispatchCount > afterLoad)
+        assertEquals(listOf("A Night at the Opera"), viewModel.shownNames())
     }
 }

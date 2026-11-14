@@ -43,6 +43,7 @@ class CollectorPickerViewModelTest {
             GetCollectorsUseCase(collectorRepository, testDispatcher),
             SelectCollectorUseCase(sessionRepository),
             savedState,
+            testDispatcher,
         ).also { viewModel ->
             backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
         }

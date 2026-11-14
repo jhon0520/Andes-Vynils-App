@@ -2,6 +2,7 @@ package com.dev.wine.music.app
 
 import android.app.Application
 import android.content.ComponentCallbacks2
+import android.os.StrictMode
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
@@ -20,12 +21,18 @@ import javax.inject.Inject
  * - Covers are opaque JPEGs, so they are decoded as RGB_565 (2 bytes per pixel instead of 4).
  * - When the system asks the app to trim memory, the repository cache is dropped
  *   (Coil already trims its own memory cache).
+ * - Debug builds turn on StrictMode, which logs disk or network work on the main thread.
  */
 @HiltAndroidApp
 class WineMusicApp : Application(), ImageLoaderFactory {
 
     @Inject
     lateinit var repositoryCache: RepositoryCache
+
+    override fun onCreate() {
+        if (BuildConfig.DEBUG) enableStrictMode()
+        super.onCreate()
+    }
 
     override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this)
         .memoryCache {
@@ -47,11 +54,29 @@ class WineMusicApp : Application(), ImageLoaderFactory {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        // The app is in the background and the system is reclaiming memory: the data can be
-        // fetched again when the user comes back.
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND && ::repositoryCache.isInitialized) {
+        // The app is in the background and the system is reclaiming memory, or the app is in the
+        // foreground but the device is about to kill processes: the data can be fetched again.
+        @Suppress("DEPRECATION") // RUNNING_CRITICAL still arrives on Android 13 and older.
+        val reclaim = level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND ||
+            level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL
+        if (reclaim && ::repositoryCache.isInitialized) {
             repositoryCache.clear()
         }
+    }
+
+    /** Logs (tag StrictMode) disk or network access on the main thread and leaked resources. */
+    private fun enableStrictMode() {
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build(),
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectLeakedClosableObjects()
+                .detectLeakedSqlLiteObjects()
+                .detectActivityLeaks()
+                .penaltyLog()
+                .build(),
+        )
     }
 
     private companion object {
