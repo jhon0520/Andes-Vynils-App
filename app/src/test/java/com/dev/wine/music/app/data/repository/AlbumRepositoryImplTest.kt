@@ -3,6 +3,8 @@ package com.dev.wine.music.app.data.repository
 import com.dev.wine.music.app.data.remote.api.AlbumApi
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
 import com.dev.wine.music.app.domain.model.AppError
+import com.dev.wine.music.app.fakes.RecordingDispatcher
+import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -33,29 +35,39 @@ class AlbumRepositoryImplTest {
 
     @Test
     fun `maps the albums from the api`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))))
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), testDispatcher)
 
         assertEquals("Buscando América", repository.getAlbums().single().name)
         assertEquals(100, repository.getAlbum(100).id)
     }
 
     @Test
+    fun `the network call and the mapping run on the io dispatcher`() = runTest {
+        val io = RecordingDispatcher()
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América"))), io)
+
+        repository.getAlbums()
+
+        assertTrue(io.dispatchCount > 0)
+    }
+
+    @Test
     fun `no connection while loading the catalog becomes Network`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = IOException("timeout")))
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = IOException("timeout")), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbums() } is AppError.Network)
     }
 
     @Test
     fun `a missing album becomes NotFound`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(404)))
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(404)), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbum(999) } is AppError.NotFound)
     }
 
     @Test
     fun `a server error becomes Server`() = runTest {
-        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(500)))
+        val repository = AlbumRepositoryImpl(FakeAlbumApi(error = httpError(500)), testDispatcher)
 
         assertTrue(failureOf { repository.getAlbums() } is AppError.Server)
     }

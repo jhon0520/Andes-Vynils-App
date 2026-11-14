@@ -3,6 +3,7 @@ package com.dev.wine.music.app.data.repository
 import com.dev.wine.music.app.data.remote.api.ArtistApi
 import com.dev.wine.music.app.data.remote.dto.PerformerDto
 import com.dev.wine.music.app.domain.model.ArtistType
+import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -18,7 +19,7 @@ class ArtistRepositoryImplTest {
 
     @Test
     fun `merges musicians and bands with their type`() = runTest {
-        val repository = ArtistRepositoryImpl(FakeArtistApi())
+        val repository = ArtistRepositoryImpl(FakeArtistApi(), testDispatcher)
 
         val artists = repository.getArtists()
 
@@ -29,7 +30,7 @@ class ArtistRepositoryImplTest {
 
     @Test
     fun `keeps the members of each band`() = runTest {
-        val repository = ArtistRepositoryImpl(FakeArtistApi())
+        val repository = ArtistRepositoryImpl(FakeArtistApi(), testDispatcher)
 
         val queen = repository.getArtists().first { it.name == "Queen" }
 

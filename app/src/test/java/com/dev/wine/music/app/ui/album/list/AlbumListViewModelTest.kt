@@ -8,6 +8,7 @@ import com.dev.wine.music.app.domain.usecase.ObserveSessionUseCase
 import com.dev.wine.music.app.fakes.FakeAlbumRepository
 import com.dev.wine.music.app.fakes.FakeSessionRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +42,7 @@ class AlbumListViewModelTest {
     private val sessionRepository = FakeSessionRepository()
 
     /** uiState uses stateIn(WhileSubscribed): it only computes while someone collects it. */
-    private fun TestScope.createViewModel() = AlbumListViewModel(GetAlbumsUseCase(repository), ObserveSessionUseCase(sessionRepository)).also { viewModel ->
+    private fun TestScope.createViewModel() = AlbumListViewModel(GetAlbumsUseCase(repository, testDispatcher), ObserveSessionUseCase(sessionRepository)).also { viewModel ->
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
     }
 

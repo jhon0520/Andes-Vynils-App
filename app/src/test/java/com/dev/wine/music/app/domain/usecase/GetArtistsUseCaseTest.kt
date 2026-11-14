@@ -3,6 +3,7 @@ package com.dev.wine.music.app.domain.usecase
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.fakes.FakeArtistRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -19,7 +20,7 @@ class GetArtistsUseCaseTest {
             ),
         )
 
-        val result = GetArtistsUseCase(repository)()
+        val result = GetArtistsUseCase(repository, testDispatcher)()
 
         assertEquals(listOf("Queen", "Rubén Blades"), result.map { it.name })
     }
@@ -33,7 +34,7 @@ class GetArtistsUseCaseTest {
             ),
         )
 
-        val result = GetArtistsUseCase(repository)()
+        val result = GetArtistsUseCase(repository, testDispatcher)()
 
         assertEquals("Queen", result.first { it.id == 1 }.bandName)
     }
@@ -47,7 +48,7 @@ class GetArtistsUseCaseTest {
             ),
         )
 
-        val result = GetArtistsUseCase(repository)()
+        val result = GetArtistsUseCase(repository, testDispatcher)()
 
         assertNull(result.first { it.id == 1 }.bandName)
         assertNull(result.first { it.id == 2 }.bandName)

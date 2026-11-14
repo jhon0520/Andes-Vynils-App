@@ -1,12 +1,19 @@
 package com.dev.wine.music.app.domain.usecase
 
+import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.repository.CollectorRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetCollectorsUseCase @Inject constructor(
     private val repository: CollectorRepository,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) {
-    suspend operator fun invoke(): List<Collector> =
-        repository.getCollectors().sortedBy { it.name.lowercase() }
+    suspend operator fun invoke(): List<Collector> {
+        val collectors = repository.getCollectors()
+        // Sorting is CPU work: it runs on the Default dispatcher, not on the main thread.
+        return withContext(defaultDispatcher) { collectors.sortedBy { it.name.lowercase() } }
+    }
 }

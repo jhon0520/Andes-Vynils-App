@@ -9,6 +9,7 @@ import com.dev.wine.music.app.fakes.FakeAlbumRepository
 import com.dev.wine.music.app.fakes.FakeCollectorRepository
 import com.dev.wine.music.app.fakes.FakeSessionRepository
 import com.dev.wine.music.app.fakes.TestData
+import com.dev.wine.music.app.fakes.testDispatcher
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.util.MainDispatcherRule
@@ -37,7 +38,7 @@ class AlbumDetailViewModelTest {
 
     private fun createViewModel(albumId: Int = 2) = AlbumDetailViewModel(
         SavedStateHandle(mapOf(AlbumDetailViewModel.ALBUM_ID_KEY to albumId)),
-        GetAlbumDetailUseCase(albumRepository, collectorRepository),
+        GetAlbumDetailUseCase(albumRepository, collectorRepository, testDispatcher),
         ObserveSessionUseCase(sessionRepository),
     )
 

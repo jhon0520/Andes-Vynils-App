@@ -3,6 +3,7 @@ package com.dev.wine.music.app.data.repository
 import com.dev.wine.music.app.data.remote.api.CollectorApi
 import com.dev.wine.music.app.data.remote.dto.CollectorDto
 import com.dev.wine.music.app.domain.model.AppError
+import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -20,14 +21,14 @@ class CollectorRepositoryImplTest {
 
     @Test
     fun `maps the collectors from the api`() = runTest {
-        val repository = CollectorRepositoryImpl(FakeCollectorApi(collectors = listOf(CollectorDto(id = 100, name = "Manolo Bellon"))))
+        val repository = CollectorRepositoryImpl(FakeCollectorApi(collectors = listOf(CollectorDto(id = 100, name = "Manolo Bellon"))), testDispatcher)
 
         assertEquals("Manolo Bellon", repository.getCollectors().single().name)
     }
 
     @Test
     fun `no connection becomes Network`() = runTest {
-        val repository = CollectorRepositoryImpl(FakeCollectorApi(error = IOException("timeout")))
+        val repository = CollectorRepositoryImpl(FakeCollectorApi(error = IOException("timeout")), testDispatcher)
 
         assertTrue(runCatching { repository.getCollectors() }.exceptionOrNull() is AppError.Network)
     }
