@@ -58,6 +58,7 @@ import com.dev.wine.music.app.ui.theme.DetailMono
 import com.dev.wine.music.app.ui.theme.LabelMono
 import com.dev.wine.music.app.ui.theme.SansBody
 import com.dev.wine.music.app.ui.theme.Terracotta
+import com.dev.wine.music.app.util.fastForEach
 
 /** Lines of description shown before «Leer más». */
 private const val DESCRIPTION_PREVIEW_LINES = 3
@@ -299,7 +300,7 @@ private fun Tracklist(tracks: List<NumberedTrack>, modifier: Modifier = Modifier
         sides.forEach { (side, sideTracks) ->
             Column {
                 SectionTitle(stringResource(R.string.album_side, side))
-                sideTracks.forEach { TrackRow(it) }
+                sideTracks.fastForEach { TrackRow(it) }
             }
         }
     }
@@ -345,7 +346,7 @@ private fun Reviews(comments: List<Comment>, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 16.dp).testTag("album_reviews"),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            comments.forEach { ReviewItem(it) }
+            comments.fastForEach { ReviewItem(it) }
         }
     }
 }

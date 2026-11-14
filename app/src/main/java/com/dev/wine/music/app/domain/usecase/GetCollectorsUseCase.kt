@@ -14,6 +14,11 @@ class GetCollectorsUseCase @Inject constructor(
     suspend operator fun invoke(): List<Collector> {
         val collectors = repository.getCollectors()
         // Sorting is CPU work: it runs on the Default dispatcher, not on the main thread.
-        return withContext(defaultDispatcher) { collectors.sortedBy { it.name.lowercase() } }
+        return withContext(defaultDispatcher) { collectors.sortedWith(BY_NAME) }
+    }
+
+    private companion object {
+        /** Compares ignoring case without creating a lowercase copy of each name on every comparison. */
+        val BY_NAME = compareBy<Collector, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
     }
 }

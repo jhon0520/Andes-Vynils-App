@@ -7,6 +7,7 @@ import com.dev.wine.music.app.data.remote.safeApiCall
 import com.dev.wine.music.app.domain.coroutines.IoDispatcher
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.repository.CollectorRepository
+import com.dev.wine.music.app.util.fastMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,7 +26,7 @@ class CollectorRepositoryImpl @Inject constructor(
     override suspend fun getCollectors(): List<Collector> {
         cache.collectors?.let { return it }
         val collectors = withContext(ioDispatcher) {
-            safeApiCall { api.getCollectors().map { it.toDomain() } }
+            safeApiCall { api.getCollectors().fastMap { it.toDomain() } }
         }
         cache.collectors = collectors
         return collectors

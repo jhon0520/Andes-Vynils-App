@@ -8,6 +8,7 @@ import com.dev.wine.music.app.domain.coroutines.IoDispatcher
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.repository.ArtistRepository
+import com.dev.wine.music.app.util.fastForEach
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -26,13 +27,18 @@ class ArtistRepositoryImpl @Inject constructor(
 
     override suspend fun getArtists(): List<Artist> {
         cache.artists?.let { return it }
-        val artists = withContext(ioDispatcher) {
+        val artists: List<Artist> = withContext(ioDispatcher) {
             safeApiCall {
                 coroutineScope {
                     val musicians = async { api.getMusicians() }
                     val bands = async { api.getBands() }
-                    musicians.await().map { it.toDomain(ArtistType.MUSICIAN) } +
-                        bands.await().map { it.toDomain(ArtistType.BAND) }
+                    val musicianDtos = musicians.await()
+                    val bandDtos = bands.await()
+                    // One list sized for both, instead of two mapped lists plus the one `+` creates.
+                    val merged = ArrayList<Artist>(musicianDtos.size + bandDtos.size)
+                    musicianDtos.fastForEach { merged.add(it.toDomain(ArtistType.MUSICIAN)) }
+                    bandDtos.fastForEach { merged.add(it.toDomain(ArtistType.BAND)) }
+                    merged
                 }
             }
         }

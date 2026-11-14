@@ -6,6 +6,7 @@ import com.dev.wine.music.app.data.remote.dto.TrackDto
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.Track
+import com.dev.wine.music.app.util.fastMap
 
 fun AlbumDto.toDomain(): Album = Album(
     id = id,
@@ -15,9 +16,9 @@ fun AlbumDto.toDomain(): Album = Album(
     description = description,
     genre = genre,
     recordLabel = recordLabel,
-    tracks = tracks.map { it.toDomain() },
-    performers = performers.map { it.toDomain() },
-    comments = comments.map { it.toDomain() },
+    tracks = tracks.fastMap { it.toDomain() },
+    performers = performers.fastMap { it.toDomain() },
+    comments = comments.fastMap { it.toDomain() },
 )
 
 fun TrackDto.toDomain(): Track = Track(

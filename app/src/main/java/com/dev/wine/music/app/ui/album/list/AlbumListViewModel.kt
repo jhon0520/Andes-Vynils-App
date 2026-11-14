@@ -52,12 +52,16 @@ class AlbumListViewModel @Inject constructor(
             when (state) {
                 UiState.Loading -> UiState.Loading
                 is UiState.Error -> state
-                is UiState.Success -> UiState.Success(
-                    AlbumCatalog(
-                        albums = state.data.filter { it.matches(query.normalized(), genre) },
-                        totalCount = state.data.size,
-                    ),
-                )
+                is UiState.Success -> {
+                    // Normalize the query once per change, not once per album inside the loop.
+                    val needle = query.normalized()
+                    UiState.Success(
+                        AlbumCatalog(
+                            albums = state.data.filter { it.matches(needle, genre) },
+                            totalCount = state.data.size,
+                        ),
+                    )
+                }
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), UiState.Loading)
 

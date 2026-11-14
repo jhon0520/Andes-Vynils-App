@@ -1,10 +1,13 @@
 package com.dev.wine.music.app.domain.usecase
 
+import androidx.collection.SparseArrayCompat
 import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.repository.AlbumRepository
 import com.dev.wine.music.app.domain.repository.CollectorRepository
+import com.dev.wine.music.app.util.fastForEach
+import com.dev.wine.music.app.util.fastMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -29,10 +32,13 @@ class GetAlbumDetailUseCase @Inject constructor(
         val loadedCollectors = collectors.await()
 
         withContext(defaultDispatcher) {
-            val authorByCommentId = loadedCollectors
-                .flatMap { collector -> collector.commentIds.map { it to collector.name } }
-                .toMap()
-            loaded.copy(comments = loaded.comments.map { it.copy(author = authorByCommentId[it.id]) })
+            // Author by comment id. SparseArrayCompat keys are plain ints: no Integer boxing and
+            // no Pair per comment, unlike flatMap { it to name }.toMap(), which built a HashMap.
+            val authorByCommentId = SparseArrayCompat<String>()
+            loadedCollectors.fastForEach { collector ->
+                collector.commentIds.fastForEach { commentId -> authorByCommentId.put(commentId, collector.name) }
+            }
+            loaded.copy(comments = loaded.comments.fastMap { it.copy(author = authorByCommentId.get(it.id)) })
         }
     }
 

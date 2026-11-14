@@ -7,6 +7,7 @@ import com.dev.wine.music.app.data.remote.safeApiCall
 import com.dev.wine.music.app.domain.coroutines.IoDispatcher
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.repository.AlbumRepository
+import com.dev.wine.music.app.util.fastMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class AlbumRepositoryImpl @Inject constructor(
     override suspend fun getAlbums(): List<Album> {
         cache.albums?.let { return it }
         val albums = withContext(ioDispatcher) {
-            safeApiCall { api.getAlbums().map { it.toDomain() } }
+            safeApiCall { api.getAlbums().fastMap { it.toDomain() } }
         }
         cache.albums = albums
         return albums

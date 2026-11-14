@@ -3,6 +3,7 @@ package com.dev.wine.music.app.data.mapper
 import com.dev.wine.music.app.data.remote.dto.PerformerDto
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
+import com.dev.wine.music.app.util.fastMap
 
 /**
  * When the endpoint already tells us the type (musicians vs bands) pass it in.
@@ -14,5 +15,5 @@ fun PerformerDto.toDomain(type: ArtistType? = null): Artist = Artist(
     image = image,
     description = description,
     type = type ?: if (creationDate != null) ArtistType.BAND else ArtistType.MUSICIAN,
-    memberIds = musicians.map { it.id },
+    memberIds = musicians.fastMap { it.id },
 )

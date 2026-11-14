@@ -107,6 +107,9 @@ class CollectorPickerViewModel @Inject constructor(
 
 private val COMBINING_MARKS = Regex("\\p{Mn}+")
 
+/** Compiled once: a Regex built inside collectorInitials would be compiled on every row. */
+private val WHITESPACE = Regex("\\s+")
+
 /** Lowercase without accents, so "bellon" finds "Bellón". */
 internal fun String.normalizedForSearch(): String =
     Normalizer.normalize(this, Normalizer.Form.NFD).replace(COMBINING_MARKS, "").lowercase().trim()
@@ -119,7 +122,7 @@ internal fun List<Collector>.filterBy(query: String): List<Collector> {
 
 /** "Manolo Bellón" → "MB". A collector without a name shows "··". */
 internal fun collectorInitials(name: String): String {
-    val initials = name.trim().split(Regex("\\s+"))
+    val initials = name.trim().split(WHITESPACE)
         .filter { it.isNotEmpty() }
         .take(2)
         .joinToString("") { it.first().uppercase() }

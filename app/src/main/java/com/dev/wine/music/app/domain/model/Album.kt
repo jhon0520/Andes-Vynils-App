@@ -28,21 +28,28 @@ data class Album(
     /** Null when the backend sends a genre outside [AlbumGenre]. */
     val genreType: AlbumGenre? get() = AlbumGenre.fromApiValue(genre)
 
-    /** Performer names as shown on the catalog card, e.g. "Rubén Blades, Queen". */
-    val performerNames: String get() = performers.joinToString(", ") { it.name }
+    /**
+     * Performer names as shown on the catalog card, e.g. "Rubén Blades, Queen".
+     * Built once per album (lazy) instead of on every recomposition of the card.
+     */
+    val performerNames: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        performers.joinToString(", ") { it.name }
+    }
 
     /**
      * Tracks numbered by vinyl side: the first half (rounded up) on side A, the rest on side B,
      * e.g. five tracks become A1, A2, A3, B1, B2.
+     * Built once per album (lazy, indexed loop) instead of on every recomposition of the detail.
      */
-    val numberedTracks: List<NumberedTrack>
-        get() {
-            val sideA = (tracks.size + 1) / 2
-            return tracks.mapIndexed { index, track ->
-                val position = if (index < sideA) "A${index + 1}" else "B${index - sideA + 1}"
-                NumberedTrack(position = position, track = track)
-            }
+    val numberedTracks: List<NumberedTrack> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        val sideA = (tracks.size + 1) / 2
+        val numbered = ArrayList<NumberedTrack>(tracks.size)
+        for (index in tracks.indices) {
+            val position = if (index < sideA) "A${index + 1}" else "B${index - sideA + 1}"
+            numbered.add(NumberedTrack(position = position, track = tracks[index]))
         }
+        numbered
+    }
 }
 
 data class Track(
