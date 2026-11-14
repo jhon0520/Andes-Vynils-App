@@ -44,15 +44,27 @@ trap restore EXIT
 for s in window_animation_scale transition_animation_scale animator_duration_scale; do adb shell settings put global "$s" 1; done
 adb shell settings put global stay_on_while_plugged_in 7
 
-cd "$HERE"
-FAILED=0
+# Kraken stops the whole queue as soon as one scenario fails, so each feature runs on its own
+# Kraken (in .runs/<scenario>, linked to the real files): a failure only loses that scenario.
+# PROFILE_FEATURES="P-HU01 P-HU04" runs only some of them.
+FEATURES="${PROFILE_FEATURES:-$(cd "$HERE/features" && ls *.feature | sed 's/\.feature$//')}"
+FAILED_LIST=""
 for run in $(seq 1 "$RUNS"); do
-  echo "== Corrida $run de $RUNS · $BUILD · $(adb shell getprop ro.product.model | tr -d '\r') =="
-  PROFILE_BUILD="$BUILD" PROFILE_RUN="$run" kraken-node run || FAILED=1
-  # Nothing of a run may stay alive into the next one.
-  pkill -f "kraken-node/bin/cucumber" 2>/dev/null || true
+  for name in $FEATURES; do
+    echo "== Corrida $run de $RUNS · $name · $BUILD · $(adb shell getprop ro.product.model | tr -d '\r') =="
+    dir="$HERE/.runs/$name"
+    mkdir -p "$dir/features"
+    ln -sfn "$HERE/features/$name.feature" "$dir/features/$name.feature"
+    ln -sfn "$HERE/features/mobile" "$dir/features/mobile"
+    for f in mobile.json properties.json node_modules; do ln -sfn "$HERE/$f" "$dir/$f"; done
+    (cd "$dir" && PROFILE_BUILD="$BUILD" PROFILE_RUN="$run" kraken-node run) || FAILED_LIST="$FAILED_LIST $name(corrida $run)"
+    # Nothing of a scenario may stay alive into the next one.
+    pkill -f "kraken-node/bin/cucumber" 2>/dev/null || true
+  done
 done
 
 node "$HERE/summarize.js"
-[ "$FAILED" = "0" ] || echo "Alguna corrida falló: revisa e2e/profiling/reports/"
-exit "$FAILED"
+if [ -n "$FAILED_LIST" ]; then
+  echo "Fallaron:$FAILED_LIST. El log del teléfono de cada falla está en e2e/profiling/reports/fallas/"
+  exit 1
+fi

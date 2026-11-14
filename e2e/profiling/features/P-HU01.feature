@@ -13,7 +13,8 @@ Feature: P-HU01 - Profiling of the album catalog
     And I hide the keyboard
     And I tap the element with id "album_genre_tab_salsa"
     And I scroll to the element with id "<SALSA_ALBUM_ID>" in the element with id "album_list"
-    And I tap the element with id "clear_search_button"
+    And I tap the element with id "album_search_clear_button"
+    And I tap the element with id "album_genre_tab_all"
     Then I should see the element with id "album_list"
     And I wait for 2 seconds
     And I save the profiling
