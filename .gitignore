@@ -14,3 +14,8 @@ local.properties
 # Kraken (E2E): dependencias y reportes generados
 e2e/**/node_modules/
 e2e/**/reports/
+
+# Perfilamiento: APK compilados y configuración generada por run-profiling.sh
+e2e/**/.kraken/
+e2e/profiling/apk/
+e2e/profiling/mobile.json
