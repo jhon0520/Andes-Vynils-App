@@ -156,11 +156,23 @@ classDiagram
         rating: Int (0 a 5)
         author: String?
     }
+    class ArtistDetail {
+        <<HU04>>
+        artist: Artist
+        date: String (nacimiento o creación)
+        members: List~Artist~ (bandas)
+        band: Artist? (músicos)
+        albums: List~Album~
+        prizes: List~ArtistPrize~
+        day: String (dd/mm/aaaa)
+    }
     class ArtistPrize {
         <<HU04>>
+        id: Int
+        premiationDate: String
         name: String
         organization: String
-        premiationDate: String
+        premiationDay: String (dd/mm/aaaa)
     }
     class CollectorAlbum {
         <<HU06 · por agregar>>
@@ -193,7 +205,9 @@ classDiagram
     Album "*" --> "*" Artist : performers
     Album "1" *-- "*" Comment : comments
     Artist --> ArtistType : type
-    Artist "1" --> "*" ArtistPrize
+    ArtistDetail --> Artist : artist, members, band
+    ArtistDetail "1" --> "*" Album : albums
+    ArtistDetail "1" *-- "*" ArtistPrize : prizes
     Collector "1" --> "*" CollectorAlbum
     CollectorAlbum --> Album
 ```
