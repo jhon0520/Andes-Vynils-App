@@ -3,7 +3,6 @@ package com.dev.wine.music.app.e2e
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -38,8 +37,9 @@ class HU02AlbumDetailCollectorE2ETest {
     @Test
     fun collectorSeesTheAddTrackButton() {
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_list"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasText(SALSA_ALBUM))
-        composeTestRule.firstNodeWithText(SALSA_ALBUM).performClick()
+        // The seed album (id 100), found by its card tag because its name differs between backends.
+        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasTestTag(SALSA_ALBUM_TAG))
+        composeTestRule.onNodeWithTag(SALSA_ALBUM_TAG).performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
 
         composeTestRule.onNodeWithTag("add_track_button").performScrollTo().assertIsDisplayed()
@@ -47,6 +47,6 @@ class HU02AlbumDetailCollectorE2ETest {
 
     private companion object {
         const val TIMEOUT = 15_000L
-        const val SALSA_ALBUM = "Buscando América Prueba"
+        const val SALSA_ALBUM_TAG = "album_item_100"
     }
 }

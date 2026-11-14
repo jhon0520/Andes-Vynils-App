@@ -16,8 +16,9 @@ Feature: HU01 - Browse the album catalog
     Then I should not see the text "<ROCK_ALBUM>"
     When I tap the element with id "album_genre_tab_salsa"
     Then the element with id "album_genre_tab_salsa" should be selected
-    When I scroll to the text "<SALSA_ALBUM>" in the element with id "album_list"
-    Then I should see the text "<SALSA_ALBUM>"
+    # The seed salsa album is found by its id: its name differs between backends
+    When I scroll to the element with id "<SALSA_ALBUM_ID>" in the element with id "album_list"
+    Then I should see the element with id "<SALSA_ALBUM_ID>"
     # A query no album can match: the empty result does not depend on the backend data
     When I type "<NO_MATCH_QUERY>" into the element with id "album_search_input"
     And I hide the keyboard

@@ -1,10 +1,10 @@
 {
   "CATALOG_ALBUM": "A Night at the Opera",
-  "SALSA_ALBUM": "Buscando América Prueba",
+  "SALSA_ALBUM_ID": "album_item_100",
   "ROCK_ALBUM": "A Day at the Races",
   "PERFORMER_QUERY": "ruben",
   "NO_MATCH_QUERY": "zzz-e2e-no-results",
-  "ALBUM_QUERY": "america prueba",
+  "ALBUM_QUERY": "ruben",
   "SALSA_LABEL": "ELEKTRA",
   "SALSA_RELEASE_DATE": "01/08/1984",
   "MUSICIAN": "Rubén Blades Bellido de Luna",
