@@ -19,3 +19,4 @@ e2e/**/reports/
 e2e/**/.kraken/
 e2e/profiling/apk/
 e2e/profiling/mobile.json
+e2e/profiling/node_modules

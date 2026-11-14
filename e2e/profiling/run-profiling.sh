@@ -16,6 +16,8 @@ DEVICES="$(adb devices | awk 'NR > 1 && $2 == "device" { print $1 }')"
 [ "$(printf '%s\n' "$DEVICES" | grep -c .)" = "1" ] || { echo "Conecta exactamente un teléfono por USB:"; adb devices; exit 1; }
 export ANDROID_SERIAL="$DEVICES"
 [ -d "$KRAKEN_DIR/node_modules" ] || (cd "$KRAKEN_DIR" && npm install)
+# Cucumber checks that it is installed where it runs (here): reuse the Kraken install instead of a second one.
+ln -sfn ../kraken/node_modules "$HERE/node_modules"
 export PATH="$KRAKEN_DIR/node_modules/.bin:$PATH"
 
 cat > "$HERE/mobile.json" <<EOF
