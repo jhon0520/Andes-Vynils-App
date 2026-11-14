@@ -19,6 +19,10 @@ class ArtistRepositoryImplTest {
             private set
         var bandCalls = 0
             private set
+        var detailCalls = 0
+            private set
+        var prizeCalls = 0
+            private set
 
         private val ruben = PerformerDto(
             id = 1,
@@ -44,19 +48,31 @@ class ArtistRepositoryImplTest {
             return listOf(queen)
         }
 
-        override suspend fun getMusician(musicianId: Int) = ruben
-        override suspend fun getBand(bandId: Int) = queen
-        override suspend fun getPerformerPrizes() = listOf(
-            PerformerPrizeDto(
-                id = 10,
-                premiationDate = "1978-12-10T05:00:00.000Z",
-                prize = PrizeDto(id = 5, name = "Grammy", organization = "Recording Academy"),
-            ),
-        )
+        override suspend fun getMusician(musicianId: Int): PerformerDto {
+            detailCalls++
+            return ruben
+        }
+
+        override suspend fun getBand(bandId: Int): PerformerDto {
+            detailCalls++
+            return queen
+        }
+
+        override suspend fun getPerformerPrizes(): List<PerformerPrizeDto> {
+            prizeCalls++
+            return listOf(
+                PerformerPrizeDto(
+                    id = 10,
+                    premiationDate = "1978-12-10T05:00:00.000Z",
+                    prize = PrizeDto(id = 5, name = "Grammy", organization = "Recording Academy"),
+                ),
+            )
+        }
     }
 
     private val api = FakeArtistApi()
-    private val repository = ArtistRepositoryImpl(api, RepositoryCache(), testDispatcher)
+    private val cache = RepositoryCache()
+    private val repository = ArtistRepositoryImpl(api, cache, testDispatcher)
 
     @Test
     fun `merges musicians and bands with their type`() = runTest {
@@ -118,5 +134,44 @@ class ArtistRepositoryImplTest {
         assertEquals("Grammy", prize.name)
         assertEquals("Recording Academy", prize.organization)
         assertEquals("10/12/1978", prize.premiationDay)
+    }
+
+    @Test
+    fun `reopening an artist answers from the cache without calling the api`() = runTest {
+        repository.getArtist(1, ArtistType.MUSICIAN)
+        repository.getArtist(1, ArtistType.MUSICIAN)
+
+        assertEquals(1, api.detailCalls)
+    }
+
+    @Test
+    fun `a musician and a band with the same id are cached apart`() = runTest {
+        val musician = repository.getArtist(1, ArtistType.MUSICIAN)
+        val band = repository.getArtist(1, ArtistType.BAND)
+
+        assertEquals(ArtistType.MUSICIAN, musician.artist.type)
+        assertEquals(ArtistType.BAND, band.artist.type)
+        assertEquals(2, api.detailCalls)
+    }
+
+    @Test
+    fun `the prize catalog is fetched once`() = runTest {
+        repository.getPerformerPrizes()
+        repository.getPerformerPrizes()
+
+        assertEquals(1, api.prizeCalls)
+    }
+
+    @Test
+    fun `after invalidating artists the detail and prizes are fetched again`() = runTest {
+        repository.getArtist(1, ArtistType.MUSICIAN)
+        repository.getPerformerPrizes()
+
+        cache.invalidateArtists()
+        repository.getArtist(1, ArtistType.MUSICIAN)
+        repository.getPerformerPrizes()
+
+        assertEquals(2, api.detailCalls)
+        assertEquals(2, api.prizeCalls)
     }
 }

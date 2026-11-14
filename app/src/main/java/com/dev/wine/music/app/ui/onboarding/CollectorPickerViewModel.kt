@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.usecase.GetCollectorsUseCase
 import com.dev.wine.music.app.domain.usecase.SelectCollectorUseCase
@@ -11,10 +12,12 @@ import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.Normalizer
@@ -39,6 +42,7 @@ class CollectorPickerViewModel @Inject constructor(
     private val getCollectors: GetCollectorsUseCase,
     private val selectCollector: SelectCollectorUseCase,
     private val savedStateHandle: SavedStateHandle,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val loadedCollectors = MutableStateFlow<UiState<List<Collector>>>(UiState.Loading)
@@ -58,7 +62,10 @@ class CollectorPickerViewModel @Inject constructor(
                 )
                 else -> CollectorPickerUiState(collectors = state, query = query)
             }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CollectorPickerUiState())
+        }
+            // Filtering normalizes every name and email: keep it off the main thread.
+            .flowOn(defaultDispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CollectorPickerUiState())
 
     init {
         loadCollectors()

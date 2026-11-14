@@ -119,6 +119,18 @@ O abrir la carpeta en **Android Studio** y pulsar **Run ▶** sobre el módulo `
 ./gradlew connectedAndroidTest   # pruebas de interfaz (emulador abierto)
 ```
 
+Para prender los emuladores desde la terminal, ver [`docs/emuladores-terminal.md`](docs/emuladores-terminal.md).
+
+### 5. Medir rendimiento (profiling)
+
+```bash
+./gradlew installProfiling                         # build con R8 al que se conecta el Profiler
+./scripts/perf-capture.sh <dispositivo> startup    # arranque en frío
+./scripts/perf-capture.sh <dispositivo> HU01       # frames, memoria y CPU de un recorrido
+```
+
+Recorridos, métricas y plantilla del reporte en [`docs/performance/README.md`](docs/performance/README.md).
+
 ## Arquitectura
 
 **MVVM** con **Jetpack Compose**, casos de uso, **Repository** y **Retrofit** como *Service Adapter*, con inyección de dependencias por **Hilt**.
