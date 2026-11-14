@@ -2,6 +2,8 @@ package com.dev.wine.music.app.fakes
 
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Artist
+import com.dev.wine.music.app.domain.model.ArtistDetail
+import com.dev.wine.music.app.domain.model.ArtistPrize
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.model.Comment
@@ -37,6 +39,21 @@ object TestData {
         type: ArtistType = ArtistType.MUSICIAN,
         memberIds: List<Int> = emptyList(),
     ) = Artist(id = id, name = name, image = "", description = "", type = type, memberIds = memberIds)
+
+    fun artistDetail(
+        artist: Artist = artist(),
+        date: String = "1948-07-16T05:00:00.000Z",
+        members: List<Artist> = emptyList(),
+        albums: List<Album> = emptyList(),
+        prizes: List<ArtistPrize> = emptyList(),
+    ) = ArtistDetail(artist = artist, date = date, members = members, albums = albums, prizes = prizes)
+
+    fun prize(
+        id: Int = 100,
+        premiationDate: String = "1978-12-10T05:00:00.000Z",
+        name: String = "",
+        organization: String = "",
+    ) = ArtistPrize(id = id, premiationDate = premiationDate, name = name, organization = organization)
 
     fun collector(
         id: Int = 1,

@@ -157,7 +157,7 @@ classDiagram
         author: String?
     }
     class ArtistPrize {
-        <<HU04 · por agregar>>
+        <<HU04>>
         name: String
         organization: String
         premiationDate: String
@@ -293,7 +293,7 @@ No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de
 - **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
 - **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
 
-**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` y `AlbumDetailRoute(albumId)`. Faltan `ArtistDetailRoute(artistId, type)`, `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
+**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumDetailRoute(albumId)` y `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`. Faltan `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
 
 ---
 
@@ -416,9 +416,9 @@ Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`
 | `GET /albums/{id}` | HU02 | `AlbumApi.getAlbum(id)` | Existe; `AlbumDto` lee `comments` |
 | `GET /musicians` | HU03 | `ArtistApi.getMusicians()` | Existe |
 | `GET /bands` | HU03 | `ArtistApi.getBands()` | Existe; `PerformerDto` lee `musicians`, de donde sale la banda de cada músico |
-| `GET /musicians/{id}` | HU04 | `ArtistApi.getMusician(id)` | Por agregar |
-| `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Por agregar |
-| `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Por agregar |
+| `GET /musicians/{id}` | HU04 | `ArtistApi.getMusician(id)` | Existe; `PerformerDto` lee `albums` y `performerPrizes` |
+| `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Existe |
+| `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Existe; `PerformerPrizeDto` trae el `prize` con nombre y organización |
 | `GET /collectors` | HU02, HU05 | `CollectorApi.getCollectors()` | Existe; `CollectorDto` lee `comments` para el autor de las reseñas de HU02 |
 | `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Por agregar |
 | `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Por agregar |
@@ -522,8 +522,8 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | 404 y red hechos (con HU02); 400/412 queda para HU07 |
 | 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
 | 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (intérpretes navegables con HU04, «Agregar track» con HU08) |
-| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión (navegación al detalle con HU04) |
-| 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla y ruta | 4, 7 | | Por hacer |
+| 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión |
+| 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla, ruta, pruebas unitarias, E2E Compose y Kraken | 4, 7 | | En revisión |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
 | 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |
 | 11 | HU07 Crear álbum: `POST /albums`, formulario con validación, pantalla de álbum creado | 4, 5 | | Por hacer |

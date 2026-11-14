@@ -2,7 +2,10 @@ package com.dev.wine.music.app.data.repository
 
 import com.dev.wine.music.app.data.cache.RepositoryCache
 import com.dev.wine.music.app.data.remote.api.ArtistApi
+import com.dev.wine.music.app.data.remote.dto.AlbumDto
 import com.dev.wine.music.app.data.remote.dto.PerformerDto
+import com.dev.wine.music.app.data.remote.dto.PerformerPrizeDto
+import com.dev.wine.music.app.data.remote.dto.PrizeDto
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
@@ -14,21 +17,49 @@ class ArtistRepositoryImplTest {
     private class FakeArtistApi : ArtistApi {
         var calls = 0
             private set
+        var bandCalls = 0
+            private set
+
+        private val ruben = PerformerDto(
+            id = 1,
+            name = "Rubén Blades",
+            birthDate = "1948-07-16T05:00:00.000Z",
+            albums = listOf(AlbumDto(id = 100, name = "Buscando América")),
+            performerPrizes = listOf(PerformerPrizeDto(id = 10, premiationDate = "1978-12-10T05:00:00.000Z")),
+        )
+        private val queen = PerformerDto(
+            id = 2,
+            name = "Queen",
+            creationDate = "1970-01-01T05:00:00.000Z",
+            musicians = listOf(PerformerDto(id = 1, name = "Rubén Blades")),
+        )
 
         override suspend fun getMusicians(): List<PerformerDto> {
             calls++
-            return listOf(PerformerDto(id = 1, name = "Rubén Blades"))
+            return listOf(ruben)
         }
 
-        override suspend fun getBands() = listOf(
-            PerformerDto(id = 2, name = "Queen", musicians = listOf(PerformerDto(id = 1, name = "Rubén Blades"))),
+        override suspend fun getBands(): List<PerformerDto> {
+            bandCalls++
+            return listOf(queen)
+        }
+
+        override suspend fun getMusician(musicianId: Int) = ruben
+        override suspend fun getBand(bandId: Int) = queen
+        override suspend fun getPerformerPrizes() = listOf(
+            PerformerPrizeDto(
+                id = 10,
+                premiationDate = "1978-12-10T05:00:00.000Z",
+                prize = PrizeDto(id = 5, name = "Grammy", organization = "Recording Academy"),
+            ),
         )
     }
 
+    private val api = FakeArtistApi()
+    private val repository = ArtistRepositoryImpl(api, RepositoryCache(), testDispatcher)
+
     @Test
     fun `merges musicians and bands with their type`() = runTest {
-        val repository = ArtistRepositoryImpl(FakeArtistApi(), RepositoryCache(), testDispatcher)
-
         val artists = repository.getArtists()
 
         assertEquals(2, artists.size)
@@ -38,8 +69,6 @@ class ArtistRepositoryImplTest {
 
     @Test
     fun `keeps the members of each band`() = runTest {
-        val repository = ArtistRepositoryImpl(FakeArtistApi(), RepositoryCache(), testDispatcher)
-
         val queen = repository.getArtists().first { it.name == "Queen" }
 
         assertEquals(listOf(1), queen.memberIds)
@@ -47,12 +76,47 @@ class ArtistRepositoryImplTest {
 
     @Test
     fun `the second time the artists come from the cache without calling the api`() = runTest {
-        val api = FakeArtistApi()
-        val repository = ArtistRepositoryImpl(api, RepositoryCache(), testDispatcher)
-
         repository.getArtists()
         repository.getArtists()
 
         assertEquals(1, api.calls)
+    }
+
+    @Test
+    fun `bands come from the cached artists when the artists tab already loaded them`() = runTest {
+        repository.getArtists()
+        val callsAfterList = api.bandCalls
+
+        val bands = repository.getBands()
+
+        assertEquals(listOf("Queen"), bands.map { it.name })
+        assertEquals(callsAfterList, api.bandCalls)
+    }
+
+    @Test
+    fun `a musician detail uses the birth date and keeps albums and prize ids`() = runTest {
+        val detail = repository.getArtist(1, ArtistType.MUSICIAN)
+
+        assertEquals("16/07/1948", detail.day)
+        assertEquals(listOf("Buscando América"), detail.albums.map { it.name })
+        assertEquals(listOf(10), detail.prizes.map { it.id })
+    }
+
+    @Test
+    fun `a band detail uses the creation date and lists its members as musicians`() = runTest {
+        val detail = repository.getArtist(2, ArtistType.BAND)
+
+        assertEquals("01/01/1970", detail.day)
+        assertEquals(ArtistType.BAND, detail.artist.type)
+        assertEquals(listOf(ArtistType.MUSICIAN), detail.members.map { it.type })
+    }
+
+    @Test
+    fun `performer prizes bring the prize name and organization`() = runTest {
+        val prize = repository.getPerformerPrizes().single()
+
+        assertEquals("Grammy", prize.name)
+        assertEquals("Recording Academy", prize.organization)
+        assertEquals("10/12/1978", prize.premiationDay)
     }
 }
