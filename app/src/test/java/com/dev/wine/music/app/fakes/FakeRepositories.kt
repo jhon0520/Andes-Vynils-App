@@ -2,6 +2,9 @@ package com.dev.wine.music.app.fakes
 
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Artist
+import com.dev.wine.music.app.domain.model.ArtistDetail
+import com.dev.wine.music.app.domain.model.ArtistPrize
+import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.domain.repository.AlbumRepository
@@ -40,6 +43,29 @@ class FakeArtistRepository(
     override suspend fun getArtists(): List<Artist> {
         if (shouldFail) throw error
         return artists
+    }
+
+    /** Detail returned by [getArtist]; the artist with that id must exist in [details]. */
+    var details: List<ArtistDetail> = emptyList()
+    var prizes: List<ArtistPrize> = emptyList()
+    /** Fails only the prize catalog, to check the detail still shows. */
+    var prizesShouldFail: Boolean = false
+    /** Fails only the band list, to check the detail still shows. */
+    var bandsShouldFail: Boolean = false
+
+    override suspend fun getBands(): List<Artist> {
+        if (shouldFail || bandsShouldFail) throw error
+        return artists.filter { it.type == ArtistType.BAND }
+    }
+
+    override suspend fun getArtist(artistId: Int, type: ArtistType): ArtistDetail {
+        if (shouldFail) throw error
+        return details.first { it.artist.id == artistId && it.artist.type == type }
+    }
+
+    override suspend fun getPerformerPrizes(): List<ArtistPrize> {
+        if (shouldFail || prizesShouldFail) throw error
+        return prizes
     }
 }
 

@@ -15,15 +15,8 @@ data class Album(
     /** Release year, e.g. "1984" from "1984-08-01T00:00:00.000Z". */
     val releaseYear: String get() = releaseDate.take(4)
 
-    /**
-     * Release date as dd/mm/yyyy, e.g. "01/08/1984". The backend sends midnight in Colombia
-     * as 05:00 UTC, so the date part of the ISO text is already the right day.
-     */
-    val releaseDay: String
-        get() {
-            val parts = releaseDate.take(10).split("-")
-            return if (parts.size == 3) "${parts[2]}/${parts[1]}/${parts[0]}" else releaseDate
-        }
+    /** Release date as dd/mm/yyyy, e.g. "01/08/1984". */
+    val releaseDay: String get() = isoDateToDay(releaseDate)
 
     /** Null when the backend sends a genre outside [AlbumGenre]. */
     val genreType: AlbumGenre? get() = AlbumGenre.fromApiValue(genre)
