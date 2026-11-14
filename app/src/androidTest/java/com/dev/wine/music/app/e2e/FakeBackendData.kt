@@ -33,6 +33,29 @@ object FakeBackendData {
          {"id":101,"name":"$OTHER_COLLECTOR_NAME","telephone":"3012357936","email":"jmonsalve@rtvc.com.co","comments":[]}]
     """.trimIndent()
 
+    const val MUSICIAN_ID = 100
+    const val BAND_ID = 101
+    const val PRIZE_ID = 100
+    const val PRIZE_NAME = "Grammy Award"
+
+    /** GET /musicians/{id}: the prize only brings id and date, as in BackVynils. */
+    val musicianDetail = """
+        {"id":$MUSICIAN_ID,"name":"$MUSICIAN_NAME","image":"","description":"Cantante panameño.",
+         "birthDate":"1948-07-16T05:00:00.000Z",
+         "albums":[{"id":$ALBUM_ID,"name":"$ALBUM_NAME","cover":"","releaseDate":"1984-08-01T05:00:00.000Z",
+                    "description":"","genre":"Salsa","recordLabel":"$ALBUM_LABEL"}],
+         "performerPrizes":[{"id":$PRIZE_ID,"premiationDate":"1978-12-10T05:00:00.000Z"}]}
+    """.trimIndent()
+
+    /** GET /bands/{id}: a band with no members, albums or prizes, to check the empty sections. */
+    val emptyBandDetail = band
+
+    /** GET /performerprizes: each prize given, with the prize name and organization. */
+    val performerPrizes = """
+        [{"id":$PRIZE_ID,"premiationDate":"1978-12-10T05:00:00.000Z",
+          "prize":{"id":100,"name":"$PRIZE_NAME","description":"","organization":"National Academy of Recording Arts & Sciences"}}]
+    """.trimIndent()
+
     val albums = "[$album]"
     val musicians = "[$musician]"
     val bands = "[$band]"

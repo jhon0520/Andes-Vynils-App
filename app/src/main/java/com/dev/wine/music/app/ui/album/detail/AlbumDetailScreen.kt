@@ -12,11 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +33,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,8 +45,11 @@ import com.dev.wine.music.app.domain.model.NumberedTrack
 import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.components.AlbumRecord
+import com.dev.wine.music.app.ui.components.DetailTopBar
+import com.dev.wine.music.app.ui.components.EmptySection
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
+import com.dev.wine.music.app.ui.components.SectionTitle
 import com.dev.wine.music.app.ui.components.TerracottaAddButton
 import com.dev.wine.music.app.ui.components.labelRes
 import com.dev.wine.music.app.ui.theme.DetailMono
@@ -98,7 +96,7 @@ fun AlbumDetailContent(
     onAddTrackClick: () -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize().testTag("album_detail")) {
-        DetailTopBar(onBack = onBack)
+        DetailTopBar(eyebrow = stringResource(R.string.album_detail_eyebrow), onBack = onBack)
         when (uiState) {
             UiState.Loading -> LoadingView()
             is UiState.Error -> ErrorView(onRetry = onRetry, type = uiState.type)
@@ -109,29 +107,6 @@ fun AlbumDetailContent(
                 onAddTrackClick = onAddTrackClick,
             )
         }
-    }
-}
-
-/** Back arrow on the left and the "FICHA DEL ÁLBUM" label on the right. */
-@Composable
-private fun DetailTopBar(onBack: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 16.dp, top = 4.dp),
-    ) {
-        IconButton(onClick = onBack, modifier = Modifier.testTag("back_button")) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.back),
-            )
-        }
-        Text(
-            text = stringResource(R.string.album_detail_eyebrow).uppercase(),
-            style = LabelMono,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.End,
-            modifier = Modifier.weight(1f),
-        )
     }
 }
 
@@ -267,21 +242,6 @@ private fun ExpandableDescription(description: String, modifier: Modifier = Modi
     }
 }
 
-/** Mono caps title with a solid ink rule under it ("LADO A", "RESEÑAS · 1"). */
-@Composable
-private fun SectionTitle(text: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = text.uppercase(),
-            style = LabelMono,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(bottom = 10.dp),
-        )
-        HorizontalDivider(thickness = 1.5.dp, color = MaterialTheme.colorScheme.onBackground)
-    }
-}
-
 /** Tracks grouped by vinyl side, each side under its own "LADO A" / "LADO B" title. */
 @Composable
 private fun Tracklist(tracks: List<NumberedTrack>, modifier: Modifier = Modifier) {
@@ -385,12 +345,3 @@ private fun RatingStars(rating: Int) {
     )
 }
 
-@Composable
-private fun EmptySection(text: String, tag: String) {
-    Text(
-        text = text,
-        style = SansBody,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(top = 16.dp).testTag(tag),
-    )
-}

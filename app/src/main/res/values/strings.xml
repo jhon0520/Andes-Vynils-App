@@ -66,4 +66,18 @@
     <string name="profile_badge_visitor">VIS</string>
     <string name="profile_badge_collector_description">Perfil: coleccionista %1$s</string>
     <string name="profile_badge_visitor_description">Perfil: visitante</string>
+
+    <!-- HU04 · Detalle de artista -->
+    <string name="artist_detail_eyebrow">Ficha del artista</string>
+    <string name="musician">Músico</string>
+    <string name="artist_born_on">Nació el %1$s</string>
+    <string name="artist_created_on">Creada el %1$s</string>
+    <string name="artist_members_count">Integrantes · %1$d</string>
+    <string name="artist_members_empty">Esta banda aún no tiene integrantes registrados.</string>
+    <string name="artist_band_empty">No pertenece a ninguna banda.</string>
+    <string name="artist_albums_count">Discografía · %1$d</string>
+    <string name="artist_albums_empty">Este artista aún no tiene álbumes.</string>
+    <string name="artist_prizes_count">Premios · %1$d</string>
+    <string name="artist_prizes_empty">Este artista aún no tiene premios.</string>
+    <string name="artist_prize_unnamed">Premio</string>
 </resources>

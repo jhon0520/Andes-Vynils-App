@@ -2,6 +2,7 @@ package com.dev.wine.music.app.ui.artist
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +45,7 @@ private val TYPE_OPTIONS: List<ArtistType?> = listOf(null, ArtistType.MUSICIAN, 
 
 @Composable
 fun ArtistListScreen(
+    onArtistClick: (Int, ArtistType) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArtistListViewModel = hiltViewModel(),
 ) {
@@ -54,6 +57,7 @@ fun ArtistListScreen(
         onTypeSelect = viewModel::onTypeSelect,
         onRetry = viewModel::loadArtists,
         modifier = modifier,
+        onArtistClick = onArtistClick,
     )
 }
 
@@ -64,6 +68,7 @@ fun ArtistListContent(
     onTypeSelect: (ArtistType?) -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    onArtistClick: (Int, ArtistType) -> Unit = { _, _ -> },
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -93,7 +98,12 @@ fun ArtistListContent(
                         ) {
                             // Musicians and bands share one id sequence in the backend, but the type keeps keys safe.
                             items(catalog.artists, key = { "${it.type}-${it.id}" }) { artist ->
-                                ArtistItem(artist, modifier = Modifier.testTag("artist_item_${artist.id}"))
+                                ArtistItem(
+                                    artist = artist,
+                                    modifier = Modifier
+                                        .clickable(role = Role.Button) { onArtistClick(artist.id, artist.type) }
+                                        .testTag("artist_item_${artist.id}"),
+                                )
                                 HorizontalDivider()
                             }
                         }
