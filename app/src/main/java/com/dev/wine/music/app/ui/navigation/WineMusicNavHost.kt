@@ -10,6 +10,7 @@ import androidx.navigation.compose.navigation
 import com.dev.wine.music.app.ui.album.detail.AlbumDetailScreen
 import com.dev.wine.music.app.ui.album.list.AlbumListScreen
 import com.dev.wine.music.app.ui.artist.ArtistListScreen
+import com.dev.wine.music.app.ui.artist.detail.ArtistDetailScreen
 import com.dev.wine.music.app.ui.collector.CollectorListScreen
 import com.dev.wine.music.app.ui.onboarding.CollectorPickerScreen
 import com.dev.wine.music.app.ui.onboarding.RoleSelectionScreen
@@ -56,7 +57,15 @@ fun WineMusicNavHost(
             )
         }
         composable<ArtistsRoute> {
-            ArtistListScreen()
+            ArtistListScreen(
+                onArtistClick = { artistId, type -> navController.navigate(ArtistDetailRoute(artistId, type.name)) },
+            )
+        }
+        composable<ArtistDetailRoute> {
+            ArtistDetailScreen(
+                onBack = dropUnlessResumed { navController.popBackStack() },
+                onAlbumClick = { albumId -> navController.navigate(AlbumDetailRoute(albumId)) },
+            )
         }
         composable<CollectorsRoute> {
             CollectorListScreen()
