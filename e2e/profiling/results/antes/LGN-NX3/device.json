@@ -1,0 +1,13 @@
+{
+  "manufacturer": "HONOR",
+  "model": "LGN-NX3",
+  "marketName": "HONOR 400 Smart",
+  "androidRelease": "15",
+  "sdk": 35,
+  "soc": "QTI SM6375",
+  "cores": 8,
+  "cpuMaxGhz": 2.3,
+  "ramGb": 5.4,
+  "screen": "720x1610",
+  "density": 320
+}
