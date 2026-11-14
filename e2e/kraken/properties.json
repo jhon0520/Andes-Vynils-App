@@ -9,6 +9,8 @@
   "SALSA_RELEASE_DATE": "01/08/1984",
   "MUSICIAN": "Rubén Blades Bellido de Luna",
   "BAND": "Queen",
+  "MUSICIAN_ITEM_ID": "artist_item_100",
+  "MUSICIAN_ALBUM_ID": "artist_album_100",
   "COLLECTOR_QUERY": "monsalve",
   "COLLECTOR_NAME": "Jaime Monsalve",
   "COLLECTOR_CONTINUE": "Continuar como Jaime Monsalve"
