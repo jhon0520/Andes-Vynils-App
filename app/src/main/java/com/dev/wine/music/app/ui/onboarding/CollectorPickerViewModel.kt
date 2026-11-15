@@ -8,6 +8,7 @@ import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.domain.usecase.GetCollectorsUseCase
 import com.dev.wine.music.app.domain.usecase.SelectCollectorUseCase
+import com.dev.wine.music.app.ui.collector.filterBy
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.common.toUiError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.text.Normalizer
 import javax.inject.Inject
 
 /**
@@ -110,28 +110,4 @@ class CollectorPickerViewModel @Inject constructor(
         const val KEY_QUERY = "query"
         const val KEY_SELECTED_ID = "selectedId"
     }
-}
-
-private val COMBINING_MARKS = Regex("\\p{Mn}+")
-
-/** Compiled once: a Regex built inside collectorInitials would be compiled on every row. */
-private val WHITESPACE = Regex("\\s+")
-
-/** Lowercase without accents, so "bellon" finds "Bellón". */
-internal fun String.normalizedForSearch(): String =
-    Normalizer.normalize(this, Normalizer.Form.NFD).replace(COMBINING_MARKS, "").lowercase().trim()
-
-internal fun List<Collector>.filterBy(query: String): List<Collector> {
-    val needle = query.normalizedForSearch()
-    if (needle.isEmpty()) return this
-    return filter { it.name.normalizedForSearch().contains(needle) || it.email.normalizedForSearch().contains(needle) }
-}
-
-/** "Manolo Bellón" → "MB". A collector without a name shows "··". */
-internal fun collectorInitials(name: String): String {
-    val initials = name.trim().split(WHITESPACE)
-        .filter { it.isNotEmpty() }
-        .take(2)
-        .joinToString("") { it.first().uppercase() }
-    return initials.ifEmpty { "··" }
 }

@@ -13,5 +13,7 @@
   "MUSICIAN_ALBUM_ID": "artist_album_100",
   "COLLECTOR_QUERY": "monsalve",
   "COLLECTOR_NAME": "Jaime Monsalve",
-  "COLLECTOR_CONTINUE": "Continuar como Jaime Monsalve"
+  "COLLECTOR_CONTINUE": "Continuar como Jaime Monsalve",
+  "OTHER_COLLECTOR_NAME": "Manolo Bellon",
+  "OTHER_COLLECTOR_EMAIL_QUERY": "caracol"
 }

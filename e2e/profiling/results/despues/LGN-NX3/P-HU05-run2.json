@@ -8,52 +8,53 @@
     "androidRelease": "15",
     "sdk": 35
   },
-  "recordedAt": "2026-11-14T22:43:51.427Z",
-  "durationMs": 17118,
+  "recordedAt": "2026-11-15T01:44:14.869Z",
+  "durationMs": 20127,
   "coldStart": null,
   "timings": {
     "coleccionistas-primera-vez": {
-      "ms": 1164,
-      "appiumRoundTripMs": 61
+      "ms": 1200,
+      "appiumRoundTripMs": 46
     },
     "coleccionistas-regreso": {
-      "ms": 1090,
-      "appiumRoundTripMs": 57
+      "ms": 1190,
+      "appiumRoundTripMs": 40
     }
   },
   "cpu": {
     "cores": 8,
-    "totalMs": 7270,
-    "mainThreadMs": 4180,
-    "otherThreadsMs": 3090,
-    "avgPct": 5.3,
-    "peakPct": 34.1
+    "totalMs": 7790,
+    "mainThreadMs": 4660,
+    "otherThreadsMs": 3130,
+    "avgPct": 4.8,
+    "peakPct": 26.8
   },
   "memory": {
-    "totalPssKb": 114539,
-    "javaHeapKb": 19684,
-    "nativeHeapKb": 16004,
-    "graphicsKb": 18768,
-    "codeKb": 2320,
+    "totalPssKb": 115496,
+    "javaHeapKb": 21000,
+    "nativeHeapKb": 16016,
+    "graphicsKb": 18804,
+    "codeKb": 2492,
     "activities": 1,
     "appContexts": 5,
-    "peakRssKb": 213956,
+    "peakRssKb": 215112,
     "peakThreads": 50
   },
   "frames": {
-    "total": 192,
-    "janky": 22,
-    "jankyPct": 11.46,
-    "slowOver16ms": 44,
+    "total": 193,
+    "janky": 23,
+    "jankyPct": 11.92,
+    "slowOver16ms": 41,
     "frozenOver700ms": 0,
-    "p50Ms": 9,
-    "p90Ms": 30,
-    "p95Ms": 85,
-    "p99Ms": 300,
-    "slowUiThread": 15,
-    "deadlineMissed": 22
+    "p50Ms": 10,
+    "p90Ms": 42,
+    "p95Ms": 73,
+    "p99Ms": 200,
+    "slowUiThread": 18,
+    "deadlineMissed": 23
   },
   "network": {
+    "source": "proxy",
     "apiRequests": 2,
     "requests": [
       {
@@ -69,12 +70,12 @@
       {
         "status": 200,
         "path": "/albums",
-        "ms": 377
+        "ms": 103
       },
       {
         "status": 200,
         "path": "/collectors",
-        "ms": 68
+        "ms": 41
       }
     ],
     "segments": [
@@ -86,6 +87,10 @@
             "path": "/collectors"
           }
         ]
+      },
+      {
+        "name": "buscar",
+        "requests": []
       },
       {
         "name": "regreso",
