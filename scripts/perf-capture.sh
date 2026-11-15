@@ -6,6 +6,8 @@
 #   ./scripts/perf-capture.sh <device-label> startup        # cold start time, 3 runs
 #   ./scripts/perf-capture.sh <device-label> <HU>           # frames, memory and CPU of a walkthrough
 #   ./scripts/perf-capture.sh <device-label> <HU> -s SERIAL  # pick a device when several are connected
+#   ./scripts/perf-capture.sh <device-label> <HU> --auto     # restart the app and run the walkthrough
+#                                                            # with scripts/perf-walkthrough.sh
 #
 # Examples:
 #   ./scripts/perf-capture.sh samsung-a10 startup
@@ -20,7 +22,7 @@ ACTIVITY="${PACKAGE}/.MainActivity"
 STARTUP_RUNS=3
 
 if [ $# -lt 2 ]; then
-  sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
   exit 1
 fi
 
@@ -28,9 +30,14 @@ DEVICE_LABEL="$1"
 STORY="$2"
 shift 2
 ADB_ARGS=()
-if [ "${1:-}" = "-s" ] && [ -n "${2:-}" ]; then
-  ADB_ARGS=(-s "$2")
-fi
+AUTO=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -s) ADB_ARGS=(-s "$2"); shift 2 ;;
+    --auto) AUTO=true; shift ;;
+    *) echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+done
 
 adb_cmd() { adb ${ADB_ARGS[@]+"${ADB_ARGS[@]}"} "$@"; }
 shell() { adb_cmd shell "$@" | tr -d '\r'; }
@@ -79,6 +86,14 @@ fi
 
 FILE_PREFIX="${OUT_DIR}/${STORY}-${STAMP}"
 
+if [ "$AUTO" = true ]; then
+  # Same starting point every run: cold process on the profile selection screen.
+  shell am force-stop "$PACKAGE"
+  sleep 2
+  shell am start -W -n "$ACTIVITY" > /dev/null
+  sleep 3
+fi
+
 # Frame stats count from here on, so they only cover the walkthrough.
 shell dumpsys gfxinfo "$PACKAGE" reset > /dev/null
 pid="$(shell pidof "$PACKAGE" || true)"
@@ -89,9 +104,13 @@ fi
 cpu_start="$(shell cat "/proc/${pid}/stat" | awk '{print $14 + $15}')"
 uptime_start="$(shell cat /proc/uptime | awk '{print $1}')"
 
-echo
-echo "Do the ${STORY} walkthrough on the device now (docs/performance/README.md, table «Recorridos»)."
-read -r -p "Press Enter when you finish... " _
+if [ "$AUTO" = true ]; then
+  "${APP_DIR}/scripts/perf-walkthrough.sh" "$STORY" ${ADB_ARGS[@]+"${ADB_ARGS[@]}"}
+else
+  echo
+  echo "Do the ${STORY} walkthrough on the device now (docs/performance/README.md, table «Recorridos»)."
+  read -r -p "Press Enter when you finish... " _
+fi
 
 cpu_end="$(shell cat "/proc/${pid}/stat" | awk '{print $14 + $15}')"
 uptime_end="$(shell cat /proc/uptime | awk '{print $1}')"
