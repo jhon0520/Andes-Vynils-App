@@ -1,6 +1,6 @@
 # Resultados de perfilamiento
 
-Generado el 2026-11-14 23:13 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
+Generado el 2026-11-15 00:31 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
 
 ## Dispositivos
 
@@ -293,6 +293,40 @@ Los tiempos incluyen la ida y vuelta de Appium (mediana 60 ms por consulta).
 
 Peticiones por corrida: `GET /albums` ×1,0, `GET /bands` ×1,0, `GET /musicians` ×1,0.
 Los tiempos incluyen la ida y vuelta de Appium (mediana 57 ms por consulta).
+
+### P-HU04 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «detalle-musico» (ms) | 989 | 955 | 1.006 |
+| Tiempo hasta ver «album-desde-artista» (ms) | 791 | 752 | 1.043 |
+| Tiempo hasta ver «detalle-banda» (ms) | 834 | 801 | 843 |
+| CPU promedio del recorrido (% del dispositivo) | 4,6 | 4,5 | 4,7 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 23,6 | 21,9 | 25,5 |
+| Tiempo de CPU en el hilo `main` (ms) | 5.910 | 5.910 | 5.950 |
+| Tiempo de CPU en los demás hilos (ms) | 4.070 | 3.950 | 4.090 |
+| Memoria total PSS al final (MB) | 115,9 | 114,8 | 116,1 |
+| Java/Kotlin heap al final (MB) | 16,6 | 16,3 | 16,9 |
+| Native heap al final (MB) | 16,9 | 16,8 | 17,1 |
+| Gráficos al final (MB) | 19,4 | 19,4 | 19,5 |
+| RSS pico (MB) | 213,0 | 212,7 | 214,2 |
+| Hilos vivos (pico) | 52 | 50 | 54 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 334 | 329 | 341 |
+| Frames lentos (> 16 ms) | 46 | 36 | 50 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 9,4 | 8,1 | 9,4 |
+| Frame p90 (ms) | 25 | 20 | 25 |
+| Frame p99 (ms) | 150 | 150 | 200 |
+| Peticiones a la API en todo el recorrido | 8 | 8 | 8 |
+| Peticiones a la API desde «detalle-musico» | 2 | 2 | 2 |
+| Peticiones a la API desde «album-desde-artista» | 2 | 2 | 2 |
+| Peticiones a la API desde «detalle-banda» | 1 | 1 | 1 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /musicians` ×1,0, `GET /bands` ×1,0, `GET /musicians/100` ×1,0, `GET /performerprizes` ×1,0, `GET /collectors` ×1,0, `GET /albums/100` ×1,0, `GET /bands/101` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 51 ms por consulta).
 
 ### P-HU05 (3 corridas)
 
