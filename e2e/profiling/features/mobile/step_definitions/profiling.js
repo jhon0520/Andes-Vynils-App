@@ -335,8 +335,14 @@ async function tapAndMeasure(world, tapSelector, targetSelector, label) {
   assert.ok(world.profile, 'Run "I start profiling" first');
   const tap = await world.driver.$(tapSelector);
   await tap.waitForDisplayed({ timeout: TIMEOUT });
+  // A real finger tap at the center of the element (`adb shell input tap`), like a user does.
+  // On the HONOR LGN-NX3 the Appium click on an artist row reached the app but never opened the
+  // detail, while a real tap does (defect D-06 was in the test, not in HU04). It also keeps the
+  // Appium round trip of the click out of the measured time.
+  const { x, y } = await tap.getLocation();
+  const { width, height } = await tap.getSize();
   const t0 = Date.now();
-  await tap.click();
+  shell(world.device.id, `input tap ${Math.round(x + width / 2)} ${Math.round(y + height / 2)}`);
   const target = await world.driver.$(targetSelector);
   await target.waitForDisplayed({ timeout: TIMEOUT, interval: POLL_MS });
   const ms = Date.now() - t0;
