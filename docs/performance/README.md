@@ -36,6 +36,18 @@ Cada recorrido se repite **3 veces** por dispositivo y se reporta la mediana. An
 ./scripts/perf-capture.sh <dispositivo> HU01 -s SERIAL   # si hay varios dispositivos conectados
 ```
 
+### Modo automático (sin tocar el dispositivo)
+
+`scripts/perf-walkthrough.sh` hace los recorridos de §2 con `adb` y `uiautomator`, buscando los elementos por `testTag` (`MainScreen` activa `testTagsAsResourceId`). Así cada repetición es idéntica en cualquier teléfono o emulador:
+
+```bash
+./scripts/perf-capture.sh <dispositivo> HU01 --auto   # reinicia la app, hace el recorrido y mide
+./scripts/perf-run-all.sh <dispositivo>               # arranque + HU01–HU05 × 3 y tabla de medianas
+./scripts/perf-run-all.sh <dispositivo> -s SERIAL
+```
+
+`perf-run-all.sh` deja además `medians-*.md` con la mediana de cada métrica por HU, lista para pegar en la wiki. Cada `uiautomator dump` consume algo de CPU del dispositivo; como está en todas las corridas, los resultados siguen siendo comparables entre sí, pero la CPU medida incluye ese costo. El Profiler de Android Studio puede quedar conectado mientras corre el modo automático para tomar las capturas de §3.
+
 `<dispositivo>` es una etiqueta corta sin espacios, p. ej. `samsung-a10`. El script guarda en `docs/performance/results/<dispositivo>/`:
 
 | Archivo | Contenido |
@@ -77,5 +89,13 @@ Guardar las capturas como `docs/performance/results/<dispositivo>/<HU>-<métrica
 Después de las tablas, una conclusión por HU, la comparación antes/después en el dispositivo de referencia (ver `micro-optimizaciones.md`), los hallazgos registrados como issues (`bug`, `performance`) y las limitaciones.
 
 ## 5. Advertencia sobre emuladores
+
+### Correr la serie en un emulador con el backend local
+
+1. `local.properties`: `api.base.url=http://10.0.2.2:3000/` (el emulador ve el `localhost` del Mac en `10.0.2.2`). Recordar volver a la URL anterior para teléfonos físicos.
+2. Backend arriba: `curl http://localhost:3000/albums` debe responder 200.
+3. Emulador con GPU del host y ventana (sin ventana usa render por software): `emulator -avd Pixel_3a_API_30_x86 -gpu host -no-snapshot-load -no-audio -no-boot-anim &`. API 29 o superior para que el Profiler se conecte al build `profileable`.
+4. `./gradlew installProfiling` y `./scripts/perf-run-all.sh emulator-api30`.
+
 
 Una prueba del script en el emulador API 30 sin ventana (render por software) dio 95,7 % de frames lentos y 0 KB de memoria gráfica en HU01. Esos números reflejan el emulador, no la app, y por eso no entran al reporte. El emulador sirve para verificar que el script funciona y para la prueba obligatoria en API 21.
