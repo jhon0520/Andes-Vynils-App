@@ -76,7 +76,12 @@ class FakeCollectorRepository(
     var error: Exception = IOException("Network error"),
 ) : CollectorRepository {
 
+    /** How many times the collectors were requested, to check that searching does not reload them. */
+    var calls = 0
+        private set
+
     override suspend fun getCollectors(): List<Collector> {
+        calls++
         if (shouldFail) throw error
         return collectors
     }

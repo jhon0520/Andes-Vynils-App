@@ -9,6 +9,7 @@ import com.dev.wine.music.app.fakes.FakeCollectorRepository
 import com.dev.wine.music.app.fakes.FakeSessionRepository
 import com.dev.wine.music.app.fakes.TestData
 import com.dev.wine.music.app.fakes.testDispatcher
+import com.dev.wine.music.app.ui.collector.collectorInitials
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.util.MainDispatcherRule
