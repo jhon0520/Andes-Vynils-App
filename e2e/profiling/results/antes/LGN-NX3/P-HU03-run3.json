@@ -1,0 +1,112 @@
+{
+  "scenario": "P-HU03",
+  "build": "antes",
+  "run": 3,
+  "device": {
+    "manufacturer": "HONOR",
+    "model": "LGN-NX3",
+    "androidRelease": "15",
+    "sdk": 35
+  },
+  "recordedAt": "2026-11-14T23:11:12.274Z",
+  "durationMs": 20720,
+  "coldStart": null,
+  "timings": {
+    "artistas-primera-vez": {
+      "ms": 1253,
+      "appiumRoundTripMs": 58
+    },
+    "artistas-regreso": {
+      "ms": 1193,
+      "appiumRoundTripMs": 50
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 8350,
+    "mainThreadMs": 5170,
+    "otherThreadsMs": 3180,
+    "avgPct": 5,
+    "peakPct": 26.1
+  },
+  "memory": {
+    "totalPssKb": 119491,
+    "javaHeapKb": 22772,
+    "nativeHeapKb": 16072,
+    "graphicsKb": 18780,
+    "codeKb": 4440,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 213344,
+    "peakThreads": 49
+  },
+  "frames": {
+    "total": 243,
+    "janky": 25,
+    "jankyPct": 10.29,
+    "slowOver16ms": 31,
+    "frozenOver700ms": 0,
+    "p50Ms": 7,
+    "p90Ms": 23,
+    "p95Ms": 69,
+    "p99Ms": 200,
+    "slowUiThread": 23,
+    "deadlineMissed": 25
+  },
+  "network": {
+    "apiRequests": 3,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/bands"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 136
+      },
+      {
+        "status": 200,
+        "path": "/bands",
+        "ms": 44
+      },
+      {
+        "status": 200,
+        "path": "/musicians",
+        "ms": 67
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/bands"
+          },
+          {
+            "method": "GET",
+            "path": "/musicians"
+          }
+        ]
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

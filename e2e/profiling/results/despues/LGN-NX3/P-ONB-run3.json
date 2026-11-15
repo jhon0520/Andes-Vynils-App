@@ -1,0 +1,111 @@
+{
+  "scenario": "P-ONB",
+  "build": "despues",
+  "run": 3,
+  "device": {
+    "manufacturer": "HONOR",
+    "model": "LGN-NX3",
+    "androidRelease": "15",
+    "sdk": 35
+  },
+  "recordedAt": "2026-11-14T22:50:13.230Z",
+  "durationMs": 10875,
+  "coldStart": [
+    {
+      "totalTimeMs": 2801,
+      "waitTimeMs": 2803,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2747,
+      "waitTimeMs": 2749,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2902,
+      "waitTimeMs": 2906,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2809,
+      "waitTimeMs": 2812,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2787,
+      "waitTimeMs": 2791,
+      "launchState": "COLD"
+    }
+  ],
+  "timings": {
+    "lista-de-coleccionistas": {
+      "ms": 1169,
+      "appiumRoundTripMs": 43
+    },
+    "catalogo": {
+      "ms": 1731,
+      "appiumRoundTripMs": 80
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 4900,
+    "mainThreadMs": 2650,
+    "otherThreadsMs": 2250,
+    "avgPct": 5.6,
+    "peakPct": 22.7
+  },
+  "memory": {
+    "totalPssKb": 116748,
+    "javaHeapKb": 16692,
+    "nativeHeapKb": 19392,
+    "graphicsKb": 18956,
+    "codeKb": 4720,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 208260,
+    "peakThreads": 49
+  },
+  "frames": {
+    "total": 117,
+    "janky": 13,
+    "jankyPct": 11.11,
+    "slowOver16ms": 20,
+    "frozenOver700ms": 0,
+    "p50Ms": 9,
+    "p90Ms": 46,
+    "p95Ms": 150,
+    "p99Ms": 250,
+    "slowUiThread": 12,
+    "deadlineMissed": 13
+  },
+  "network": {
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 152
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 47
+      }
+    ],
+    "segments": []
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

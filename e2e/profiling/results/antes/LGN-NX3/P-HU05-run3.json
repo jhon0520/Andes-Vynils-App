@@ -1,0 +1,99 @@
+{
+  "scenario": "P-HU05",
+  "build": "antes",
+  "run": 3,
+  "device": {
+    "manufacturer": "HONOR",
+    "model": "LGN-NX3",
+    "androidRelease": "15",
+    "sdk": 35
+  },
+  "recordedAt": "2026-11-14T23:12:12.825Z",
+  "durationMs": 17166,
+  "coldStart": null,
+  "timings": {
+    "coleccionistas-primera-vez": {
+      "ms": 1105,
+      "appiumRoundTripMs": 61
+    },
+    "coleccionistas-regreso": {
+      "ms": 1100,
+      "appiumRoundTripMs": 53
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 6810,
+    "mainThreadMs": 3950,
+    "otherThreadsMs": 2860,
+    "avgPct": 5,
+    "peakPct": 27.7
+  },
+  "memory": {
+    "totalPssKb": 114987,
+    "javaHeapKb": 19044,
+    "nativeHeapKb": 15480,
+    "graphicsKb": 18708,
+    "codeKb": 4548,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 215520,
+    "peakThreads": 45
+  },
+  "frames": {
+    "total": 168,
+    "janky": 16,
+    "jankyPct": 9.52,
+    "slowOver16ms": 29,
+    "frozenOver700ms": 0,
+    "p50Ms": 7,
+    "p90Ms": 32,
+    "p95Ms": 85,
+    "p99Ms": 250,
+    "slowUiThread": 15,
+    "deadlineMissed": 16
+  },
+  "network": {
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 167
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 44
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors"
+          }
+        ]
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
