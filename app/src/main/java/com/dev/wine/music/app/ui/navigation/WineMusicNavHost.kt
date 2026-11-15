@@ -68,7 +68,10 @@ fun WineMusicNavHost(
             )
         }
         composable<CollectorsRoute> {
-            CollectorListScreen()
+            CollectorListScreen(
+                // TODO: navigate to the collector detail when HU06 is implemented.
+                onCollectorClick = {},
+            )
         }
     }
 }

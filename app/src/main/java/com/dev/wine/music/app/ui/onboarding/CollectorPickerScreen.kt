@@ -48,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.ui.collector.collectorInitials
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
