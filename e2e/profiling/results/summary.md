@@ -1,6 +1,6 @@
 # Resultados de perfilamiento
 
-Generado el 2026-11-15 00:31 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
+Generado el 2026-11-15 01:45 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
 
 ## Dispositivos
 
@@ -332,33 +332,34 @@ Los tiempos incluyen la ida y vuelta de Appium (mediana 51 ms por consulta).
 
 | Métrica | Mediana | Mín. | Máx. |
 |---|---|---|---|
-| Tiempo hasta ver «coleccionistas-primera-vez» (ms) | 1.107 | 1.065 | 1.164 |
-| Tiempo hasta ver «coleccionistas-regreso» (ms) | 700 | 560 | 1.090 |
-| CPU promedio del recorrido (% del dispositivo) | 5,1 | 5,1 | 5,3 |
-| CPU pico en ventanas de 0,5 s (% del dispositivo) | 24,0 | 23,9 | 34,1 |
-| Tiempo de CPU en el hilo `main` (ms) | 4.050 | 4.020 | 4.180 |
-| Tiempo de CPU en los demás hilos (ms) | 2.900 | 2.790 | 3.090 |
-| Memoria total PSS al final (MB) | 113,8 | 111,9 | 114,2 |
-| Java/Kotlin heap al final (MB) | 19,4 | 19,2 | 19,7 |
-| Native heap al final (MB) | 15,6 | 15,5 | 16,2 |
-| Gráficos al final (MB) | 18,3 | 18,3 | 18,3 |
-| RSS pico (MB) | 208,3 | 208,2 | 208,9 |
-| Hilos vivos (pico) | 46 | 45 | 50 |
+| Tiempo hasta ver «coleccionistas-primera-vez» (ms) | 1.223 | 1.200 | 1.233 |
+| Tiempo hasta ver «coleccionistas-regreso» (ms) | 969 | 586 | 1.190 |
+| CPU promedio del recorrido (% del dispositivo) | 4,8 | 4,5 | 5,0 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 26,8 | 22,7 | 27,6 |
+| Tiempo de CPU en el hilo `main` (ms) | 4.660 | 4.570 | 4.670 |
+| Tiempo de CPU en los demás hilos (ms) | 3.160 | 3.130 | 3.190 |
+| Memoria total PSS al final (MB) | 111,8 | 111,4 | 112,8 |
+| Java/Kotlin heap al final (MB) | 19,8 | 19,5 | 20,5 |
+| Native heap al final (MB) | 15,6 | 15,5 | 15,6 |
+| Gráficos al final (MB) | 18,4 | 18,4 | 18,4 |
+| RSS pico (MB) | 213,0 | 210,1 | 215,3 |
+| Hilos vivos (pico) | 50 | 48 | 52 |
 | Activities vivas al final | 1 | 1 | 1 |
-| Frames dibujados | 180 | 179 | 192 |
-| Frames lentos (> 16 ms) | 29 | 26 | 44 |
+| Frames dibujados | 193 | 192 | 199 |
+| Frames lentos (> 16 ms) | 41 | 41 | 50 |
 | Frames congelados (> 700 ms) | 0 | 0 | 0 |
-| Frames con jank (%) | 11,2 | 10,0 | 11,5 |
-| Frame p90 (ms) | 30 | 28 | 30 |
-| Frame p99 (ms) | 300 | 200 | 300 |
+| Frames con jank (%) | 13,1 | 11,9 | 13,5 |
+| Frame p90 (ms) | 42 | 38 | 42 |
+| Frame p99 (ms) | 250 | 200 | 250 |
 | Peticiones a la API en todo el recorrido | 2 | 2 | 2 |
 | Peticiones a la API desde «primera-apertura» | 1 | 1 | 1 |
+| Peticiones a la API desde «buscar» | 0 | 0 | 0 |
 | Peticiones a la API desde «regreso» | 0 | 0 | 0 |
 | ANR | 0 | 0 | 0 |
 | Cierres inesperados | 0 | 0 | 0 |
 
 Peticiones por corrida: `GET /albums` ×1,0, `GET /collectors` ×1,0.
-Los tiempos incluyen la ida y vuelta de Appium (mediana 57 ms por consulta).
+Los tiempos incluyen la ida y vuelta de Appium (mediana 47 ms por consulta).
 
 ## LGN-NX3 · antes vs. después
 
@@ -457,25 +458,25 @@ Los tiempos incluyen la ida y vuelta de Appium (mediana 57 ms por consulta).
 | P-HU03 | Peticiones a la API desde «regreso» | 0 | 0 | = |
 | P-HU03 | ANR | 0 | 0 | = |
 | P-HU03 | Cierres inesperados | 0 | 0 | = |
-| P-HU05 | Tiempo hasta ver «coleccionistas-primera-vez» (ms) | 1.105 | 1.107 | +0 % |
-| P-HU05 | Tiempo hasta ver «coleccionistas-regreso» (ms) | 997 | 700 | -30 % |
-| P-HU05 | CPU promedio del recorrido (% del dispositivo) | 5,0 | 5,1 | +2 % |
-| P-HU05 | CPU pico en ventanas de 0,5 s (% del dispositivo) | 28,2 | 24,0 | -15 % |
-| P-HU05 | Tiempo de CPU en el hilo `main` (ms) | 4.080 | 4.050 | -1 % |
-| P-HU05 | Tiempo de CPU en los demás hilos (ms) | 2.860 | 2.900 | +1 % |
-| P-HU05 | Memoria total PSS al final (MB) | 113,1 | 113,8 | +1 % |
-| P-HU05 | Java/Kotlin heap al final (MB) | 19,5 | 19,4 | -1 % |
+| P-HU05 | Tiempo hasta ver «coleccionistas-primera-vez» (ms) | 1.105 | 1.223 | +11 % |
+| P-HU05 | Tiempo hasta ver «coleccionistas-regreso» (ms) | 997 | 969 | -3 % |
+| P-HU05 | CPU promedio del recorrido (% del dispositivo) | 5,0 | 4,8 | -4 % |
+| P-HU05 | CPU pico en ventanas de 0,5 s (% del dispositivo) | 28,2 | 26,8 | -5 % |
+| P-HU05 | Tiempo de CPU en el hilo `main` (ms) | 4.080 | 4.660 | +14 % |
+| P-HU05 | Tiempo de CPU en los demás hilos (ms) | 2.860 | 3.160 | +10 % |
+| P-HU05 | Memoria total PSS al final (MB) | 113,1 | 111,8 | -1 % |
+| P-HU05 | Java/Kotlin heap al final (MB) | 19,5 | 19,8 | +1 % |
 | P-HU05 | Native heap al final (MB) | 15,1 | 15,6 | +3 % |
-| P-HU05 | Gráficos al final (MB) | 18,3 | 18,3 | +0 % |
-| P-HU05 | RSS pico (MB) | 208,2 | 208,3 | +0 % |
-| P-HU05 | Hilos vivos (pico) | 45 | 46 | +2 % |
+| P-HU05 | Gráficos al final (MB) | 18,3 | 18,4 | +1 % |
+| P-HU05 | RSS pico (MB) | 208,2 | 213,0 | +2 % |
+| P-HU05 | Hilos vivos (pico) | 45 | 50 | +11 % |
 | P-HU05 | Activities vivas al final | 1 | 1 | +0 % |
-| P-HU05 | Frames dibujados | 173 | 180 | +4 % |
-| P-HU05 | Frames lentos (> 16 ms) | 31 | 29 | -6 % |
+| P-HU05 | Frames dibujados | 173 | 193 | +12 % |
+| P-HU05 | Frames lentos (> 16 ms) | 31 | 41 | +32 % |
 | P-HU05 | Frames congelados (> 700 ms) | 0 | 0 | = |
-| P-HU05 | Frames con jank (%) | 11,6 | 11,2 | -3 % |
-| P-HU05 | Frame p90 (ms) | 32 | 30 | -6 % |
-| P-HU05 | Frame p99 (ms) | 250 | 300 | +20 % |
+| P-HU05 | Frames con jank (%) | 11,6 | 13,1 | +13 % |
+| P-HU05 | Frame p90 (ms) | 32 | 42 | +31 % |
+| P-HU05 | Frame p99 (ms) | 250 | 250 | +0 % |
 | P-HU05 | Peticiones a la API en todo el recorrido | 2 | 2 | +0 % |
 | P-HU05 | Peticiones a la API desde «primera-apertura» | 1 | 1 | +0 % |
 | P-HU05 | Peticiones a la API desde «regreso» | 0 | 0 | = |
