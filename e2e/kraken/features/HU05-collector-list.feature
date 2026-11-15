@@ -16,12 +16,15 @@ Feature: HU05 - Browse the list of collectors
     And I hide the keyboard
     Then I should see the text "<COLLECTOR_NAME>"
     And I should not see the text "<OTHER_COLLECTOR_NAME>"
-    When I type "<OTHER_COLLECTOR_EMAIL_QUERY>" into the element with id "collectors_search"
+    # Appium adds the text to what is already in the field: the search is cleared with its ✕ first
+    When I tap the element with id "collectors_search_clear_button"
+    And I type "<OTHER_COLLECTOR_EMAIL_QUERY>" into the element with id "collectors_search"
     And I hide the keyboard
     Then I should see the text "<OTHER_COLLECTOR_NAME>"
     And I should not see the text "<COLLECTOR_NAME>"
     # A query no collector can match: the empty result does not depend on the backend data
-    When I type "<NO_MATCH_QUERY>" into the element with id "collectors_search"
+    When I tap the element with id "collectors_search_clear_button"
+    And I type "<NO_MATCH_QUERY>" into the element with id "collectors_search"
     And I hide the keyboard
     Then I should see the element with id "no_results_view"
     When I tap the element with id "clear_search_button"
