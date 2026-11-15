@@ -1,0 +1,180 @@
+{
+  "scenario": "P-HU04",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "HONOR",
+    "model": "LGN-NX3",
+    "androidRelease": "15",
+    "sdk": 35
+  },
+  "recordedAt": "2026-11-15T00:24:39.192Z",
+  "durationMs": 26516,
+  "coldStart": null,
+  "timings": {
+    "detalle-musico": {
+      "ms": 989,
+      "appiumRoundTripMs": 52
+    },
+    "album-desde-artista": {
+      "ms": 791,
+      "appiumRoundTripMs": 51
+    },
+    "detalle-banda": {
+      "ms": 801,
+      "appiumRoundTripMs": 54
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 9900,
+    "mainThreadMs": 5950,
+    "otherThreadsMs": 3950,
+    "avgPct": 4.7,
+    "peakPct": 23.6
+  },
+  "memory": {
+    "totalPssKb": 117581,
+    "javaHeapKb": 16700,
+    "nativeHeapKb": 17296,
+    "graphicsKb": 19856,
+    "codeKb": 4720,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 218152,
+    "peakThreads": 50
+  },
+  "frames": {
+    "total": 334,
+    "janky": 27,
+    "jankyPct": 8.08,
+    "slowOver16ms": 46,
+    "frozenOver700ms": 0,
+    "p50Ms": 9,
+    "p90Ms": 25,
+    "p95Ms": 48,
+    "p99Ms": 150,
+    "slowUiThread": 16,
+    "deadlineMissed": 27
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 8,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians"
+      },
+      {
+        "method": "GET",
+        "path": "/bands"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians/100"
+      },
+      {
+        "method": "GET",
+        "path": "/performerprizes"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      },
+      {
+        "method": "GET",
+        "path": "/bands/101"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 168
+      },
+      {
+        "status": 200,
+        "path": "/musicians",
+        "ms": 42
+      },
+      {
+        "status": 200,
+        "path": "/bands",
+        "ms": 136
+      },
+      {
+        "status": 200,
+        "path": "/musicians/100",
+        "ms": 81
+      },
+      {
+        "status": 200,
+        "path": "/performerprizes",
+        "ms": 70
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 59
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 60
+      },
+      {
+        "status": 200,
+        "path": "/bands/101",
+        "ms": 88
+      }
+    ],
+    "segments": [
+      {
+        "name": "detalle-musico",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/musicians/100"
+          },
+          {
+            "method": "GET",
+            "path": "/performerprizes"
+          }
+        ]
+      },
+      {
+        "name": "album-desde-artista",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors"
+          },
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          }
+        ]
+      },
+      {
+        "name": "detalle-banda",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/bands/101"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
