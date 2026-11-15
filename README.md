@@ -67,11 +67,18 @@ Si la IP detectada no sirve, pásala a mano: `HOST_IP=192.168.x.x ./scripts/e2e-
 
 | Herramienta | Versión |
 | --- | --- |
-| Android Studio | Compatible con Android Gradle Plugin 8.8 *(versión exacta por confirmar)* |
-| JDK | 17 para Gradle (Android Studio ya lo incluye) |
-| Android SDK | 35 |
-| Emulador | Android 7.0 (API 24) o superior |
+| Android Studio | Compatible con Android Gradle Plugin 8.8 |
+| JDK | 17 para Gradle (el que trae Android Studio; con JDK 21+ Gradle falla) |
+| Android SDK | 35, con `platform-tools` (`adb`) en el `PATH` |
+| Emulador o teléfono | Android 5.0 (API 21) o superior (`minSdk = 21`) |
+| Node.js | 20 (`e2e/kraken/.nvmrc`), solo para Kraken y el perfilamiento |
 | Backend | **BackVynils** en Render (por defecto) o local (ver [Backend](#1-backend)) |
+
+`adb` viene con el SDK pero no siempre queda en el `PATH`. En macOS:
+
+```bash
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+```
 
 ### 1. Backend
 
@@ -106,18 +113,60 @@ Para volver al dominio por defecto, borra la línea `api.base.url` de `local.pro
 ```bash
 git clone https://github.com/jhon0520/Andes-Vynils-App.git
 cd Andes-Vynils-App
-./gradlew assembleDebug
-./gradlew installDebug   # con el emulador abierto
+./gradlew assembleDebug    # compila app/build/outputs/apk/debug/app-debug.apk
+./gradlew installDebug     # lo instala en el emulador o teléfono conectado (adb devices)
 ```
 
 O abrir la carpeta en **Android Studio** y pulsar **Run ▶** sobre el módulo `app`.
 
-### 4. Pruebas
+Para actualizar el APK que se entrega en el repositorio (`distributions/`):
 
 ```bash
-./gradlew test                   # pruebas unitarias
-./gradlew connectedAndroidTest   # pruebas de interfaz (emulador abierto)
+./gradlew assembleDebug && cp app/build/outputs/apk/debug/app-debug.apk distributions/
 ```
+
+El APK usa el `api.base.url` con el que se compiló. Para el release en `main` debe apuntar a Render: borra `api.base.url` de `local.properties` antes de compilar, o usa `./scripts/e2e-local.sh --release`.
+
+### 4. Pruebas
+
+Antes de las pruebas instrumentadas y de Kraken:
+
+- Un emulador o teléfono conectado (`adb devices` lo lista) y el backend respondiendo en `api.base.url`.
+- Con BackVynils local y un teléfono por USB: `adb reverse tcp:3000 tcp:3000` (se pierde al desconectar el cable).
+- Recomendado para Espresso/Compose: apagar las animaciones del dispositivo.
+
+```bash
+adb shell settings put global window_animation_scale 0
+adb shell settings put global transition_animation_scale 0
+adb shell settings put global animator_duration_scale 0
+```
+
+| Qué | Comando | Reporte |
+|---|---|---|
+| Unitarias (JVM, sin dispositivo) | `./gradlew testDebugUnitTest` | `app/build/reports/tests/testDebugUnitTest/index.html` |
+| Lint (configuración estricta, falla con errores) | `./gradlew lint` | `app/build/reports/lint-results-debug.html` |
+| UI de componente y E2E con Compose (dispositivo) | `./gradlew connectedDebugAndroidTest` | `app/build/reports/androidTests/connected/debug/index.html` |
+| E2E con Kraken (dispositivo) | `(cd e2e/kraken && npx kraken-node run)` | `e2e/kraken/reports/<id>/index.html`, uno por escenario |
+
+Secuencia completa, en el orden en que la corre el equipo antes de un PR:
+
+```bash
+./gradlew testDebugUnitTest lint
+./gradlew connectedDebugAndroidTest
+./gradlew assembleDebug && cp app/build/outputs/apk/debug/app-debug.apk distributions/
+(cd e2e/kraken && npx kraken-node run)
+```
+
+Kraken instala el APK de `distributions/`, por eso hay que copiarlo antes. La primera vez instala sus dependencias con `(cd e2e/kraken && npm install)`.
+
+Para correr una sola clase:
+
+```bash
+./gradlew testDebugUnitTest --tests "*.CollectorListViewModelTest"
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.dev.wine.music.app.e2e.HU05CollectorListE2ETest
+```
+
+Las pruebas E2E que terminan en `ErrorE2ETest` usan un backend falso (MockWebServer) y no necesitan BackVynils. Las demás usan el backend real con sus datos semilla. La estrategia y el inventario de pruebas están en la wiki ([SP02 · Estrategia de pruebas](https://github.com/jhon0520/Andes-Vynils-App/wiki/SP02%E2%80%90Estrategia%E2%80%90de%E2%80%90pruebas)).
 
 Para prender los emuladores desde la terminal, ver [`docs/emuladores-terminal.md`](docs/emuladores-terminal.md).
 
@@ -130,6 +179,17 @@ Para prender los emuladores desde la terminal, ver [`docs/emuladores-terminal.md
 ```
 
 Recorridos, métricas y plantilla del reporte en [`docs/performance/README.md`](docs/performance/README.md).
+
+Perfilamiento automatizado en un teléfono físico (Kraken repite los recorridos de cada HU y `adb` mide CPU, memoria, frames, peticiones y ANR; necesita el backend local):
+
+```bash
+e2e/profiling/build-apks.sh                # apk/antes.apk (develop @ 8921089) y apk/despues.apk (rama actual)
+e2e/profiling/run-profiling.sh despues     # 3 corridas de cada escenario
+e2e/profiling/run-profiling.sh antes       # build sin optimizaciones, para la comparación
+PROFILE_FEATURES="P-HU05" e2e/profiling/run-profiling.sh despues   # solo algunos escenarios
+```
+
+Resultados en `e2e/profiling/results/summary.md`; detalle en [`e2e/profiling/README.md`](e2e/profiling/README.md) y en la wiki ([SP02 · Perfilamiento](https://github.com/jhon0520/Andes-Vynils-App/wiki/SP02%E2%80%90Perfilamiento)).
 
 ## Arquitectura
 
