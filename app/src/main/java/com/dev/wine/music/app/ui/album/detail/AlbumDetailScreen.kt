@@ -43,6 +43,7 @@ import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.NumberedTrack
 import com.dev.wine.music.app.domain.model.UserSession
+import com.dev.wine.music.app.ui.album.track.AddTrackSheet
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.components.AlbumRecord
 import com.dev.wine.music.app.ui.components.DetailTopBar
@@ -70,20 +71,31 @@ private const val COVER_WIDTH = 0.82f
 @Composable
 fun AlbumDetailScreen(
     onBack: () -> Unit,
-    onAddTrackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AlbumDetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val session by viewModel.session.collectAsStateWithLifecycle()
+    var showAddTrack by rememberSaveable { mutableStateOf(viewModel.openAddTrackOnArrival) }
     AlbumDetailContent(
         uiState = uiState,
         onBack = onBack,
         onRetry = viewModel::loadAlbum,
         modifier = modifier,
         session = session,
-        onAddTrackClick = onAddTrackClick,
+        onAddTrackClick = { showAddTrack = true },
     )
+    val album = (uiState as? UiState.Success)?.data
+    if (showAddTrack && album != null && session is UserSession.Collector) {
+        AddTrackSheet(
+            album = album,
+            onDismiss = { showAddTrack = false },
+            onSaved = {
+                showAddTrack = false
+                viewModel.loadAlbum()
+            },
+        )
+    }
 }
 
 @Composable
