@@ -14,3 +14,5 @@ import kotlinx.serialization.Serializable
 
 /** [type] is the [com.dev.wine.music.app.domain.model.ArtistType] name: musicians and bands use different endpoints. */
 @Serializable data class ArtistDetailRoute(val artistId: Int, val type: String)
+
+@Serializable data object AlbumCreateRoute

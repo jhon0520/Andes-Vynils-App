@@ -1,6 +1,7 @@
 package com.dev.wine.music.app.data.remote.api
 
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
+import com.dev.wine.music.app.data.remote.dto.AlbumRequestDto
 import com.dev.wine.music.app.data.remote.dto.TrackDto
 import com.dev.wine.music.app.data.remote.dto.TrackRequestDto
 import retrofit2.http.Body
@@ -17,4 +18,7 @@ interface AlbumApi {
 
     @GET("albums/{id}")
     suspend fun getAlbum(@Path("id") albumId: Int): AlbumDto
+
+    @POST("albums")
+    suspend fun createAlbum(@Body body: AlbumRequestDto): AlbumDto
 }

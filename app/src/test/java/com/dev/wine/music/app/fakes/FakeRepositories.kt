@@ -6,6 +6,7 @@ import com.dev.wine.music.app.domain.model.ArtistDetail
 import com.dev.wine.music.app.domain.model.ArtistPrize
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.domain.model.NewAlbum
 import com.dev.wine.music.app.domain.model.NewTrack
 import com.dev.wine.music.app.domain.model.Track
 import com.dev.wine.music.app.domain.model.UserSession
@@ -34,12 +35,24 @@ class FakeAlbumRepository(
         return albums.first { it.id == albumId }
     }
 
+    val createdAlbums = mutableListOf<NewAlbum>()
+
+    override suspend fun createAlbum(newAlbum: NewAlbum): Album {
+        if (shouldFail) throw error
+        createdAlbums += newAlbum
+        return TestData.album(id = CREATED_ALBUM_ID, name = newAlbum.name)
+    }
+
     val addedTracks = mutableListOf<Pair<Int, NewTrack>>()
 
     override suspend fun addTrack(albumId: Int, newTrack: NewTrack): Track {
         if (shouldFail) throw error
         addedTracks += albumId to newTrack
         return Track(id = 500, name = newTrack.name, duration = newTrack.duration)
+    }
+
+    companion object {
+        const val CREATED_ALBUM_ID = 999
     }
 }
 

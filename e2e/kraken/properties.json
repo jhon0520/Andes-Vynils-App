@@ -16,5 +16,8 @@
   "COLLECTOR_CONTINUE": "Continuar como Jaime Monsalve",
   "OTHER_COLLECTOR_NAME": "Manolo Bellon",
   "OTHER_COLLECTOR_EMAIL_QUERY": "caracol",
+  "NEW_ALBUM_COVER": "https://example.com/kraken.jpg",
+  "NEW_ALBUM_DATE": "01081984",
+  "NEW_ALBUM_DESCRIPTION": "Created by a Kraken scenario",
   "NEW_TRACK_DURATION": "0330"
 }
