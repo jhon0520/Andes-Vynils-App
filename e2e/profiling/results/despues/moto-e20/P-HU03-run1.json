@@ -1,0 +1,113 @@
+{
+  "scenario": "P-HU03",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "motorola",
+    "model": "moto e20",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-21T22:07:07.070Z",
+  "durationMs": 20126,
+  "coldStart": null,
+  "timings": {
+    "artistas-primera-vez": {
+      "ms": 1405,
+      "appiumRoundTripMs": 76
+    },
+    "artistas-regreso": {
+      "ms": 875,
+      "appiumRoundTripMs": 65
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 11130,
+    "mainThreadMs": 4760,
+    "otherThreadsMs": 6370,
+    "avgPct": 6.9,
+    "peakPct": 34.8
+  },
+  "memory": {
+    "totalPssKb": 90326,
+    "javaHeapKb": 14180,
+    "nativeHeapKb": 18836,
+    "graphicsKb": 0,
+    "codeKb": 42492,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 201852,
+    "peakThreads": 49
+  },
+  "frames": {
+    "total": 187,
+    "janky": 49,
+    "jankyPct": 26.2,
+    "slowOver16ms": 49,
+    "frozenOver700ms": 0,
+    "p50Ms": 11,
+    "p90Ms": 73,
+    "p95Ms": 150,
+    "p99Ms": 500,
+    "slowUiThread": 20,
+    "deadlineMissed": 24
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 3,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/bands"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 123
+      },
+      {
+        "status": 200,
+        "path": "/bands",
+        "ms": 22
+      },
+      {
+        "status": 200,
+        "path": "/musicians",
+        "ms": 41
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/bands"
+          },
+          {
+            "method": "GET",
+            "path": "/musicians"
+          }
+        ]
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

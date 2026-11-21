@@ -1,0 +1,13 @@
+{
+  "manufacturer": "motorola",
+  "model": "moto e20",
+  "marketName": "",
+  "androidRelease": "11",
+  "sdk": 30,
+  "soc": "ums9230",
+  "cores": 8,
+  "cpuMaxGhz": 1.61,
+  "ramGb": 1.8,
+  "screen": "720x1600",
+  "density": 280
+}

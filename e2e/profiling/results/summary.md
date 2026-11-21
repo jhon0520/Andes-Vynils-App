@@ -1,12 +1,13 @@
 # Resultados de perfilamiento
 
-Generado el 2026-11-15 01:45 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
+Generado el 2026-11-21 22:28 UTC con `e2e/profiling/summarize.js`. Cada valor es la **mediana** de las corridas.
 
 ## Dispositivos
 
 | Modelo | Android (API) | RAM | SoC | Núcleos · frec. máx. | Pantalla |
 |---|---|---|---|---|---|
 | HONOR HONOR 400 Smart (LGN-NX3) | 15 (API 35) | 5,4 GB | QTI SM6375 | 8 · 2,30 GHz | 720x1610 @ 320 dpi |
+| motorola moto e20 (moto e20) | 11 (API 30) | 1,8 GB | ums9230 | 8 · 1,61 GHz | 720x1600 @ 280 dpi |
 
 ## LGN-NX3 · antes
 
@@ -482,4 +483,299 @@ Los tiempos incluyen la ida y vuelta de Appium (mediana 47 ms por consulta).
 | P-HU05 | Peticiones a la API desde «regreso» | 0 | 0 | = |
 | P-HU05 | ANR | 0 | 0 | = |
 | P-HU05 | Cierres inesperados | 0 | 0 | = |
+
+## moto-e20 · despues
+
+### P-ONB (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Arranque en frío hasta el primer frame (ms, `am start -W`) | 2.887 | 2.885 | 2.887 |
+| Tiempo hasta ver «lista-de-coleccionistas» (ms) | 1.662 | 1.607 | 2.067 |
+| Tiempo hasta ver «catalogo» (ms) | 1.294 | 1.272 | 1.331 |
+| CPU promedio del recorrido (% del dispositivo) | 8,0 | 7,7 | 8,1 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 24,3 | 24,2 | 26,7 |
+| Tiempo de CPU en el hilo `main` (ms) | 2.690 | 2.680 | 2.700 |
+| Tiempo de CPU en los demás hilos (ms) | 4.050 | 3.990 | 4.130 |
+| Memoria total PSS al final (MB) | 93,8 | 87,6 | 95,7 |
+| Java/Kotlin heap al final (MB) | 13,6 | 13,3 | 13,8 |
+| Native heap al final (MB) | 24,4 | 23,6 | 25,2 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 208,5 | 207,0 | 210,7 |
+| Hilos vivos (pico) | 51 | 50 | 51 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 97 | 95 | 103 |
+| Frames lentos (> 16 ms) | 28 | 28 | 36 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 29,9 | 29,5 | 35,0 |
+| Frame p90 (ms) | 101 | 97 | 105 |
+| Frame p99 (ms) | 500 | 450 | 500 |
+| Peticiones a la API en todo el recorrido | 2 | 2 | 2 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /collectors` ×1,0, `GET /albums` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 104 ms por consulta).
+
+### P-HU01 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «catalogo» (ms) | 1.895 | 1.873 | 2.106 |
+| CPU promedio del recorrido (% del dispositivo) | 5,8 | 5,8 | 5,9 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 33,8 | 32,0 | 34,1 |
+| Tiempo de CPU en el hilo `main` (ms) | 5.610 | 5.440 | 5.700 |
+| Tiempo de CPU en los demás hilos (ms) | 9.490 | 9.420 | 9.560 |
+| Memoria total PSS al final (MB) | 91,0 | 83,7 | 94,3 |
+| Java/Kotlin heap al final (MB) | 13,7 | 12,7 | 15,5 |
+| Native heap al final (MB) | 19,3 | 19,3 | 25,7 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 204,0 | 199,4 | 204,4 |
+| Hilos vivos (pico) | 49 | 48 | 52 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 548 | 528 | 559 |
+| Frames lentos (> 16 ms) | 78 | 67 | 97 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 14,8 | 12,2 | 17,5 |
+| Frame p90 (ms) | 20 | 20 | 26 |
+| Frame p99 (ms) | 150 | 150 | 150 |
+| Peticiones a la API en todo el recorrido | 1 | 1 | 1 |
+| Peticiones a la API desde «buscar-y-filtrar» | 0 | 0 | 0 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 120 ms por consulta).
+
+### P-HU02 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «detalle-primera-vez» (ms) | 1.141 | 1.119 | 1.150 |
+| Tiempo hasta ver «detalle-segunda-vez» (ms) | 934 | 917 | 948 |
+| CPU promedio del recorrido (% del dispositivo) | 6,7 | 6,2 | 6,7 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 29,7 | 25,3 | 35,0 |
+| Tiempo de CPU en el hilo `main` (ms) | 4.210 | 4.130 | 4.380 |
+| Tiempo de CPU en los demás hilos (ms) | 5.730 | 5.040 | 6.230 |
+| Memoria total PSS al final (MB) | 90,5 | 86,8 | 91,8 |
+| Java/Kotlin heap al final (MB) | 16,3 | 15,2 | 17,5 |
+| Native heap al final (MB) | 19,2 | 18,3 | 19,4 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 208,2 | 205,7 | 213,1 |
+| Hilos vivos (pico) | 52 | 45 | 52 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 185 | 169 | 207 |
+| Frames lentos (> 16 ms) | 44 | 35 | 44 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 21,7 | 20,7 | 24,3 |
+| Frame p90 (ms) | 57 | 48 | 57 |
+| Frame p99 (ms) | 500 | 400 | 500 |
+| Peticiones a la API en todo el recorrido | 3 | 3 | 3 |
+| Peticiones a la API desde «primera-apertura» | 2 | 2 | 2 |
+| Peticiones a la API desde «segunda-apertura» | 0 | 0 | 0 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /albums/100` ×1,0, `GET /collectors` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 99 ms por consulta).
+
+### P-HU03 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «artistas-primera-vez» (ms) | 1.404 | 1.402 | 1.405 |
+| Tiempo hasta ver «artistas-regreso» (ms) | 890 | 875 | 896 |
+| CPU promedio del recorrido (% del dispositivo) | 8,1 | 6,9 | 8,2 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 31,4 | 24,2 | 34,8 |
+| Tiempo de CPU en el hilo `main` (ms) | 5.010 | 4.760 | 5.080 |
+| Tiempo de CPU en los demás hilos (ms) | 7.530 | 6.370 | 7.990 |
+| Memoria total PSS al final (MB) | 93,5 | 88,2 | 100,1 |
+| Java/Kotlin heap al final (MB) | 15,4 | 13,8 | 16,2 |
+| Native heap al final (MB) | 20,5 | 18,4 | 26,8 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 204,0 | 197,1 | 208,9 |
+| Hilos vivos (pico) | 52 | 49 | 53 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 251 | 187 | 269 |
+| Frames lentos (> 16 ms) | 49 | 42 | 90 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 26,2 | 17,1 | 33,5 |
+| Frame p90 (ms) | 53 | 46 | 73 |
+| Frame p99 (ms) | 450 | 350 | 500 |
+| Peticiones a la API en todo el recorrido | 3 | 3 | 3 |
+| Peticiones a la API desde «primera-apertura» | 2 | 2 | 2 |
+| Peticiones a la API desde «regreso» | 0 | 0 | 0 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /bands` ×1,0, `GET /musicians` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 68 ms por consulta).
+
+### P-HU04 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «detalle-musico» (ms) | 1.154 | 1.126 | 1.809 |
+| Tiempo hasta ver «album-desde-artista» (ms) | 1.077 | 1.073 | 1.138 |
+| Tiempo hasta ver «detalle-banda» (ms) | 977 | 957 | 979 |
+| CPU promedio del recorrido (% del dispositivo) | 7,7 | 7,7 | 7,8 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 32,6 | 29,8 | 33,8 |
+| Tiempo de CPU en el hilo `main` (ms) | 6.680 | 6.590 | 6.700 |
+| Tiempo de CPU en los demás hilos (ms) | 10.870 | 10.600 | 11.090 |
+| Memoria total PSS al final (MB) | 100,7 | 99,1 | 101,3 |
+| Java/Kotlin heap al final (MB) | 15,4 | 14,8 | 17,5 |
+| Native heap al final (MB) | 28,4 | 27,5 | 29,8 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 217,9 | 216,2 | 219,7 |
+| Hilos vivos (pico) | 59 | 53 | 59 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 475 | 463 | 491 |
+| Frames lentos (> 16 ms) | 116 | 114 | 128 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 24,8 | 24,6 | 26,3 |
+| Frame p90 (ms) | 34 | 34 | 34 |
+| Frame p99 (ms) | 350 | 300 | 350 |
+| Peticiones a la API en todo el recorrido | 8 | 8 | 8 |
+| Peticiones a la API desde «detalle-musico» | 2 | 2 | 2 |
+| Peticiones a la API desde «album-desde-artista» | 2 | 2 | 2 |
+| Peticiones a la API desde «detalle-banda» | 1 | 1 | 1 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /musicians` ×1,0, `GET /bands` ×1,0, `GET /musicians/100` ×1,0, `GET /performerprizes` ×1,0, `GET /albums/100` ×1,0, `GET /collectors` ×1,0, `GET /bands/101` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 71 ms por consulta).
+
+### P-HU05 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «coleccionistas-primera-vez» (ms) | 1.284 | 1.279 | 1.798 |
+| Tiempo hasta ver «coleccionistas-regreso» (ms) | 874 | 871 | 925 |
+| CPU promedio del recorrido (% del dispositivo) | 6,3 | 6,0 | 6,4 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 32,9 | 30,5 | 34,7 |
+| Tiempo de CPU en el hilo `main` (ms) | 4.190 | 4.110 | 4.310 |
+| Tiempo de CPU en los demás hilos (ms) | 5.670 | 5.010 | 5.720 |
+| Memoria total PSS al final (MB) | 90,1 | 85,8 | 93,8 |
+| Java/Kotlin heap al final (MB) | 17,4 | 13,9 | 18,2 |
+| Native heap al final (MB) | 19,4 | 18,4 | 25,7 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 201,4 | 195,5 | 201,9 |
+| Hilos vivos (pico) | 48 | 47 | 50 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 165 | 159 | 180 |
+| Frames lentos (> 16 ms) | 42 | 35 | 57 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 23,3 | 22,0 | 35,2 |
+| Frame p90 (ms) | 69 | 57 | 77 |
+| Frame p99 (ms) | 500 | 500 | 500 |
+| Peticiones a la API en todo el recorrido | 2 | 2 | 2 |
+| Peticiones a la API desde «primera-apertura» | 1 | 1 | 1 |
+| Peticiones a la API desde «buscar» | 0 | 0 | 0 |
+| Peticiones a la API desde «regreso» | 0 | 0 | 0 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /collectors` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 71 ms por consulta).
+
+### P-HU06 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «detalle-primera-vez» (ms) | 1.118 | 1.108 | 1.150 |
+| Tiempo hasta ver «artista-favorito» (ms) | 1.002 | 962 | 1.023 |
+| Tiempo hasta ver «detalle-segunda-vez» (ms) | 976 | 964 | 983 |
+| CPU promedio del recorrido (% del dispositivo) | 6,3 | 6,2 | 6,7 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 30,4 | 26,2 | 30,5 |
+| Tiempo de CPU en el hilo `main` (ms) | 5.340 | 5.330 | 5.410 |
+| Tiempo de CPU en los demás hilos (ms) | 7.410 | 7.260 | 7.720 |
+| Memoria total PSS al final (MB) | 90,6 | 84,7 | 91,9 |
+| Java/Kotlin heap al final (MB) | 13,9 | 13,8 | 14,3 |
+| Native heap al final (MB) | 19,8 | 19,6 | 26,4 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 211,0 | 210,7 | 212,0 |
+| Hilos vivos (pico) | 49 | 49 | 54 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 256 | 255 | 259 |
+| Frames lentos (> 16 ms) | 58 | 53 | 80 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 22,7 | 20,5 | 31,4 |
+| Frame p90 (ms) | 53 | 53 | 53 |
+| Frame p99 (ms) | 300 | 300 | 400 |
+| Peticiones a la API en todo el recorrido | 9 | 9 | 9 |
+| Peticiones a la API desde «detalle-primera-vez» | 2 | 2 | 2 |
+| Peticiones a la API desde «artista-favorito» | 3 | 3 | 3 |
+| Peticiones a la API desde «detalle-segunda-vez» | 2 | 2 | 2 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /albums` ×1,0, `GET /collectors` ×1,0, `GET /collectors/100` ×2,0, `GET /collectors/100/albums` ×2,0, `GET /musicians/100` ×1,0, `GET /bands` ×1,0, `GET /performerprizes` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 76 ms por consulta).
+
+### P-HU07 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «formulario» (ms) | 926 | 907 | 1.391 |
+| Tiempo hasta ver «album-creado» (ms) | 2.132 | 2.129 | 2.140 |
+| Tiempo hasta ver «detalle-album-creado» (ms) | 1.672 | 1.660 | 1.698 |
+| CPU promedio del recorrido (% del dispositivo) | 6,0 | 5,9 | 6,3 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 22,3 | 21,9 | 25,0 |
+| Tiempo de CPU en el hilo `main` (ms) | 6.880 | 6.850 | 6.920 |
+| Tiempo de CPU en los demás hilos (ms) | 7.870 | 7.620 | 8.330 |
+| Memoria total PSS al final (MB) | 89,8 | 86,4 | 92,8 |
+| Java/Kotlin heap al final (MB) | 16,7 | 16,5 | 18,2 |
+| Native heap al final (MB) | 18,6 | 18,5 | 19,9 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 208,8 | 204,7 | 213,2 |
+| Hilos vivos (pico) | 52 | 50 | 52 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 315 | 306 | 322 |
+| Frames lentos (> 16 ms) | 167 | 139 | 175 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 55,0 | 45,4 | 55,6 |
+| Frame p90 (ms) | 93 | 93 | 97 |
+| Frame p99 (ms) | 350 | 300 | 350 |
+| Peticiones a la API en todo el recorrido | 4 | 4 | 4 |
+| Peticiones a la API desde «formulario» | 0 | 0 | 0 |
+| Peticiones a la API desde «crear» | 1 | 1 | 1 |
+| Peticiones a la API desde «ver-album» | 1 | 1 | 1 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /collectors` ×1,0, `GET /albums` ×1,0, `POST /albums` ×1,0, `GET /albums/5` ×0,3, `GET /albums/6` ×0,3, `GET /albums/7` ×0,3.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 41 ms por consulta).
+
+### P-HU08 (3 corridas)
+
+| Métrica | Mediana | Mín. | Máx. |
+|---|---|---|---|
+| Tiempo hasta ver «detalle-album» (ms) | 1.209 | 1.157 | 1.223 |
+| Tiempo hasta ver «hoja-agregar-track» (ms) | 1.753 | 1.751 | 1.766 |
+| Tiempo hasta ver «track-guardado» (ms) | 1.605 | 1.580 | 1.773 |
+| CPU promedio del recorrido (% del dispositivo) | 5,9 | 5,9 | 6,1 |
+| CPU pico en ventanas de 0,5 s (% del dispositivo) | 26,3 | 25,9 | 30,0 |
+| Tiempo de CPU en el hilo `main` (ms) | 6.190 | 6.140 | 6.210 |
+| Tiempo de CPU en los demás hilos (ms) | 8.320 | 8.320 | 8.430 |
+| Memoria total PSS al final (MB) | 90,9 | 87,8 | 95,3 |
+| Java/Kotlin heap al final (MB) | 16,6 | 16,3 | 17,8 |
+| Native heap al final (MB) | 20,8 | 19,8 | 20,9 |
+| Gráficos al final (MB) | 0,0 | 0,0 | 0,0 |
+| RSS pico (MB) | 212,2 | 210,6 | 212,8 |
+| Hilos vivos (pico) | 51 | 51 | 53 |
+| Activities vivas al final | 1 | 1 | 1 |
+| Frames dibujados | 392 | 387 | 400 |
+| Frames lentos (> 16 ms) | 73 | 68 | 91 |
+| Frames congelados (> 700 ms) | 0 | 0 | 0 |
+| Frames con jank (%) | 18,9 | 17,3 | 23,5 |
+| Frame p90 (ms) | 38 | 38 | 42 |
+| Frame p99 (ms) | 300 | 250 | 300 |
+| Peticiones a la API en todo el recorrido | 5 | 5 | 5 |
+| Peticiones a la API desde «detalle-album» | 1 | 1 | 1 |
+| Peticiones a la API desde «guardar-track» | 2 | 2 | 2 |
+| ANR | 0 | 0 | 0 |
+| Cierres inesperados | 0 | 0 | 0 |
+
+Peticiones por corrida: `GET /collectors` ×1,0, `GET /albums` ×1,0, `GET /albums/100` ×2,0, `POST /albums/100/tracks` ×1,0.
+Los tiempos incluyen la ida y vuelta de Appium (mediana 52 ms por consulta).
 
