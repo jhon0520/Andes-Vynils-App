@@ -42,4 +42,16 @@ class AlbumTest {
     fun `numberedTracks is empty for an album without tracks`() {
         assertEquals(emptyList<NumberedTrack>(), TestData.album().numberedTracks)
     }
+
+    @Test
+    fun `nextTrackPosition matches where the track lands after adding it`() {
+        for (count in 0..8) {
+            val tracks = List(count) { TestData.track(id = it) }
+            val album = TestData.album(tracks = tracks)
+
+            val after = TestData.album(tracks = tracks + TestData.track(id = count))
+
+            assertEquals(after.numberedTracks.last().position, album.nextTrackPosition)
+        }
+    }
 }
