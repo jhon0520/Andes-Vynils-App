@@ -63,13 +63,13 @@ flowchart LR
         direction TB
         RAIZ["raíz del paquete<br/>MainActivity · splash<br/>WineMusicApp · Hilt"]
         subgraph UIP["ui · pantallas Compose y ViewModels"]
-            U1["album/list, album/detail, album/create, album/track · artist · collector"]
+            U1["album/list, album/detail, album/create, album/track · artist · collector, collector/detail"]
             U2["common: UiState · components: estados y tarjetas"]
             U3["navigation: rutas tipadas, NavHost y barra inferior"]
             U4["theme: colores y tipografía"]
         end
         subgraph DOM["domain · reglas de la app, sin Android ni red"]
-            D1["model: Album, Track, Artist, ArtistType, Collector"]
+            D1["model: Album, Track, Artist, ArtistType, Collector, CollectorDetail"]
             D2["repository: interfaces AlbumRepository y otras"]
             D3["usecase: GetAlbumsUseCase, GetAlbumDetailUseCase…"]
         end
@@ -95,7 +95,7 @@ flowchart LR
 
 ### Modelo de dominio
 
-Hoy existen `Album`, `Track`, `NumberedTrack`, `Comment`, `Artist`, `ArtistType`, `Collector` y `AppError`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
+Hoy existen `Album`, `Track`, `NumberedTrack`, `Comment`, `Artist`, `ArtistType`, `Collector`, `CollectorDetail`, `CollectorAlbum`, `CollectorReview` y `AppError`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
 
 ```mermaid
 classDiagram
@@ -174,11 +174,31 @@ classDiagram
         organization: String
         premiationDay: String (dd/mm/aaaa)
     }
+    class CollectorDetail {
+        <<HU06>>
+        collector: Collector
+        favoriteArtists: List~Artist~
+        albums: List~CollectorAlbum~
+        reviews: List~CollectorReview~
+    }
     class CollectorAlbum {
-        <<HU06 · por agregar>>
-        price: Int
-        status: Active o Inactive
+        <<HU06>>
+        id: Int
+        price: Int (sin moneda)
+        status: CollectorAlbumStatus
         album: Album
+    }
+    class CollectorAlbumStatus {
+        <<enum · HU06>>
+        ACTIVE
+        INACTIVE
+    }
+    class CollectorReview {
+        <<HU06>>
+        id: Int
+        description: String
+        rating: Int (0 a 5)
+        album: Album?
     }
     class Profile {
         <<enum · HU01, HU02, HU07, HU08>>
@@ -218,8 +238,13 @@ classDiagram
     ArtistDetail --> Artist : artist, members, band
     ArtistDetail "1" --> "*" Album : albums
     ArtistDetail "1" *-- "*" ArtistPrize : prizes
-    Collector "1" --> "*" CollectorAlbum
-    CollectorAlbum --> Album
+    CollectorDetail --> Collector : collector
+    CollectorDetail "1" --> "*" Artist : favoriteArtists
+    CollectorDetail "1" *-- "*" CollectorAlbum : albums
+    CollectorDetail "1" *-- "*" CollectorReview : reviews
+    CollectorAlbum --> Album : album
+    CollectorAlbum --> CollectorAlbumStatus : status
+    CollectorReview --> Album : album
 ```
 
 ### Cadena de Clases código
@@ -297,7 +322,7 @@ Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repos
 | HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` (filtro por tipo) | `GetArtistsUseCase` (asigna la banda de cada músico) | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
 | HU04 Detalle de artista | `ArtistDetailScreen` | `ArtistDetailViewModel` | `GetArtistDetailUseCase` | `ArtistRepository.getArtist(id, type)` · `ArtistApi.getMusician(id)`, `getBand(id)`, `getPerformerPrizes()` | `GET /musicians/{id}`, `GET /bands/{id}`, `GET /performerprizes` |
 | HU05 Coleccionistas | `CollectorListScreen` | `CollectorListViewModel` | `GetCollectorsUseCase` | `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /collectors` |
-| HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi` | `GET /collectors/{id}`, `GET /collectors/{id}/albums` |
+| HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` (cruza el álbum de cada reseña) | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi.getCollector(id)`, `getCollectorAlbums(id)`; `AlbumRepository.getAlbums()` | `GET /collectors/{id}`, `GET /collectors/{id}/albums`, `GET /albums` |
 | HU07 Crear álbum | `AlbumCreateScreen` | `AlbumCreateViewModel` | `CreateAlbumUseCase` | `AlbumRepository.createAlbum(newAlbum)` · `AlbumApi.createAlbum(body)` | `POST /albums` |
 | HU08 Asociar tracks | `AddTrackSheet` | `AddTrackViewModel` | `AddTrackUseCase` | `AlbumRepository.addTrack(albumId, newTrack)` · `AlbumApi.addTrack(id, body)` | `POST /albums/{id}/tracks` |
 
@@ -317,7 +342,7 @@ No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de
 - **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
 - **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
 
-**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumCreateRoute`, `AlbumDetailRoute(albumId, openAddTrack)` y `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`. Falta `CollectorDetailRoute(collectorId)`. HU08 no tiene ruta propia: es la hoja `AddTrackSheet` dentro del detalle del álbum. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
+**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumCreateRoute`, `AlbumDetailRoute(albumId, openAddTrack)`, `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`, y `CollectorDetailRoute(collectorId)` (HU06: desde un coleccionista de la lista; sus favoritos abren `ArtistDetailRoute` y sus álbumes y reseñas abren `AlbumDetailRoute`). HU08 no tiene ruta propia: es la hoja `AddTrackSheet` dentro del detalle del álbum. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
 
 ---
 
@@ -434,7 +459,7 @@ Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `h
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 10 (`GET /albums`, `GET /albums/{id}`, `POST /albums`, `POST /albums/{id}/tracks`, `GET /musicians`, `GET /musicians/{id}`, `GET /bands`, `GET /bands/{id}`, `GET /performerprizes` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 12 (`GET /albums`, `GET /albums/{id}`, `POST /albums`, `POST /albums/{id}/tracks`, `GET /musicians`, `GET /musicians/{id}`, `GET /bands`, `GET /bands/{id}`, `GET /performerprizes`, `GET /collectors`, `GET /collectors/{id}` y `GET /collectors/{id}/albums`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
@@ -446,8 +471,8 @@ Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 10 (
 | `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Existe |
 | `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Existe; `PerformerPrizeDto` trae el `prize` con nombre y organización |
 | `GET /collectors` | HU02, HU05 | `CollectorApi.getCollectors()` | Existe; `CollectorDto` lee `comments` para el autor de las reseñas de HU02 |
-| `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Por agregar |
-| `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Por agregar |
+| `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Existe; `CollectorDto` lee `favoritePerformers` y `comments` (las reseñas, sin su álbum) |
+| `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Existe; `CollectorAlbumDto` trae `price`, `status` y el `album` |
 | `POST /albums` | HU07 | `AlbumApi.createAlbum(body)` | Existe; al aceptarse invalida la caché de álbumes |
 | `POST /albums/{id}/tracks` | HU08 | `AlbumApi.addTrack(id, body)` | Existe; al aceptarse invalida la caché de álbumes |
 
@@ -500,6 +525,8 @@ Los errores del backend llegan con el cuerpo `{ "statusCode": 404, "message": "T
 - `GET /musicians` y `GET /musicians/{id}` **no** devuelven la banda del músico. La banda se obtiene de `GET /bands`, cuyas bandas traen su arreglo `musicians`. Un músico tiene una sola banda; si no tiene, la app muestra «Sin banda».
 - `GET /collectors` trae `collectorAlbums` solo con `id`, `price` y `status`; los datos del álbum salen de `GET /collectors/{id}/albums`.
 - El precio de la colección (HU06) no trae moneda; se muestra el número tal cual.
+- Las reseñas de `GET /collectors/{id}` no dicen a qué álbum pertenecen. `GetCollectorDetailUseCase` cruza el id de cada reseña con los `comments` de `GET /albums` (normalmente ya en caché); si el catálogo falla, la reseña se muestra con «Álbum no disponible».
+- El detalle del coleccionista no se guarda en `RepositoryCache`: siempre muestra la colección actual.
 - Las fechas llegan en ISO 8601 UTC (`"1984-08-01T05:00:00.000Z"`, medianoche en Colombia).
 - Músicos y bandas comparten la tabla `performer`, así que sus ids no se repiten entre sí.
 - El backend no tiene autenticación: el perfil visitante o coleccionista se resuelve solo en la app.
@@ -551,7 +578,7 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla, ruta, pruebas unitarias, E2E Compose y Kraken | 4, 7 | | En revisión |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
-| 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |
+| 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | En revisión |
 | 11 | HU07 Crear álbum: `POST /albums`, formulario con validación, pantalla de álbum creado | 4, 5 | | En revisión |
 | 12 | HU08 Asociar tracks: `POST /albums/{id}/tracks` y hoja de agregar track | 4, 6 | | En revisión |
 | 13 | Diagramas finales de clases, paquetes y componentes | 5 a 12 | | Por hacer |

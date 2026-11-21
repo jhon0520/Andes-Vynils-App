@@ -29,8 +29,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +48,7 @@ import com.dev.wine.music.app.ui.components.DetailTopBar
 import com.dev.wine.music.app.ui.components.EmptySection
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
+import com.dev.wine.music.app.ui.components.RatingStars
 import com.dev.wine.music.app.ui.components.SectionTitle
 import com.dev.wine.music.app.ui.components.TerracottaAddButton
 import com.dev.wine.music.app.ui.components.labelRes
@@ -343,17 +342,5 @@ private fun ReviewItem(comment: Comment) {
             RatingStars(comment.rating)
         }
     }
-}
-
-/** Five stars, filled up to [rating]; read aloud as "Calificación: 4 de 5". */
-@Composable
-private fun RatingStars(rating: Int) {
-    val description = stringResource(R.string.review_rating_description, rating, Comment.MAX_RATING)
-    Text(
-        text = "★".repeat(rating) + "☆".repeat(Comment.MAX_RATING - rating),
-        style = SansBody.copy(fontSize = 17.sp, letterSpacing = 1.sp),
-        color = Terracotta,
-        modifier = Modifier.semantics { contentDescription = description },
-    )
 }
 

@@ -33,6 +33,27 @@ object FakeBackendData {
          {"id":101,"name":"$OTHER_COLLECTOR_NAME","telephone":"3012357936","email":"jmonsalve@rtvc.com.co","comments":[]}]
     """.trimIndent()
 
+    const val REVIEW_ID = 100
+
+    /** GET /collectors/{id}: one favorite musician and one review, which does not say its album. */
+    val collectorDetail = """
+        {"id":$COLLECTOR_ID,"name":"$COLLECTOR_NAME","telephone":"3502457896","email":"manollo@caracol.com.co",
+         "comments":[{"id":$REVIEW_ID,"description":"The most relevant album of Ruben Blades","rating":5}],
+         "favoritePerformers":[$musician]}
+    """.trimIndent()
+
+    /** GET /collectors/{id}: a collector without favorites or reviews. */
+    val emptyCollectorDetail = """
+        {"id":$COLLECTOR_ID,"name":"$COLLECTOR_NAME","telephone":"3502457896","email":"manollo@caracol.com.co",
+         "comments":[],"favoritePerformers":[]}
+    """.trimIndent()
+
+    /** GET /collectors/{id}/albums: the album in the collection with its price and status. */
+    val collectorAlbums = """[{"id":100,"price":35,"status":"Active","album":$album}]"""
+
+    /** The catalog where album 100 has the review [REVIEW_ID], so the review gets its album. */
+    val albumsWithReview = "[" + album.replace(""""comments":[]""", """"comments":[{"id":$REVIEW_ID,"description":"","rating":5}]""") + "]"
+
     const val MUSICIAN_ID = 100
     const val BAND_ID = 101
     const val PRIZE_ID = 100

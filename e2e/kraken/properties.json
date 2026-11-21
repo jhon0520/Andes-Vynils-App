@@ -19,5 +19,10 @@
   "NEW_ALBUM_COVER": "https://example.com/kraken.jpg",
   "NEW_ALBUM_DATE": "01081984",
   "NEW_ALBUM_DESCRIPTION": "Created by a Kraken scenario",
-  "NEW_TRACK_DURATION": "0330"
+  "NEW_TRACK_DURATION": "0330",
+  "DETAIL_COLLECTOR_ITEM_ID": "collector_item_100",
+  "DETAIL_COLLECTOR_NAME": "Manolo Bellon",
+  "FAVORITE_ITEM_ID": "favorite_item_100",
+  "COLLECTOR_ALBUM_ID": "collector_album_100",
+  "COLLECTOR_REVIEW_ID": "collector_review_100"
 }

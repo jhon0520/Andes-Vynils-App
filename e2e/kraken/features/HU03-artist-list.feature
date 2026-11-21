@@ -19,6 +19,8 @@ Feature: HU03 - Browse the list of artists
     And I should not see the element with id "artist_avatar_musician"
     When I tap the element with id "artist_type_tab_musician"
     Then the element with id "artist_type_tab_musician" should be selected
-    And I should see the text "<MUSICIAN>"
+    # The musicians are sorted by name: on small screens the seed musician starts below the fold
+    When I scroll to the text "<MUSICIAN>" in the element with id "artist_list"
+    Then I should see the text "<MUSICIAN>"
     And I should not see the text "<BAND>"
     And I should not see the element with id "artist_avatar_band"

@@ -15,6 +15,7 @@ import com.dev.wine.music.app.ui.album.list.AlbumListScreen
 import com.dev.wine.music.app.ui.artist.ArtistListScreen
 import com.dev.wine.music.app.ui.artist.detail.ArtistDetailScreen
 import com.dev.wine.music.app.ui.collector.CollectorListScreen
+import com.dev.wine.music.app.ui.collector.detail.CollectorDetailScreen
 import com.dev.wine.music.app.ui.onboarding.CollectorPickerScreen
 import com.dev.wine.music.app.ui.onboarding.RoleSelectionScreen
 
@@ -87,8 +88,14 @@ fun WineMusicNavHost(
         }
         composable<CollectorsRoute> {
             CollectorListScreen(
-                // TODO: navigate to the collector detail when HU06 is implemented.
-                onCollectorClick = {},
+                onCollectorClick = { collectorId -> navController.navigate(CollectorDetailRoute(collectorId)) },
+            )
+        }
+        composable<CollectorDetailRoute> {
+            CollectorDetailScreen(
+                onBack = dropUnlessResumed { navController.popBackStack() },
+                onArtistClick = { artistId, type -> navController.navigate(ArtistDetailRoute(artistId, type.name)) },
+                onAlbumClick = { albumId -> navController.navigate(AlbumDetailRoute(albumId)) },
             )
         }
     }
