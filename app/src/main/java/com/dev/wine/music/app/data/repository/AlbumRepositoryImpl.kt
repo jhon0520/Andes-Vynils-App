@@ -2,10 +2,12 @@ package com.dev.wine.music.app.data.repository
 
 import com.dev.wine.music.app.data.cache.RepositoryCache
 import com.dev.wine.music.app.data.mapper.toDomain
+import com.dev.wine.music.app.data.mapper.toRequest
 import com.dev.wine.music.app.data.remote.api.AlbumApi
 import com.dev.wine.music.app.data.remote.safeApiCall
 import com.dev.wine.music.app.domain.coroutines.IoDispatcher
 import com.dev.wine.music.app.domain.model.Album
+import com.dev.wine.music.app.domain.model.NewAlbum
 import com.dev.wine.music.app.domain.repository.AlbumRepository
 import com.dev.wine.music.app.util.fastMap
 import kotlinx.coroutines.CoroutineDispatcher
@@ -37,6 +39,15 @@ class AlbumRepositoryImpl @Inject constructor(
             safeApiCall { api.getAlbum(albumId).toDomain() }
         }
         cache.albumDetails.put(albumId, album)
+        return album
+    }
+
+    /** The catalog changed: the cache is dropped only after the backend accepts the album. */
+    override suspend fun createAlbum(newAlbum: NewAlbum): Album {
+        val album = withContext(ioDispatcher) {
+            safeApiCall { api.createAlbum(newAlbum.toRequest()).toDomain() }
+        }
+        cache.invalidateAlbums()
         return album
     }
 }
