@@ -16,3 +16,5 @@ import kotlinx.serialization.Serializable
 @Serializable data class ArtistDetailRoute(val artistId: Int, val type: String)
 
 @Serializable data object AlbumCreateRoute
+
+@Serializable data class CollectorDetailRoute(val collectorId: Int)

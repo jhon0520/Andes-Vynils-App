@@ -6,6 +6,8 @@ import com.dev.wine.music.app.domain.model.ArtistDetail
 import com.dev.wine.music.app.domain.model.ArtistPrize
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.domain.model.CollectorAlbum
+import com.dev.wine.music.app.domain.model.CollectorDetail
 import com.dev.wine.music.app.domain.model.NewAlbum
 import com.dev.wine.music.app.domain.model.NewTrack
 import com.dev.wine.music.app.domain.model.Track
@@ -107,6 +109,21 @@ class FakeCollectorRepository(
         calls++
         if (shouldFail) throw error
         return collectors
+    }
+
+    /** Detail returned by [getCollector]; the collector with that id must exist in [details]. */
+    var details: List<CollectorDetail> = emptyList()
+    /** Collection returned by [getCollectorAlbums], by collector id. */
+    var collections: Map<Int, List<CollectorAlbum>> = emptyMap()
+
+    override suspend fun getCollector(collectorId: Int): CollectorDetail {
+        if (shouldFail) throw error
+        return details.first { it.collector.id == collectorId }
+    }
+
+    override suspend fun getCollectorAlbums(collectorId: Int): List<CollectorAlbum> {
+        if (shouldFail) throw error
+        return collections[collectorId].orEmpty()
     }
 }
 

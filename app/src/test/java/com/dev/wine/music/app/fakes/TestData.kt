@@ -6,6 +6,10 @@ import com.dev.wine.music.app.domain.model.ArtistDetail
 import com.dev.wine.music.app.domain.model.ArtistPrize
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.domain.model.CollectorAlbum
+import com.dev.wine.music.app.domain.model.CollectorAlbumStatus
+import com.dev.wine.music.app.domain.model.CollectorDetail
+import com.dev.wine.music.app.domain.model.CollectorReview
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.Track
 
@@ -73,4 +77,20 @@ object TestData {
 
     fun comment(id: Int = 1, description: String = "The most relevant album of Ruben Blades", rating: Int = 5) =
         Comment(id = id, description = description, rating = rating)
+
+    fun collectorAlbum(
+        id: Int = 1,
+        album: Album = album(),
+        price: Int = 35,
+        status: CollectorAlbumStatus = CollectorAlbumStatus.ACTIVE,
+    ) = CollectorAlbum(id = id, price = price, status = status, album = album)
+
+    fun collectorReview(id: Int = 1, description: String = "The most relevant album of Ruben Blades", rating: Int = 5) =
+        CollectorReview(id = id, description = description, rating = rating)
+
+    fun collectorDetail(
+        collector: Collector = collector(),
+        favoriteArtists: List<Artist> = emptyList(),
+        reviews: List<CollectorReview> = emptyList(),
+    ) = CollectorDetail(collector = collector, favoriteArtists = favoriteArtists, reviews = reviews)
 }

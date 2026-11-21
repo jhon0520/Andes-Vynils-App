@@ -36,6 +36,7 @@
     <string name="read_more">Leer más</string>
     <string name="read_less">Leer menos</string>
     <string name="album_tracks_empty">Este álbum aún no tiene tracks.</string>
+    <!-- Also the reviews title of the collector detail (HU06). -->
     <string name="album_reviews_count">Reseñas · %1$d</string>
     <string name="album_reviews_empty">Aún no hay reseñas de este álbum.</string>
     <string name="review_anonymous">Anónimo</string>
@@ -115,4 +116,18 @@
     <string name="add_track_saving">Guardando…</string>
     <string name="add_track_cancel">Cancelar</string>
     <string name="add_track_rejected">El servicio rechazó el track. Revisa los datos e intenta de nuevo.</string>
+
+    <!-- HU06 · Detalle de coleccionista -->
+    <string name="collector_detail_eyebrow">Perfil del coleccionista</string>
+    <string name="collector_telephone_description">Teléfono: %1$s</string>
+    <string name="collector_email_description">Correo: %1$s</string>
+    <string name="collector_favorites_count">Artistas favoritos · %1$d</string>
+    <string name="collector_favorites_empty">Aún no tiene artistas favoritos.</string>
+    <string name="collector_albums_count">Colección · %1$d</string>
+    <string name="collector_albums_empty">Aún no tiene álbumes en su colección.</string>
+    <string name="collector_album_price">Precio: %1$d</string>
+    <string name="collector_album_active">Activo</string>
+    <string name="collector_album_inactive">Inactivo</string>
+    <string name="collector_reviews_empty">Aún no ha escrito reseñas.</string>
+    <string name="collector_review_unknown_album">Álbum no disponible</string>
 </resources>
