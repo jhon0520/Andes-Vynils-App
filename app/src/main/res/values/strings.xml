@@ -80,4 +80,15 @@
     <string name="artist_prizes_count">Premios · %1$d</string>
     <string name="artist_prizes_empty">Este artista aún no tiene premios.</string>
     <string name="artist_prize_unnamed">Premio</string>
+
+    <!-- HU08 · Asociar tracks -->
+    <string name="add_track_current">Tracks actuales</string>
+    <string name="add_track_position">Será el track %1$s</string>
+    <string name="track_field_name">Nombre del track</string>
+    <string name="track_field_duration">Duración (mm:ss)</string>
+    <string name="track_error_required">Este dato es obligatorio.</string>
+    <string name="track_error_duration">Usa el formato mm:ss, con segundos entre 00 y 59.</string>
+    <string name="add_track_saving">Guardando…</string>
+    <string name="add_track_cancel">Cancelar</string>
+    <string name="add_track_rejected">El servicio rechazó el track. Revisa los datos e intenta de nuevo.</string>
 </resources>

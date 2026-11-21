@@ -63,7 +63,7 @@ flowchart LR
         direction TB
         RAIZ["raíz del paquete<br/>MainActivity · splash<br/>WineMusicApp · Hilt"]
         subgraph UIP["ui · pantallas Compose y ViewModels"]
-            U1["album/list, album/detail · artist · collector"]
+            U1["album/list, album/detail, album/track · artist · collector"]
             U2["common: UiState · components: estados y tarjetas"]
             U3["navigation: rutas tipadas, NavHost y barra inferior"]
             U4["theme: colores y tipografía"]
@@ -195,7 +195,7 @@ classDiagram
         recordLabel: String
     }
     class NewTrack {
-        <<HU08 · formulario>>
+        <<HU08>>
         name: String
         duration: String
     }
@@ -307,7 +307,7 @@ No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de
 - **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
 - **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
 
-**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumDetailRoute(albumId)` y `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`. Faltan `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
+**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumDetailRoute(albumId, openAddTrack)` y `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`. Faltan `CollectorDetailRoute(collectorId)` y `AlbumCreateRoute`. HU08 no tiene ruta propia: es la hoja `AddTrackSheet` dentro del detalle del álbum. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
 
 ---
 
@@ -335,12 +335,12 @@ interface AlbumApi {
     @GET("albums/{id}")
     suspend fun getAlbum(@Path("id") albumId: Int): AlbumDto
 
-    // Por agregar en HU07 y HU08
-    @POST("albums")
-    suspend fun createAlbum(@Body body: AlbumRequestDto): AlbumDto
-
     @POST("albums/{id}/tracks")
     suspend fun addTrack(@Path("id") albumId: Int, @Body body: TrackRequestDto): TrackDto
+
+    // Por agregar en HU07
+    @POST("albums")
+    suspend fun createAlbum(@Body body: AlbumRequestDto): AlbumDto
 }
 ```
 
@@ -425,7 +425,7 @@ Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `h
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 9 (`GET /albums`, `GET /albums/{id}`, `POST /albums/{id}/tracks`, `GET /musicians`, `GET /musicians/{id}`, `GET /bands`, `GET /bands/{id}`, `GET /performerprizes` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
@@ -440,7 +440,7 @@ Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`
 | `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Por agregar |
 | `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Por agregar |
 | `POST /albums` | HU07 | `AlbumApi.createAlbum(body)` | Por agregar |
-| `POST /albums/{id}/tracks` | HU08 | `AlbumApi.addTrack(id, body)` | Por agregar |
+| `POST /albums/{id}/tracks` | HU08 | `AlbumApi.addTrack(id, body)` | Existe; al aceptarse invalida la caché de álbumes |
 
 ### Cuerpos de los POST
 
@@ -538,13 +538,13 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 3 | Perfil visitante/coleccionista: `Profile`, `ProfileRepository` y pantalla de elegir perfil | 1 | | Por hacer |
 | 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | 404 y red hechos (con HU02); 400/412 queda para HU07 |
 | 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
-| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (intérpretes navegables con HU04, «Agregar track» con HU08) |
+| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (faltan los intérpretes navegables) |
 | 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla, ruta, pruebas unitarias, E2E Compose y Kraken | 4, 7 | | En revisión |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
 | 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |
 | 11 | HU07 Crear álbum: `POST /albums`, formulario con validación, pantalla de álbum creado | 4, 5 | | Por hacer |
-| 12 | HU08 Asociar tracks: `POST /albums/{id}/tracks` y hoja de agregar track | 4, 6 | | Por hacer |
+| 12 | HU08 Asociar tracks: `POST /albums/{id}/tracks` y hoja de agregar track | 4, 6 | | En revisión |
 | 13 | Diagramas finales de clases, paquetes y componentes | 5 a 12 | | Por hacer |
 | 14 | README con instrucciones de construcción (texto listo en la sección [README](#readme)) | 1 | | Por hacer |
 

@@ -3,8 +3,10 @@ package com.dev.wine.music.app.data.mapper
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
 import com.dev.wine.music.app.data.remote.dto.CommentDto
 import com.dev.wine.music.app.data.remote.dto.TrackDto
+import com.dev.wine.music.app.data.remote.dto.TrackRequestDto
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Comment
+import com.dev.wine.music.app.domain.model.NewTrack
 import com.dev.wine.music.app.domain.model.Track
 import com.dev.wine.music.app.util.fastMap
 
@@ -24,6 +26,11 @@ fun AlbumDto.toDomain(): Album = Album(
 fun TrackDto.toDomain(): Track = Track(
     id = id,
     name = name,
+    duration = duration,
+)
+
+fun NewTrack.toTrackRequest(): TrackRequestDto = TrackRequestDto(
+    name = name.trim(),
     duration = duration,
 )
 
