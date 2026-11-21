@@ -43,6 +43,14 @@ data class Album(
         }
         numbered
     }
+
+    /** Where a new track lands once the sides are split again with one more track. */
+    val nextTrackPosition: String
+        get() {
+            val index = tracks.size
+            val sideA = (index + 2) / 2
+            return if (index < sideA) "A${index + 1}" else "B${index - sideA + 1}"
+        }
 }
 
 data class Track(

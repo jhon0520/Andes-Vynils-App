@@ -49,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -79,8 +80,16 @@ fun AlbumListScreen(
     onAlbumClick: (albumId: Int) -> Unit,
     onCreateAlbumClick: () -> Unit,
     modifier: Modifier = Modifier,
+    catalogChanged: Boolean = false,
+    onCatalogRefreshed: () -> Unit = {},
     viewModel: AlbumListViewModel = hiltViewModel(),
 ) {
+    LaunchedEffect(catalogChanged) {
+        if (catalogChanged) {
+            viewModel.loadAlbums()
+            onCatalogRefreshed()
+        }
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val session by viewModel.session.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()

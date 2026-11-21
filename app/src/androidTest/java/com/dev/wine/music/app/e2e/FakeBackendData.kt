@@ -56,6 +56,17 @@ object FakeBackendData {
           "prize":{"id":100,"name":"$PRIZE_NAME","description":"","organization":"National Academy of Recording Arts & Sciences"}}]
     """.trimIndent()
 
+    const val NEW_TRACK_NAME = "E2E new track"
+
+    /** POST /albums/{id}/tracks answers with the created track. */
+    val newTrack = """{"id":200,"name":"$NEW_TRACK_NAME","duration":"03:30"}"""
+
+    /** The album after adding [newTrack]. */
+    val albumWithNewTrack = album.replace(
+        """"duration":"5:05"}]""",
+        """"duration":"5:05"},$newTrack]""",
+    )
+
     val albums = "[$album]"
     val musicians = "[$musician]"
     val bands = "[$band]"
