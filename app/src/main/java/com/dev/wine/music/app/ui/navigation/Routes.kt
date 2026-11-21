@@ -9,7 +9,10 @@ import kotlinx.serialization.Serializable
 @Serializable data object AlbumsRoute
 @Serializable data object ArtistsRoute
 @Serializable data object CollectorsRoute
-@Serializable data class AlbumDetailRoute(val albumId: Int)
+/** [openAddTrack] opens the add track sheet on arrival, right after creating the album. */
+@Serializable data class AlbumDetailRoute(val albumId: Int, val openAddTrack: Boolean = false)
 
 /** [type] is the [com.dev.wine.music.app.domain.model.ArtistType] name: musicians and bands use different endpoints. */
 @Serializable data class ArtistDetailRoute(val artistId: Int, val type: String)
+
+@Serializable data object AlbumCreateRoute

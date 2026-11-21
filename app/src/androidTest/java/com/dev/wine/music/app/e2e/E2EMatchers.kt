@@ -6,11 +6,13 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 
 /** Matches list items by their tag prefix, for example "album_item_" for every album card. */
 fun hasTestTagPrefix(prefix: String): SemanticsMatcher =
@@ -64,4 +66,19 @@ fun ComposeTestRule.enterAsCollector(timeoutMillis: Long = 15_000L) {
     waitUntilAtLeastOneExists(hasTestTagPrefix("collector_row_"), timeoutMillis)
     onAllNodes(hasTestTagPrefix("collector_row_")).onFirst().performClick()
     onNodeWithTag("collector_continue").performClick()
+}
+
+/** Fills every field of the create album form (HU07) with valid values. */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeTestRule.fillAlbumForm(name: String) {
+    onNodeWithTag("album_cover_input").performScrollTo().performTextInput("https://example.com/e2e.jpg")
+    onNodeWithTag("album_name_input").performScrollTo().performTextInput(name)
+    onNodeWithTag("album_release_date_input").performScrollTo().performTextInput("01081984")
+    onNodeWithTag("album_genre_input").performScrollTo().performClick()
+    waitUntilAtLeastOneExists(hasTestTag("album_genre_option_salsa"), timeoutMillis = 5_000L)
+    onNodeWithTag("album_genre_option_salsa").performClick()
+    onNodeWithTag("album_label_input").performScrollTo().performClick()
+    waitUntilAtLeastOneExists(hasTestTag("album_label_option_elektra"), timeoutMillis = 5_000L)
+    onNodeWithTag("album_label_option_elektra").performClick()
+    onNodeWithTag("album_description_input").performScrollTo().performTextInput("Created by an E2E test")
 }

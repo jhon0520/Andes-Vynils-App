@@ -46,6 +46,30 @@
     <string name="artist_no_band">Sin banda</string>
     <string name="artist_no_results_type">No hay artistas de este tipo todavía.</string>
     <string name="artist_show_all">Ver todos</string>
+    <!-- HU07 · Crear álbum -->
+    <string name="album_create_eyebrow">Nuevo álbum</string>
+    <string name="album_field_cover">URL de la portada</string>
+    <string name="album_field_name">Nombre</string>
+    <string name="album_field_release_date">Fecha de lanzamiento (dd/mm/aaaa)</string>
+    <string name="album_field_genre">Género</string>
+    <string name="album_field_record_label">Sello</string>
+    <string name="album_field_description">Descripción</string>
+    <string name="album_description_counter">%1$d/%2$d</string>
+    <string name="album_error_required">Este campo es obligatorio.</string>
+    <string name="album_error_cover">La URL debe empezar por https://.</string>
+    <string name="album_error_date">Escribe una fecha válida en formato dd/mm/aaaa.</string>
+    <string name="album_error_future_date">La fecha no puede ser futura.</string>
+    <plurals name="album_form_review">
+        <item quantity="one">Revisa %1$d campo.</item>
+        <item quantity="other">Revisa %1$d campos.</item>
+    </plurals>
+    <string name="album_create_submitting">Enviando…</string>
+    <string name="album_create_rejected">El servicio rechazó los datos. Revísalos e intenta de nuevo.</string>
+    <string name="album_created_title">Álbum creado</string>
+    <string name="album_created_message">«%1$s» ya está en el catálogo.</string>
+    <string name="album_created_add_tracks">Agregar tracks</string>
+    <string name="album_created_view">Ver álbum</string>
+    <string name="album_created_not_now">Ahora no</string>
     <!-- Onboarding: selección de perfil -->
     <string name="onboarding_brand">Vinilos</string>
     <string name="onboarding_side_a">LADO A · 33⅓</string>
