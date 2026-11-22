@@ -1,0 +1,1380 @@
+{
+  "serial": "emulator-5556",
+  "model": "Android SDK built for x86",
+  "android": "11",
+  "actions": 102,
+  "pending_when_stopped": 0,
+  "screens": [
+    {
+      "name": "S00",
+      "path": [],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "role_selection",
+        "role_visitor"
+      ]
+    },
+    {
+      "name": "S01",
+      "path": [
+        "role_visitor"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_classical",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_list",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S02",
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_classical",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_list",
+        "album_search_clear_button",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S03",
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_list",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S04",
+      "path": [
+        "role_visitor",
+        "album_item_103"
+      ],
+      "ids": [
+        "album_description",
+        "album_detail",
+        "album_detail_body",
+        "album_genre",
+        "album_performers",
+        "album_record_label",
+        "album_release_date",
+        "album_track_count",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "back_button"
+      ]
+    },
+    {
+      "name": "S05",
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "artist_avatar_musician",
+        "artist_list",
+        "artist_type_tab_all",
+        "artist_type_tab_band",
+        "artist_type_tab_musician",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors"
+      ]
+    },
+    {
+      "name": "S06",
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "collectors_list",
+        "collectors_search",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors"
+      ]
+    },
+    {
+      "name": "S07",
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_list",
+        "album_search_clear_button",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S08",
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_item_6"
+      ],
+      "ids": [
+        "album_description",
+        "album_detail",
+        "album_detail_body",
+        "album_genre",
+        "album_record_label",
+        "album_release_date",
+        "album_track_count",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "back_button"
+      ]
+    },
+    {
+      "name": "S09",
+      "path": [
+        "role_visitor",
+        "album_genre_tab_classical",
+        "album_item_111"
+      ],
+      "ids": [
+        "album_detail",
+        "album_detail_body",
+        "album_genre",
+        "album_performers",
+        "album_record_label",
+        "album_release_date",
+        "album_track_count",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "back_button"
+      ]
+    },
+    {
+      "name": "S10",
+      "path": [
+        "role_visitor",
+        "album_item_103",
+        "album_performer_101"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "artist_description",
+        "artist_detail",
+        "artist_detail_body",
+        "artist_facts",
+        "artist_image_band",
+        "artist_name",
+        "back_button"
+      ]
+    },
+    {
+      "name": "S11",
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "artist_avatar_band",
+        "artist_list",
+        "artist_type_tab_all",
+        "artist_type_tab_band",
+        "artist_type_tab_musician",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors"
+      ]
+    },
+    {
+      "name": "S12",
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_item_110"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "artist_description",
+        "artist_detail",
+        "artist_detail_body",
+        "artist_facts",
+        "artist_image_musician",
+        "artist_name",
+        "back_button"
+      ]
+    },
+    {
+      "name": "S13",
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "collectors_search",
+        "collectors_search_clear_button",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "no_results_view"
+      ]
+    },
+    {
+      "name": "S14",
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_102"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "back_button",
+        "collector_detail",
+        "collector_detail_body",
+        "collector_email",
+        "collector_favorites",
+        "collector_name",
+        "collector_telephone"
+      ]
+    },
+    {
+      "name": "S15",
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_classical",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_search_clear_button",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "no_results_view",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S16",
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "artist_avatar_band",
+        "artist_avatar_musician",
+        "artist_list",
+        "artist_type_tab_all",
+        "artist_type_tab_band",
+        "artist_type_tab_musician",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors"
+      ]
+    },
+    {
+      "name": "S17",
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "collectors_list",
+        "collectors_search",
+        "collectors_search_clear_button",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors"
+      ]
+    },
+    {
+      "name": "S18",
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "ids": [
+        "album_genre_tab_all",
+        "album_genre_tab_rock",
+        "album_genre_tab_salsa",
+        "album_search_clear_button",
+        "album_search_input",
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "nav_albums",
+        "nav_artists",
+        "nav_collectors",
+        "no_results_view",
+        "profile_badge"
+      ]
+    },
+    {
+      "name": "S19",
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_artists",
+        "collector_item_101"
+      ],
+      "ids": [
+        "android:id/content",
+        "android:id/navigationBarBackground",
+        "back_button",
+        "collector_albums",
+        "collector_detail",
+        "collector_detail_body",
+        "collector_email",
+        "collector_favorites",
+        "collector_name",
+        "collector_telephone"
+      ]
+    }
+  ],
+  "issues": [],
+  "log": [
+    {
+      "path": [],
+      "action": "role_visitor",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_search_input",
+      "result": "S02"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_genre_tab_salsa",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_genre_tab_classical",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_item_103",
+      "result": "S04"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "album_item_102",
+      "result": "S04"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "nav_artists",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor"
+      ],
+      "action": "nav_collectors",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_search_input",
+      "result": "S02"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_search_clear_button",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_genre_tab_salsa",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_genre_tab_classical",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_item_1",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "album_item_2",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "nav_artists",
+      "result": "S02"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input"
+      ],
+      "action": "nav_collectors",
+      "result": "S02"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_search_input",
+      "result": "S07"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_genre_tab_all",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_item_6",
+      "result": "S08"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_item_10",
+      "result": "S08"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "nav_artists",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa"
+      ],
+      "action": "nav_collectors",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_rock"
+      ],
+      "action": "album_genre_tab_salsa",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_rock"
+      ],
+      "action": "album_item_103",
+      "result": "S04"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_rock"
+      ],
+      "action": "album_item_102",
+      "result": "S04"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_classical"
+      ],
+      "action": "album_item_111",
+      "result": "S09"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_item_103"
+      ],
+      "action": "back_button",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_item_103"
+      ],
+      "action": "album_performer_101",
+      "result": "S10"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "artist_type_tab_musician",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "artist_type_tab_band",
+      "result": "S11"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "artist_item_110",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "artist_item_113",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "nav_albums",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists"
+      ],
+      "action": "nav_collectors",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "action": "collectors_search",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "action": "collector_item_102",
+      "result": "S14"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "action": "collector_item_105",
+      "result": "S14"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "action": "nav_albums",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors"
+      ],
+      "action": "nav_artists",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists"
+      ],
+      "action": "album_item_112",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists"
+      ],
+      "action": "album_item_109",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_collectors"
+      ],
+      "action": "album_item_111",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_collectors"
+      ],
+      "action": "album_item_100",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_search_input",
+      "result": "S07"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_search_clear_button",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_genre_tab_all",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_item_1",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "album_item_2",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "nav_artists",
+      "result": "S07"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input"
+      ],
+      "action": "nav_collectors",
+      "result": "S07"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_item_6"
+      ],
+      "action": "back_button",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_classical",
+        "album_item_111"
+      ],
+      "action": "back_button",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_classical",
+        "album_item_111"
+      ],
+      "action": "album_performer_115",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_item_103",
+        "album_performer_101"
+      ],
+      "action": "back_button",
+      "result": "S04"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_musician"
+      ],
+      "action": "artist_type_tab_all",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "artist_type_tab_all",
+      "result": "S16"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "artist_type_tab_musician",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "artist_item_101",
+      "result": "S10"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "artist_item_116",
+      "result": "S10"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "nav_albums",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band"
+      ],
+      "action": "nav_collectors",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_item_110"
+      ],
+      "action": "back_button",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search"
+      ],
+      "action": "collectors_search",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search"
+      ],
+      "action": "collectors_search_clear_button",
+      "result": "element not on screen"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search"
+      ],
+      "action": "nav_albums",
+      "result": "S17"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search"
+      ],
+      "action": "nav_artists",
+      "result": "S17"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_102"
+      ],
+      "action": "back_button",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_102"
+      ],
+      "action": "favorite_item_113",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_102"
+      ],
+      "action": "favorite_item_100",
+      "result": "S14"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_105"
+      ],
+      "action": "favorite_item_103",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collector_item_105"
+      ],
+      "action": "favorite_item_115",
+      "result": "S14"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "album_search_input",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "album_search_clear_button",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "album_genre_tab_salsa",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "album_genre_tab_classical",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "nav_artists",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112"
+      ],
+      "action": "nav_collectors",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input",
+        "nav_artists"
+      ],
+      "action": "album_item_105",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input",
+        "nav_collectors"
+      ],
+      "action": "album_item_100",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_genre_tab_salsa",
+        "album_search_input",
+        "nav_collectors"
+      ],
+      "action": "album_item_11",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "artist_type_tab_musician",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "artist_type_tab_band",
+      "result": "S11"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "artist_item_106",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "artist_item_101",
+      "result": "S10"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "nav_albums",
+      "result": "S01"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all"
+      ],
+      "action": "nav_collectors",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "collectors_search",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "collectors_search_clear_button",
+      "result": "S06"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "collector_item_102",
+      "result": "S14"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "collector_item_105",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "nav_albums",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_albums"
+      ],
+      "action": "nav_artists",
+      "result": "S13"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_artists"
+      ],
+      "action": "collector_item_101",
+      "result": "S19"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_search_input",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_search_clear_button",
+      "result": "S03"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_genre_tab_all",
+      "result": "S15"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "album_genre_tab_rock",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "nav_artists",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_salsa"
+      ],
+      "action": "nav_collectors",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "album_search_input",
+        "nav_artists",
+        "album_item_112",
+        "album_genre_tab_rock"
+      ],
+      "action": "album_genre_tab_salsa",
+      "result": "S18"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all",
+        "artist_type_tab_musician"
+      ],
+      "action": "artist_item_106",
+      "result": "S05"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_artists",
+        "artist_type_tab_band",
+        "artist_type_tab_all",
+        "artist_type_tab_musician"
+      ],
+      "action": "artist_item_108",
+      "result": "S12"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_artists",
+        "collector_item_101"
+      ],
+      "action": "back_button",
+      "result": "S17"
+    },
+    {
+      "path": [
+        "role_visitor",
+        "nav_collectors",
+        "collectors_search",
+        "nav_artists",
+        "collector_item_101"
+      ],
+      "action": "favorite_item_101",
+      "result": "S10"
+    }
+  ]
+}

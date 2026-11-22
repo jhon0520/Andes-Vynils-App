@@ -178,7 +178,8 @@ private fun PersonRow(name: String, image: String, tag: String, square: Boolean 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxWidth().padding(top = 16.dp).testTag(tag),
+        // Image and name are read as one item.
+        modifier = Modifier.fillMaxWidth().padding(top = 16.dp).semantics(mergeDescendants = true) {}.testTag(tag),
     ) {
         AsyncImage(
             model = image,

@@ -1,0 +1,41 @@
+11-21 22:46:41.403 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:46:45.493 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:46:51.188 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:47:47.583 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.SocketException: Socket closed
+11-21 22:47:57.060 I/okhttp.OkHttpClient( 7998): <-- 200 OK http://192.168.0.236:3000/albums (203ms)
+11-21 22:48:02.991 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.SocketException: Socket closed
+11-21 22:48:02.993 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.SocketException: Socket closed
+11-21 22:48:42.356 I/okhttp.OkHttpClient( 7998): <-- 200 OK http://192.168.0.236:3000/collectors (2229ms)
+11-21 22:51:45.627 I/okhttp.OkHttpClient( 7998): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:52:43.950 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:54:42.028 I/okhttp.OkHttpClient( 9547): <-- 200 OK http://192.168.0.236:3000/albums (209ms)
+11-21 22:54:42.635 I/okhttp.OkHttpClient( 9547): <-- 200 OK http://192.168.0.236:3000/collectors (57ms)
+11-21 22:54:49.171 I/okhttp.OkHttpClient( 9547): <-- 200 OK http://192.168.0.236:3000/albums/6 (6591ms)
+11-21 22:55:04.774 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:55:04.774 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:55:12.101 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:55:12.101 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:55:19.467 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:55:19.467 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:15.870 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:15.870 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:19.241 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:19.242 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:29.128 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:29.129 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:31.710 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:31.710 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:38.353 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:38.354 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:54.880 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:54.881 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:55.871 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:56:55.871 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:05.608 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:05.608 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:24.133 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:24.133 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:27.276 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:27.276 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:34.630 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000
+11-21 22:57:34.630 I/okhttp.OkHttpClient( 9547): <-- HTTP FAILED: java.net.ConnectException: Failed to connect to /192.168.0.236:3000

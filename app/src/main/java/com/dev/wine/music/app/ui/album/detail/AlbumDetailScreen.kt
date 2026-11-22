@@ -389,7 +389,8 @@ private fun Reviews(comments: List<Comment>, modifier: Modifier = Modifier) {
 /** The review as a quote, then "Author · ★★★★★". */
 @Composable
 private fun ReviewItem(comment: Comment) {
-    Column(modifier = Modifier.fillMaxWidth().testTag("review_item_${comment.id}")) {
+    // Quote, author and stars are read as one review.
+    Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}.testTag("review_item_${comment.id}")) {
         Text(
             text = "“${comment.description}”",
             style = MaterialTheme.typography.headlineSmall,
