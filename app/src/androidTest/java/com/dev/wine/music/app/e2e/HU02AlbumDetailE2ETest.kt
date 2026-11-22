@@ -82,6 +82,20 @@ class HU02AlbumDetailE2ETest {
     }
 
     @Test
+    fun performerOpensTheArtistDetailAndBackReturnsToTheAlbum() {
+        openSalsaAlbum()
+
+        composeTestRule.onNodeWithTag(SALSA_PERFORMER_TAG).performClick()
+
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("artist_detail_body"), timeoutMillis = TIMEOUT)
+        composeTestRule.onNodeWithTag("artist_image_musician").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("back_button").performClick()
+
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
+    }
+
+    @Test
     fun backReturnsToTheCatalog() {
         openSalsaAlbum()
 
@@ -93,6 +107,7 @@ class HU02AlbumDetailE2ETest {
     private companion object {
         const val TIMEOUT = 15_000L
         const val SALSA_ALBUM_TAG = "album_item_100"
+        const val SALSA_PERFORMER_TAG = "album_performer_100"
         const val FIRST_TRACK = "Decisiones"
         const val REVIEW_AUTHOR = "Manolo Bellon"
     }
