@@ -1,6 +1,8 @@
 package com.dev.wine.music.app.ui.collector
 
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isHeading
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -80,6 +82,7 @@ class CollectorListContentTest {
         setContent(loaded(shown = emptyList(), query = "zzz"), onQueryChange = { query = it })
 
         composeTestRule.onNodeWithTag("no_results_view").assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.no_results_title)).assert(isHeading())
         composeTestRule.onNodeWithText(context.getString(R.string.collector_no_results_query, "zzz")).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("clear_search_button").performClick()

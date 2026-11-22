@@ -15,9 +15,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.dev.wine.music.app.ui.theme.Hyphenated
 import com.dev.wine.music.app.ui.theme.RecordBlack
 import com.dev.wine.music.app.ui.theme.SleeveText
 import com.dev.wine.music.app.ui.theme.Terracotta
@@ -31,21 +33,28 @@ fun TerracottaAddButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = ButtonShape,
-        colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = SleeveText),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Terracotta,
+            contentColor = SleeveText,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp),
         modifier = modifier
-            .background(RecordBlack, ButtonShape)
+            .background(if (enabled) RecordBlack else Color.Transparent, ButtonShape)
             .padding(bottom = 3.dp),
     ) {
         Icon(Icons.Filled.Add, contentDescription = null)
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = text,
-            style = textStyle,
+            style = textStyle.merge(Hyphenated),
             fontWeight = FontWeight.Bold,
         )
     }

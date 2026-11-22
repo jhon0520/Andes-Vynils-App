@@ -3,7 +3,14 @@ package com.dev.wine.music.app.data.repository
 import com.dev.wine.music.app.data.cache.RepositoryCache
 import com.dev.wine.music.app.data.remote.api.AlbumApi
 import com.dev.wine.music.app.data.remote.dto.AlbumDto
+import com.dev.wine.music.app.data.remote.dto.AlbumRequestDto
+import com.dev.wine.music.app.data.remote.dto.TrackDto
+import com.dev.wine.music.app.data.remote.dto.TrackRequestDto
+import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.domain.model.AppError
+import com.dev.wine.music.app.domain.model.NewAlbum
+import com.dev.wine.music.app.domain.model.NewTrack
+import com.dev.wine.music.app.domain.model.RecordLabel
 import com.dev.wine.music.app.fakes.RecordingDispatcher
 import com.dev.wine.music.app.fakes.testDispatcher
 import kotlinx.coroutines.test.runTest
@@ -35,6 +42,26 @@ class AlbumRepositoryImplTest {
         override suspend fun getAlbum(albumId: Int): AlbumDto {
             calls++
             return error?.let { throw it } ?: albums.first { it.id == albumId }
+        }
+
+        var createdBody: AlbumRequestDto? = null
+            private set
+
+        override suspend fun createAlbum(body: AlbumRequestDto): AlbumDto {
+            calls++
+            error?.let { throw it }
+            createdBody = body
+            return AlbumDto(id = 104, name = body.name)
+        }
+
+        var trackBody: TrackRequestDto? = null
+            private set
+
+        override suspend fun addTrack(albumId: Int, body: TrackRequestDto): TrackDto {
+            calls++
+            error?.let { throw it }
+            trackBody = body
+            return TrackDto(id = 500, name = body.name, duration = body.duration)
         }
     }
 
@@ -131,6 +158,92 @@ class AlbumRepositoryImplTest {
         cache.clear()
         repository.getAlbums()
 
+        assertEquals(2, api.calls)
+    }
+
+    private val newAlbum = NewAlbum(
+        name = "  Siembra ",
+        cover = "https://example.com/siembra.jpg",
+        releaseDate = "1978-08-01T00:00:00-05:00",
+        description = "Salsa",
+        genre = AlbumGenre.CLASSICAL,
+        recordLabel = RecordLabel.FANIA_RECORDS,
+    )
+
+    @Test
+    fun `creating an album sends the exact values the backend validates`() = runTest {
+        val api = FakeAlbumApi()
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+
+        val created = repository.createAlbum(newAlbum)
+
+        assertEquals(104, created.id)
+        assertEquals("Siembra", api.createdBody?.name)
+        assertEquals("Classical", api.createdBody?.genre)
+        assertEquals("Fania Records", api.createdBody?.recordLabel)
+    }
+
+    @Test
+    fun `creating an album drops the cached catalog so the next load asks the api`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América")))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+        repository.getAlbums()
+
+        repository.createAlbum(newAlbum)
+        repository.getAlbums()
+
+        assertEquals(3, api.calls)
+    }
+
+    @Test
+    fun `a rejected album keeps the cache and reports a validation error`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América")))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+        repository.getAlbums()
+        api.error = httpError(400)
+
+        assertTrue(failureOf { repository.createAlbum(newAlbum) } is AppError.Validation)
+
+        api.error = null
+        repository.getAlbums()
+        assertEquals(2, api.calls)
+    }
+
+    @Test
+    fun `adding a track sends the trimmed name and the duration`() = runTest {
+        val api = FakeAlbumApi()
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+
+        val track = repository.addTrack(100, NewTrack(" Decisiones ", "05:05"))
+
+        assertEquals(500, track.id)
+        assertEquals("Decisiones", api.trackBody?.name)
+        assertEquals("05:05", api.trackBody?.duration)
+    }
+
+    @Test
+    fun `adding a track drops the cached album so the detail shows it`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América")))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+        repository.getAlbum(100)
+
+        repository.addTrack(100, NewTrack("Decisiones", "05:05"))
+        repository.getAlbum(100)
+
+        assertEquals(3, api.calls)
+    }
+
+    @Test
+    fun `a rejected track keeps the cached album and reports the error`() = runTest {
+        val api = FakeAlbumApi(albums = listOf(AlbumDto(id = 100, name = "Buscando América")))
+        val repository = AlbumRepositoryImpl(api, RepositoryCache(), testDispatcher)
+        repository.getAlbum(100)
+        api.error = httpError(404)
+
+        assertTrue(failureOf { repository.addTrack(100, NewTrack("Decisiones", "05:05")) } is AppError.NotFound)
+
+        api.error = null
+        repository.getAlbum(100)
         assertEquals(2, api.calls)
     }
 }

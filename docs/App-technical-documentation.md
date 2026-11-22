@@ -63,13 +63,13 @@ flowchart LR
         direction TB
         RAIZ["raíz del paquete<br/>MainActivity · splash<br/>WineMusicApp · Hilt"]
         subgraph UIP["ui · pantallas Compose y ViewModels"]
-            U1["album/list, album/detail · artist · collector"]
+            U1["album/list, album/detail, album/create, album/track · artist · collector, collector/detail"]
             U2["common: UiState · components: estados y tarjetas"]
             U3["navigation: rutas tipadas, NavHost y barra inferior"]
             U4["theme: colores y tipografía"]
         end
         subgraph DOM["domain · reglas de la app, sin Android ni red"]
-            D1["model: Album, Track, Artist, ArtistType, Collector"]
+            D1["model: Album, Track, Artist, ArtistType, Collector, CollectorDetail"]
             D2["repository: interfaces AlbumRepository y otras"]
             D3["usecase: GetAlbumsUseCase, GetAlbumDetailUseCase…"]
         end
@@ -95,7 +95,7 @@ flowchart LR
 
 ### Modelo de dominio
 
-Hoy existen `Album`, `Track`, `NumberedTrack`, `Comment`, `Artist`, `ArtistType`, `Collector` y `AppError`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
+Hoy existen `Album`, `Track`, `NumberedTrack`, `Comment`, `Artist`, `ArtistType`, `Collector`, `CollectorDetail`, `CollectorAlbum`, `CollectorReview` y `AppError`; el resto llega con las HU pendientes (marcadas con la HU que las necesita).
 
 ```mermaid
 classDiagram
@@ -174,11 +174,31 @@ classDiagram
         organization: String
         premiationDay: String (dd/mm/aaaa)
     }
+    class CollectorDetail {
+        <<HU06>>
+        collector: Collector
+        favoriteArtists: List~Artist~
+        albums: List~CollectorAlbum~
+        reviews: List~CollectorReview~
+    }
     class CollectorAlbum {
-        <<HU06 · por agregar>>
-        price: Int
-        status: Active o Inactive
+        <<HU06>>
+        id: Int
+        price: Int (sin moneda)
+        status: CollectorAlbumStatus
         album: Album
+    }
+    class CollectorAlbumStatus {
+        <<enum · HU06>>
+        ACTIVE
+        INACTIVE
+    }
+    class CollectorReview {
+        <<HU06>>
+        id: Int
+        description: String
+        rating: Int (0 a 5)
+        album: Album?
     }
     class Profile {
         <<enum · HU01, HU02, HU07, HU08>>
@@ -186,21 +206,31 @@ classDiagram
         COLLECTOR
     }
     class NewAlbum {
-        <<HU07 · formulario>>
+        <<HU07>>
         name: String
         cover: String
         releaseDate: String
         description: String
-        genre: String
-        recordLabel: String
+        genre: AlbumGenre
+        recordLabel: RecordLabel
+    }
+    class RecordLabel {
+        <<enum · HU07>>
+        SONY_MUSIC
+        EMI
+        DISCOS_FUENTES
+        ELEKTRA
+        FANIA_RECORDS
     }
     class NewTrack {
-        <<HU08 · formulario>>
+        <<HU08>>
         name: String
         duration: String
     }
 
     Album --> AlbumGenre : genreType
+    NewAlbum --> AlbumGenre : genre
+    NewAlbum --> RecordLabel : recordLabel
     Album "1" *-- "*" Track : tracks
     Album "*" --> "*" Artist : performers
     Album "1" *-- "*" Comment : comments
@@ -208,8 +238,13 @@ classDiagram
     ArtistDetail --> Artist : artist, members, band
     ArtistDetail "1" --> "*" Album : albums
     ArtistDetail "1" *-- "*" ArtistPrize : prizes
-    Collector "1" --> "*" CollectorAlbum
-    CollectorAlbum --> Album
+    CollectorDetail --> Collector : collector
+    CollectorDetail "1" --> "*" Artist : favoriteArtists
+    CollectorDetail "1" *-- "*" CollectorAlbum : albums
+    CollectorDetail "1" *-- "*" CollectorReview : reviews
+    CollectorAlbum --> Album : album
+    CollectorAlbum --> CollectorAlbumStatus : status
+    CollectorReview --> Album : album
 ```
 
 ### Cadena de Clases código
@@ -287,7 +322,7 @@ Cada HU recorre la misma cadena: pantalla Compose, ViewModel, caso de uso, repos
 | HU03 Artistas | `ArtistListScreen` | `ArtistListViewModel` (filtro por tipo) | `GetArtistsUseCase` (asigna la banda de cada músico) | `ArtistRepository.getArtists()` · `ArtistApi.getMusicians()`, `getBands()` | `GET /musicians`, `GET /bands` |
 | HU04 Detalle de artista | `ArtistDetailScreen` | `ArtistDetailViewModel` | `GetArtistDetailUseCase` | `ArtistRepository.getArtist(id, type)` · `ArtistApi.getMusician(id)`, `getBand(id)`, `getPerformerPrizes()` | `GET /musicians/{id}`, `GET /bands/{id}`, `GET /performerprizes` |
 | HU05 Coleccionistas | `CollectorListScreen` | `CollectorListViewModel` | `GetCollectorsUseCase` | `CollectorRepository.getCollectors()` · `CollectorApi.getCollectors()` | `GET /collectors` |
-| HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi` | `GET /collectors/{id}`, `GET /collectors/{id}/albums` |
+| HU06 Detalle de coleccionista | `CollectorDetailScreen` | `CollectorDetailViewModel` | `GetCollectorDetailUseCase` (cruza el álbum de cada reseña) | `CollectorRepository.getCollector(id)`, `getCollectorAlbums(id)` · `CollectorApi.getCollector(id)`, `getCollectorAlbums(id)`; `AlbumRepository.getAlbums()` | `GET /collectors/{id}`, `GET /collectors/{id}/albums`, `GET /albums` |
 | HU07 Crear álbum | `AlbumCreateScreen` | `AlbumCreateViewModel` | `CreateAlbumUseCase` | `AlbumRepository.createAlbum(newAlbum)` · `AlbumApi.createAlbum(body)` | `POST /albums` |
 | HU08 Asociar tracks | `AddTrackSheet` | `AddTrackViewModel` | `AddTrackUseCase` | `AlbumRepository.addTrack(albumId, newTrack)` · `AlbumApi.addTrack(id, body)` | `POST /albums/{id}/tracks` |
 
@@ -305,9 +340,10 @@ No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de
 - **Muerte del proceso:** Navigation restaura las pantallas, pero la sesión se pierde. `MainScreen` lo detecta (`session == null` fuera del onboarding) y vuelve a `OnboardingGraph` limpiando la pila.
 - **Rutas:** `OnboardingGraph` (grafo anidado, `startDestination` de la app) con `RoleSelectionRoute` y `CollectorPickerRoute`. Al terminar se navega a `AlbumsRoute` con `popUpTo<OnboardingGraph> { inclusive = true }`, así atrás en Álbumes sale de la app.
 - **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
+- **Texto grande (D-14, sprint 3):** en `CollectorPickerScreen` el título, el buscador y la nota «Podrás cambiar de perfil luego» son ítems del mismo `LazyColumn` que las filas; solo «Continuar» queda fijo. El `LazyColumn` lleva `collector_list` solo cuando muestra coleccionistas (si no, `collector_picker_body`), así las E2E, Kraken y P-ONB siguen esperando la lista con datos.
 - **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
 
-**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumDetailRoute(albumId)` y `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`. Faltan `CollectorDetailRoute(collectorId)`, `AlbumCreateRoute` y la hoja de HU08 dentro del detalle. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
+**Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumCreateRoute`, `AlbumDetailRoute(albumId, openAddTrack)`, `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`, y `CollectorDetailRoute(collectorId)` (HU06: desde un coleccionista de la lista; sus favoritos abren `ArtistDetailRoute` y sus álbumes y reseñas abren `AlbumDetailRoute`). HU08 no tiene ruta propia: es la hoja `AddTrackSheet` dentro del detalle del álbum. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
 
 ---
 
@@ -335,7 +371,6 @@ interface AlbumApi {
     @GET("albums/{id}")
     suspend fun getAlbum(@Path("id") albumId: Int): AlbumDto
 
-    // Por agregar en HU07 y HU08
     @POST("albums")
     suspend fun createAlbum(@Body body: AlbumRequestDto): AlbumDto
 
@@ -421,11 +456,24 @@ class AlbumListViewModel @Inject constructor(
 
 Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, catálogo vacío, sin resultados o la cuadrícula. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada. En HU01, `AlbumListViewModel` combina la lista cargada con `query` y `selectedGenre` (`combine` + `stateIn`) y expone un `AlbumCatalog` con los álbumes visibles y el total cargado; la búsqueda ignora mayúsculas y tildes y no vuelve a llamar a la API.
 
+
+**Texto grande (A11Y-03, sprint 3).** Las pantallas deben poder usarse con la fuente al 200 % y el tamaño de pantalla «más grande»:
+- **Nada fijo que se coma la pantalla:** en el catálogo, el encabezado, el buscador y las pestañas son ítems de ancho completo (`GridItemSpan(maxLineSpan)`) de la misma `LazyVerticalGrid`; la grilla lleva `album_list` solo cuando muestra álbumes (si no, `album_catalog`). Igual en «¿Quién eres?».
+- **El botón flotante no tapa la última fila:** el margen inferior de la grilla sale del alto medido del botón (`onSizeChanged`), no de un valor fijo.
+- **Palabras partidas:** los textos cortos en espacios angostos (etiquetas `LabelMono`, pestañas, opciones de perfil, títulos de tarjeta, `TerracottaAddButton`) usan `Hyphenated` (`Hyphens.Auto`), que corta por sílaba con guion. No se aplica a toda la tipografía porque la separación en sílabas hace más lento el *layout* de los párrafos. La barra inferior tiene alto fijo: su etiqueta va en una línea con «…». En la hoja de HU08 los botones van en un `FlowRow`.
+- **Logotipo:** la carátula del onboarding se dibuja con `fontScale = 1` (WCAG 1.4.4 exceptúa los logotipos).
+- **Pruebas:** `PhoneWithFontScale` (en `androidTest/.../ui/a11y/`) pinta el contenido como un teléfono de 360 × 640 dp con la fuente al 200 %; lo usan `CollectorPickerContentTest`, `AlbumListContentTest` y `AddTrackContentTest`.
+
+**TalkBack (A11Y-02, sprint 3).** Reglas que salieron del recorrido con TalkBack:
+- **Mensajes de estado (D-18):** lo que cambia sin mover el foco se anuncia con `AnnounceOnChange` (`ui/common/Announcer.kt`): resultados al filtrar o buscar (HU01, HU03, HU05 y «¿Quién eres?», con `resultsMessage`), el aviso «Revisa N campos.» (HU07) y, con `rememberAnnouncer()`, el track guardado (HU08). No anuncia la carga inicial ni mientras la `key` es `null`, y espera 700 ms para no hablar en cada tecla. Usa `View.announceForAccessibility` porque Compose 1.7 no tiene API para mensajes de estado. En las pruebas se reemplaza con `LocalAnnouncer`.
+- **Rol de botón (D-19):** el `clickable(role = Role.Button)` va en un `Box` alrededor del texto, nunca sobre el `Text`: sobre el texto, Compose expone un `TextView` y TalkBack no dice «Botón».
+- **Una parada por dato (D-20):** las filas que forman un dato (track, línea de metadatos del álbum) usan `semantics(mergeDescendants = true)`; las filas con descripción propia (teléfono, correo) usan `clearAndSetSemantics`, así el valor no se lee dos veces. Los textos fusionados se prueban con `useUnmergedTree = true`.
+- **Pruebas:** `TalkBackFeedbackTest`; recorrido real con `e2e/a11y/talkback/talkback_walk.py`.
 ---
 
 ## Consumo de la API REST
 
-Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`GET /albums`, `GET /albums/{id}`, `GET /musicians`, `GET /bands` y `GET /collectors`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
+Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 12 (`GET /albums`, `GET /albums/{id}`, `POST /albums`, `POST /albums/{id}/tracks`, `GET /musicians`, `GET /musicians/{id}`, `GET /bands`, `GET /bands/{id}`, `GET /performerprizes`, `GET /collectors`, `GET /collectors/{id}` y `GET /collectors/{id}/albums`). Todas las llamadas salen de las interfaces de Retrofit en `data/remote/api`, con la URL base `BuildConfig.API_BASE_URL` (se define una sola vez en `api.base.url` de `gradle.properties`, por defecto `https://backvynils-q6yc.onrender.com/`, y se sobrescribe en `local.properties`; de ahí también se genera `network_security_config.xml`, ver README). La referencia completa del backend está en `Backend-technical-documentation.md` del repositorio BackVynils.
 
 | Método y ruta | HU | Función de Retrofit | En el código |
 |---|---|---|---|
@@ -437,10 +485,10 @@ Las HU comprometidas usan 12 endpoints de BackVynils; el código ya consume 5 (`
 | `GET /bands/{id}` | HU04 | `ArtistApi.getBand(id)` | Existe |
 | `GET /performerprizes` | HU04 | `ArtistApi.getPerformerPrizes()` | Existe; `PerformerPrizeDto` trae el `prize` con nombre y organización |
 | `GET /collectors` | HU02, HU05 | `CollectorApi.getCollectors()` | Existe; `CollectorDto` lee `comments` para el autor de las reseñas de HU02 |
-| `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Por agregar |
-| `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Por agregar |
-| `POST /albums` | HU07 | `AlbumApi.createAlbum(body)` | Por agregar |
-| `POST /albums/{id}/tracks` | HU08 | `AlbumApi.addTrack(id, body)` | Por agregar |
+| `GET /collectors/{id}` | HU06 | `CollectorApi.getCollector(id)` | Existe; `CollectorDto` lee `favoritePerformers` y `comments` (las reseñas, sin su álbum) |
+| `GET /collectors/{id}/albums` | HU06 | `CollectorApi.getCollectorAlbums(id)` | Existe; `CollectorAlbumDto` trae `price`, `status` y el `album` |
+| `POST /albums` | HU07 | `AlbumApi.createAlbum(body)` | Existe; al aceptarse invalida la caché de álbumes |
+| `POST /albums/{id}/tracks` | HU08 | `AlbumApi.addTrack(id, body)` | Existe; al aceptarse invalida la caché de álbumes |
 
 ### Cuerpos de los POST
 
@@ -478,7 +526,7 @@ Cada capa traduce lo suyo, para que `ui` nunca importe Retrofit. Los repositorio
 |---|---|---|
 | `IOException` | Sin conexión o servidor caído | `ErrorView` «No hay conexión» con «Reintentar» |
 | `HttpException` 404 | El recurso no existe | `ErrorView` «No encontrado», sin «Reintentar» (tag `not_found_view`) |
-| `HttpException` 400 o 412 | Datos rechazados por el backend | Mensaje en el formulario, sin perder lo escrito (por agregar) |
+| `HttpException` 400 o 412 | Datos rechazados por el backend | Mensaje en el formulario, sin perder lo escrito |
 | `HttpException` 500 | Error del servidor | `ErrorView` con «Reintentar» |
 
 Los errores del backend llegan con el cuerpo `{ "statusCode": 404, "message": "The album with the given id was not found" }`; en un `400` de validación, `message` trae el texto de Joi.
@@ -491,6 +539,8 @@ Los errores del backend llegan con el cuerpo `{ "statusCode": 404, "message": "T
 - `GET /musicians` y `GET /musicians/{id}` **no** devuelven la banda del músico. La banda se obtiene de `GET /bands`, cuyas bandas traen su arreglo `musicians`. Un músico tiene una sola banda; si no tiene, la app muestra «Sin banda».
 - `GET /collectors` trae `collectorAlbums` solo con `id`, `price` y `status`; los datos del álbum salen de `GET /collectors/{id}/albums`.
 - El precio de la colección (HU06) no trae moneda; se muestra el número tal cual.
+- Las reseñas de `GET /collectors/{id}` no dicen a qué álbum pertenecen. `GetCollectorDetailUseCase` cruza el id de cada reseña con los `comments` de `GET /albums` (normalmente ya en caché); si el catálogo falla, la reseña se muestra con «Álbum no disponible».
+- El detalle del coleccionista no se guarda en `RepositoryCache`: siempre muestra la colección actual.
 - Las fechas llegan en ISO 8601 UTC (`"1984-08-01T05:00:00.000Z"`, medianoche en Colombia).
 - Músicos y bandas comparten la tabla `performer`, así que sus ids no se repiten entre sí.
 - El backend no tiene autenticación: el perfil visitante o coleccionista se resuelve solo en la app.
@@ -536,15 +586,15 @@ La arquitectura base ya está en la rama `h0_base_architecture`; falta integrarl
 | 1 | Arquitectura base: Compose, Hilt, Retrofit, navegación, `UiState` y vistas de estado (rama `h0_base_architecture`) | — | | En revisión |
 | 2 | Tema del estilo A: colores, Fraunces e IBM Plex, textos en español | 1 | | Por hacer |
 | 3 | Perfil visitante/coleccionista: `Profile`, `ProfileRepository` y pantalla de elegir perfil | 1 | | Por hacer |
-| 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | 404 y red hechos (con HU02); 400/412 queda para HU07 |
+| 4 | Errores por tipo: 404 con pantalla «No encontrado», 400/412 en formularios | 1 | | En revisión |
 | 5 | HU01 completar: búsqueda, filtro por género, intérprete en la tarjeta, funda de respaldo (el botón «Crear álbum» queda para HU07 + perfil) | 2, 3 | | En revisión |
-| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (intérpretes navegables con HU04, «Agregar track» con HU08) |
+| 6 | HU02 completar: reseñas (`comments` en el DTO), fecha completa, intérpretes navegables, «Agregar track» | 3, 4 | | En revisión (faltan los intérpretes navegables) |
 | 7 | HU03 completar: filtro por tipo, banda del músico, navegación al detalle | 2 | | En revisión |
 | 8 | HU04 Detalle de artista: API, caso de uso, ViewModel, pantalla, ruta, pruebas unitarias, E2E Compose y Kraken | 4, 7 | | En revisión |
 | 9 | HU05 completar: búsqueda, iniciales, navegación al detalle | 2 | | Por hacer |
-| 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | Por hacer |
-| 11 | HU07 Crear álbum: `POST /albums`, formulario con validación, pantalla de álbum creado | 4, 5 | | Por hacer |
-| 12 | HU08 Asociar tracks: `POST /albums/{id}/tracks` y hoja de agregar track | 4, 6 | | Por hacer |
+| 10 | HU06 Detalle de coleccionista: API, caso de uso, ViewModel, pantalla y ruta | 4, 9 | | En revisión |
+| 11 | HU07 Crear álbum: `POST /albums`, formulario con validación, pantalla de álbum creado | 4, 5 | | En revisión |
+| 12 | HU08 Asociar tracks: `POST /albums/{id}/tracks` y hoja de agregar track | 4, 6 | | En revisión |
 | 13 | Diagramas finales de clases, paquetes y componentes | 5 a 12 | | Por hacer |
 | 14 | README con instrucciones de construcción (texto listo en la sección [README](#readme)) | 1 | | Por hacer |
 

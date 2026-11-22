@@ -29,22 +29,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dev.wine.music.app.R
+import com.dev.wine.music.app.ui.theme.Hyphenated
 import com.dev.wine.music.app.ui.theme.LabelMono
 import com.dev.wine.music.app.ui.theme.RecordBlack
 import com.dev.wine.music.app.ui.theme.RecordGreen
@@ -98,7 +104,7 @@ fun RoleSelectionContent(
             text = stringResource(R.string.onboarding_how_to_enter),
             style = LabelMono,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().semantics { heading() },
         )
         Spacer(Modifier.height(8.dp))
         HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
@@ -126,6 +132,16 @@ fun RoleSelectionContent(
 /** Green sleeve with a black record sliding out to the right, drawn without raster images. */
 @Composable
 private fun VinylHero(modifier: Modifier = Modifier) {
+    // The sleeve is the app logo drawn at a fixed size: its text keeps the default font scale so "Vinilos"
+    // is not cut inside the sleeve (WCAG 1.4.4 exempts logotypes). The rest of the screen scales normally.
+    val density = LocalDensity.current
+    CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale = 1f)) {
+        VinylHeroArtwork(modifier)
+    }
+}
+
+@Composable
+private fun VinylHeroArtwork(modifier: Modifier) {
     Box(modifier = modifier.size(width = 240.dp, height = 170.dp)) {
         Canvas(
             modifier = Modifier
@@ -200,12 +216,12 @@ private fun RoleOption(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold).merge(Hyphenated),
                 color = MaterialTheme.colorScheme.onBackground,
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.merge(Hyphenated),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }

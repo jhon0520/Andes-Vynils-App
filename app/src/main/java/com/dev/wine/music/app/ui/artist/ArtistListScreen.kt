@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -27,6 +28,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,11 +37,14 @@ import coil.compose.AsyncImage
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
 import com.dev.wine.music.app.ui.components.NoResultsView
+import com.dev.wine.music.app.ui.theme.Hyphenated
 
 /** "Todos" first, then musicians and bands. */
 private val TYPE_OPTIONS: List<ArtistType?> = listOf(null, ArtistType.MUSICIAN, ArtistType.BAND)
@@ -74,7 +80,7 @@ fun ArtistListContent(
         Text(
             text = stringResource(R.string.artists),
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).semantics { heading() },
         )
         when (uiState) {
             UiState.Loading -> LoadingView()
@@ -84,6 +90,11 @@ fun ArtistListContent(
                 if (catalog.totalCount == 0) {
                     EmptyView()
                 } else {
+                    // D-18: TalkBack says how many artists are left after choosing a type.
+                    AnnounceOnChange(
+                        message = resultsMessage(catalog.artists.size),
+                        key = selectedType to catalog.artists.size,
+                    )
                     TypeTabs(selectedType = selectedType, onTypeSelect = onTypeSelect)
                     if (catalog.artists.isEmpty()) {
                         NoResultsView(
@@ -124,7 +135,8 @@ private fun TypeTabs(selectedType: ArtistType?, onTypeSelect: (ArtistType?) -> U
             Tab(
                 selected = type == selectedType,
                 onClick = { onTypeSelect(type) },
-                text = { Text(stringResource(type.tabLabelRes())) },
+                // With a large font "Músicos" does not fit a third of the width: split it at a syllable.
+                text = { Text(stringResource(type.tabLabelRes()), style = LocalTextStyle.current.merge(Hyphenated)) },
                 modifier = Modifier.testTag("artist_type_tab_${type?.name?.lowercase() ?: "all"}"),
             )
         }
@@ -156,7 +168,7 @@ private fun ArtistItem(artist: Artist, modifier: Modifier = Modifier) {
             // The avatar shape tells the type apart: square for bands, round for musicians.
             AsyncImage(
                 model = artist.image,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.artist_image_description, artist.name),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(56.dp)

@@ -1,0 +1,131 @@
+{
+  "scenario": "P-HU07",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "motorola",
+    "model": "moto e20",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-21T22:10:21.016Z",
+  "durationMs": 30480,
+  "coldStart": null,
+  "timings": {
+    "formulario": {
+      "ms": 926,
+      "appiumRoundTripMs": 51
+    },
+    "album-creado": {
+      "ms": 2129,
+      "appiumRoundTripMs": 39
+    },
+    "detalle-album-creado": {
+      "ms": 1698,
+      "appiumRoundTripMs": 47
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 14750,
+    "mainThreadMs": 6880,
+    "otherThreadsMs": 7870,
+    "avgPct": 6,
+    "peakPct": 25
+  },
+  "memory": {
+    "totalPssKb": 95015,
+    "javaHeapKb": 17128,
+    "nativeHeapKb": 19056,
+    "graphicsKb": 0,
+    "codeKb": 42688,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 213832,
+    "peakThreads": 50
+  },
+  "frames": {
+    "total": 306,
+    "janky": 170,
+    "jankyPct": 55.56,
+    "slowOver16ms": 167,
+    "frozenOver700ms": 0,
+    "p50Ms": 17,
+    "p90Ms": 93,
+    "p95Ms": 150,
+    "p99Ms": 350,
+    "slowUiThread": 66,
+    "deadlineMissed": 69
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 4,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "POST",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/5"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 50
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 25
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 30
+      },
+      {
+        "status": 200,
+        "path": "/albums/5",
+        "ms": 22
+      }
+    ],
+    "segments": [
+      {
+        "name": "formulario",
+        "requests": []
+      },
+      {
+        "name": "crear",
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/albums"
+          }
+        ]
+      },
+      {
+        "name": "ver-album",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/5"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

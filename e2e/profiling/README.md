@@ -1,6 +1,6 @@
 # Perfilamiento en dispositivos físicos
 
-Mide el consumo de la app en los recorridos de las HU (P-ONB y P-HU01 a P-HU05) en un teléfono conectado por USB. Kraken maneja la UI con los mismos pasos de `e2e/kraken`, y los pasos de `features/mobile/step_definitions/profiling.js` leen con `adb` lo que consume la app:
+Mide el consumo de la app en los recorridos de las HU (P-ONB y P-HU01 a P-HU08) en un teléfono conectado por USB. Kraken maneja la UI con los mismos pasos de `e2e/kraken`, y los pasos de `features/mobile/step_definitions/profiling.js` leen con `adb` lo que consume la app:
 
 | Métrica | Fuente |
 |---|---|
@@ -30,5 +30,6 @@ Durante la corrida se ponen las animaciones a velocidad normal y la pantalla sie
 ## Límites
 
 - Es un build **debug** (el mismo para antes y después): los tiempos absolutos son peores que en un release, pero la comparación es justa.
-- El APK «antes» (8921089) no tiene detalle de artista: P-HU04 se marca como omitido en esa versión.
+- El APK «antes» (8921089) no tiene detalle de artista ni de coleccionista, ni creación de álbumes o tracks: P-HU04 y P-HU06 a P-HU08 se marcan como omitidos en esa versión.
+- P-HU07 y P-HU08 escriben en el backend: cada corrida crea un álbum y agrega un track al álbum semilla. Córrelos contra el backend local, no contra el de Render.
 - Para las asignaciones por tipo de objeto y el *System Trace* se usa el Profiler de Android Studio; este script cubre lo que se puede medir igual en los 3 teléfonos.

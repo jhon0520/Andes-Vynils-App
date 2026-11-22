@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const RESULTS_DIR = path.join(__dirname, 'results');
-const SCENARIOS = ['P-ONB', 'P-HU01', 'P-HU02', 'P-HU03', 'P-HU04', 'P-HU05'];
+const SCENARIOS = ['P-ONB', 'P-HU01', 'P-HU02', 'P-HU03', 'P-HU04', 'P-HU05', 'P-HU06', 'P-HU07', 'P-HU08'];
 const BUILDS = ['antes', 'despues'];
 
 const median = (values) => {

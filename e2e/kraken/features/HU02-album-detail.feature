@@ -13,5 +13,10 @@ Feature: HU02 - View the detailed information of an album
     Then I should see the element with id "album_detail_body"
     And I should see the text "<SALSA_LABEL>"
     And I should see the text "<SALSA_RELEASE_DATE>"
+    # The performer is a link to the artist detail (HU04)
+    When I tap the element with id "<SALSA_PERFORMER_ID>"
+    Then I should see the element with id "artist_detail_body"
+    When I tap the element with id "back_button"
+    Then I should see the element with id "album_detail_body"
     When I tap the element with id "back_button"
     Then I should see the element with id "album_list"

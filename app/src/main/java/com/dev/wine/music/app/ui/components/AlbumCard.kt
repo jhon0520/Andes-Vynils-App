@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.ui.theme.DetailMono
+import com.dev.wine.music.app.ui.theme.Hyphenated
 import com.dev.wine.music.app.ui.theme.SansBody
 
 /** Sleeve width over the whole card width: the rest is the record peeking out on the right. */
@@ -26,12 +28,13 @@ fun AlbumCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.clickable(onClick = onClick)) {
+    Column(modifier = modifier.clickable(role = Role.Button, onClick = onClick)) {
         AlbumRecord(album = album, sleeveFraction = SLEEVE_FRACTION)
         // Every text reserves a fixed number of lines, so all cards in the grid have the same height.
         Text(
             text = album.name,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp, lineHeight = 22.sp),
+            // Half the screen wide: with a large font a long word ("Siembra") is split at a syllable.
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp, lineHeight = 22.sp).merge(Hyphenated),
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
             minLines = 2,

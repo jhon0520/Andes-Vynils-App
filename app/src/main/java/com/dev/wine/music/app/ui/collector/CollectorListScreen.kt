@@ -29,12 +29,16 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +47,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
@@ -79,12 +85,18 @@ fun CollectorListContent(
         Text(
             text = stringResource(R.string.collectors),
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).semantics { heading() },
         )
         SearchField(
             query = uiState.query,
             onQueryChange = onQueryChange,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+        )
+        // D-18: TalkBack says how many collectors match the search.
+        val found = (uiState.collectors as? UiState.Success)?.data?.size?.takeIf { uiState.totalCount > 0 }
+        AnnounceOnChange(
+            message = found?.let { resultsMessage(it) },
+            key = found?.let { uiState.query to it },
         )
         Box(modifier = Modifier.weight(1f)) {
             when (val collectors = uiState.collectors) {
@@ -143,6 +155,7 @@ private fun CollectorList(collectors: List<Collector>, onCollectorClick: (Int) -
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class) // invisibleToUser
 @Composable
 private fun CollectorItem(collector: Collector, onClick: () -> Unit) {
     Row(
@@ -164,6 +177,8 @@ private fun CollectorItem(collector: Collector, onClick: () -> Unit) {
                 text = collectorInitials(collector.name),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
+                // The initials repeat the name read next to them, so TalkBack skips them.
+                modifier = Modifier.semantics { invisibleToUser() },
             )
         }
         Spacer(Modifier.width(16.dp))

@@ -1,0 +1,131 @@
+{
+  "scenario": "P-HU07",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "Google",
+    "model": "sdk_gphone64_arm64",
+    "androidRelease": "16",
+    "sdk": 36
+  },
+  "recordedAt": "2026-11-22T01:54:32.431Z",
+  "durationMs": 16478,
+  "coldStart": null,
+  "timings": {
+    "formulario": {
+      "ms": 202,
+      "appiumRoundTripMs": 14
+    },
+    "album-creado": {
+      "ms": 1664,
+      "appiumRoundTripMs": 11
+    },
+    "detalle-album-creado": {
+      "ms": 1361,
+      "appiumRoundTripMs": 15
+    }
+  },
+  "cpu": {
+    "cores": 1,
+    "totalMs": 2820,
+    "mainThreadMs": 1740,
+    "otherThreadsMs": 1080,
+    "avgPct": 17.1,
+    "peakPct": 66.2
+  },
+  "memory": {
+    "totalPssKb": 111291,
+    "javaHeapKb": 19160,
+    "nativeHeapKb": 28004,
+    "graphicsKb": 0,
+    "codeKb": 4428,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 217752,
+    "peakThreads": 47
+  },
+  "frames": {
+    "total": 381,
+    "janky": 66,
+    "jankyPct": 17.32,
+    "slowOver16ms": 210,
+    "frozenOver700ms": 0,
+    "p50Ms": 17,
+    "p90Ms": 46,
+    "p95Ms": 85,
+    "p99Ms": 133,
+    "slowUiThread": 49,
+    "deadlineMissed": 66
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 4,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "POST",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/7"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 8
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 9
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 10
+      },
+      {
+        "status": 200,
+        "path": "/albums/7",
+        "ms": 10
+      }
+    ],
+    "segments": [
+      {
+        "name": "formulario",
+        "requests": []
+      },
+      {
+        "name": "crear",
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/albums"
+          }
+        ]
+      },
+      {
+        "name": "ver-album",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/7"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

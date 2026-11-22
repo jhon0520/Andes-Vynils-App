@@ -33,6 +33,27 @@ object FakeBackendData {
          {"id":101,"name":"$OTHER_COLLECTOR_NAME","telephone":"3012357936","email":"jmonsalve@rtvc.com.co","comments":[]}]
     """.trimIndent()
 
+    const val REVIEW_ID = 100
+
+    /** GET /collectors/{id}: one favorite musician and one review, which does not say its album. */
+    val collectorDetail = """
+        {"id":$COLLECTOR_ID,"name":"$COLLECTOR_NAME","telephone":"3502457896","email":"manollo@caracol.com.co",
+         "comments":[{"id":$REVIEW_ID,"description":"The most relevant album of Ruben Blades","rating":5}],
+         "favoritePerformers":[$musician]}
+    """.trimIndent()
+
+    /** GET /collectors/{id}: a collector without favorites or reviews. */
+    val emptyCollectorDetail = """
+        {"id":$COLLECTOR_ID,"name":"$COLLECTOR_NAME","telephone":"3502457896","email":"manollo@caracol.com.co",
+         "comments":[],"favoritePerformers":[]}
+    """.trimIndent()
+
+    /** GET /collectors/{id}/albums: the album in the collection with its price and status. */
+    val collectorAlbums = """[{"id":100,"price":35,"status":"Active","album":$album}]"""
+
+    /** The catalog where album 100 has the review [REVIEW_ID], so the review gets its album. */
+    val albumsWithReview = "[" + album.replace(""""comments":[]""", """"comments":[{"id":$REVIEW_ID,"description":"","rating":5}]""") + "]"
+
     const val MUSICIAN_ID = 100
     const val BAND_ID = 101
     const val PRIZE_ID = 100
@@ -55,6 +76,17 @@ object FakeBackendData {
         [{"id":$PRIZE_ID,"premiationDate":"1978-12-10T05:00:00.000Z",
           "prize":{"id":100,"name":"$PRIZE_NAME","description":"","organization":"National Academy of Recording Arts & Sciences"}}]
     """.trimIndent()
+
+    const val NEW_TRACK_NAME = "E2E new track"
+
+    /** POST /albums/{id}/tracks answers with the created track. */
+    val newTrack = """{"id":200,"name":"$NEW_TRACK_NAME","duration":"03:30"}"""
+
+    /** The album after adding [newTrack]. */
+    val albumWithNewTrack = album.replace(
+        """"duration":"5:05"}]""",
+        """"duration":"5:05"},$newTrack]""",
+    )
 
     val albums = "[$album]"
     val musicians = "[$musician]"

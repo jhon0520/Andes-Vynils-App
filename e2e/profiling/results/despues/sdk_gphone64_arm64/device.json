@@ -1,0 +1,13 @@
+{
+  "manufacturer": "Google",
+  "model": "sdk_gphone64_arm64",
+  "marketName": "Emulador Pixel (AVD Medium_Phone_API_36.1)",
+  "androidRelease": "16",
+  "sdk": 36,
+  "soc": "AOSP ranchu",
+  "cores": 1,
+  "cpuMaxGhz": null,
+  "ramGb": 1.9,
+  "screen": "1080x2400",
+  "density": 420
+}
