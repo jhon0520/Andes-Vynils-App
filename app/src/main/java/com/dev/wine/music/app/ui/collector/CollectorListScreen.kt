@@ -47,7 +47,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
@@ -89,6 +91,12 @@ fun CollectorListContent(
             query = uiState.query,
             onQueryChange = onQueryChange,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+        )
+        // D-18: TalkBack says how many collectors match the search.
+        val found = (uiState.collectors as? UiState.Success)?.data?.size?.takeIf { uiState.totalCount > 0 }
+        AnnounceOnChange(
+            message = found?.let { resultsMessage(it) },
+            key = found?.let { uiState.query to it },
         )
         Box(modifier = Modifier.weight(1f)) {
             when (val collectors = uiState.collectors) {

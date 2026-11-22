@@ -61,13 +61,13 @@ private val DurationMask = MaskedDigitsTransformation(separator = ':', separator
 fun AddTrackSheet(
     album: Album,
     onDismiss: () -> Unit,
-    onSaved: () -> Unit,
+    onSaved: (trackName: String) -> Unit,
     viewModel: AddTrackViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     DisposableEffect(viewModel) { onDispose { viewModel.reset() } }
     LaunchedEffect(uiState.isSaved) {
-        if (uiState.isSaved) onSaved()
+        if (uiState.isSaved) onSaved(uiState.name.trim())
     }
     ModalBottomSheet(
         onDismissRequest = onDismiss,

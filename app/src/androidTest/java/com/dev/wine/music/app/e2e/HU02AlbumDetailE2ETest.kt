@@ -53,8 +53,8 @@ class HU02AlbumDetailE2ETest {
     fun detailShowsLabelAndReleaseDateFromTheBackend() {
         openSalsaAlbum()
 
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("ELEKTRA")
-        composeTestRule.onNodeWithTag("album_release_date").assertTextEquals("01/08/1984")
+        composeTestRule.onNodeWithTag("album_record_label", useUnmergedTree = true).assertTextEquals("ELEKTRA")
+        composeTestRule.onNodeWithTag("album_release_date", useUnmergedTree = true).assertTextEquals("01/08/1984")
         composeTestRule.onNodeWithTag("album_performers").assertIsDisplayed()
     }
 

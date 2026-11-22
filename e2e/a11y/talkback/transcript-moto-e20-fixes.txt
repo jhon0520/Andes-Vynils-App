@@ -1,0 +1,212 @@
+
+## ONB + HU01 · Filtrar por Rock (D-18)
+open app       → (silence)
+next           → Vinilos
+next           → Compra, vende e intercambia discos de vinilo.
+next           → ¿CÓMO QUIERES INGRESAR?. Encabezado
+next           → Visitante. Explora álbumes, artistas y coleccionistas. Botón
+next           → Coleccionista. Comenta, marca favoritos y gestiona tu colección. Botón
+activate       → Volver. Botón
+next           → PERFIL DE COLECCIONISTA
+next           → ¿Quién eres?. Encabezado. En la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Sin seleccionar. Ana María Rodríguez. ana.rodriguez@example.com. Botón de selección
+next           → Sin seleccionar. Andrés Martínez. andres.martinez@example.com. Botón de selección
+next           → Sin seleccionar. Carlos Pérez. carlos.perez@example.com. Botón de selección
+next           → Sin seleccionar. Jaime Monsalve. jmonsalve@rtvc.com.co. Botón de selección
+next           → Sin seleccionar. Laura Gómez. laura.gomez@example.com. Botón de selección
+next           → Sin seleccionar. Manolo Bellon. manollo@caracol.com.co. Botón de selección
+activate       → Seleccionado
+next           → Sin seleccionar. Sofía Herrera. sofia.herrera@example.com. Botón de selección
+next           → Podrás cambiar de perfil luego.
+next           → Continuar como Manolo Bellon. Botón. Fuera de la lista
+activate       → VINILOS · CATÁLOGO. En la lista
+next           → Perfil: coleccionista Manolo Bellon
+next           → Álbumes. Encabezado
+next           → Editando. Editar casilla. Buscar por álbum o artista
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+activate       → Rock | seleccionado | 8 resultados
+
+## HU02 · Intérprete, Leer más, metadatos y tracks (D-19, D-20)
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de A Day at the Races. A Day at the Races. Queen. 1976 · ROCK. Botón
+activate       → Volver. Botón. Fuera de la lista
+next           → FICHA DEL ÁLBUM
+next           → Portada de A Day at the Races. Imagen
+next           → EMI. 10/12/1976. ROCK. 2 TRACKS
+next           → A Day at the Races. Encabezado
+next           → por
+next           → Queen. Botón
+next           → El álbum fue grabado en los Estudios Sarm West, The Manor and Wessex en Inglaterra y con el ingeniero Mike Stone. El título del álbum es una referencia directa al anterior, A Night at the Opera. Ambos álbumes están titulados como películas de los hermanos Marx.
+next           → Leer más. Botón
+next           → Agregar track. Botón
+next           → LADO A. Encabezado
+next           → A1. Somebody to Love. 4:56
+next           → LADO B. Encabezado
+
+
+## ONB + HU05 · Búsqueda sin resultados (D-18)
+open app       → (silence)
+next           → Vinilos
+next           → Compra, vende e intercambia discos de vinilo.
+next           → ¿CÓMO QUIERES INGRESAR?. Encabezado
+next           → Visitante. Explora álbumes, artistas y coleccionistas. Botón
+next           → Coleccionista. Comenta, marca favoritos y gestiona tu colección. Botón
+activate       → Volver. Botón
+next           → PERFIL DE COLECCIONISTA
+next           → ¿Quién eres?. Encabezado. En la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Sin seleccionar. Ana María Rodríguez. ana.rodriguez@example.com. Botón de selección
+next           → Sin seleccionar. Andrés Martínez. andres.martinez@example.com. Botón de selección
+next           → Sin seleccionar. Carlos Pérez. carlos.perez@example.com. Botón de selección
+next           → Sin seleccionar. Jaime Monsalve. jmonsalve@rtvc.com.co. Botón de selección
+next           → Sin seleccionar. Laura Gómez. laura.gomez@example.com. Botón de selección
+next           → Sin seleccionar. Manolo Bellon. manollo@caracol.com.co. Botón de selección
+activate       → Seleccionado
+next           → Sin seleccionar. Sofía Herrera. sofia.herrera@example.com. Botón de selección
+next           → Podrás cambiar de perfil luego.
+next           → Continuar como Manolo Bellon. Botón. Fuera de la lista
+activate       → VINILOS · CATÁLOGO. En la lista
+previous       → (silence)
+previous       → Coleccionistas. Pestaña. 3 de 3. En la lista. 3 elementos
+activate       → Coleccionistas | seleccionado
+next           → (silence)
+next           → Coleccionistas. Encabezado. Fuera de la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+activate       → (silence)
+type «qwxk»    → q | w | 0 resultados. Esta funda está vacía
+
+## HU06 · Teléfono y correo (D-20)
+next           → Limpiar búsqueda. Botón
+activate       → Texto borrado | Editando. Editar casilla. Buscar por nombre o correo
+next           → Ana María Rodríguez. ana.rodriguez@example.com. Botón. En la lista
+activate       → Volver. Botón. Fuera de la lista
+next           → PERFIL DEL COLECCIONISTA
+next           → Ana María Rodríguez. Encabezado
+next           → Teléfono: 3104567890
+next           → Correo: ana.rodriguez@example.com
+
+## ONB + HU07 · Vista previa sin nombre y aviso del formulario (D-18, D-20)
+open app       → (silence)
+next           → Vinilos
+next           → Compra, vende e intercambia discos de vinilo.
+next           → ¿CÓMO QUIERES INGRESAR?. Encabezado
+next           → Visitante. Explora álbumes, artistas y coleccionistas. Botón
+next           → Coleccionista. Comenta, marca favoritos y gestiona tu colección. Botón
+activate       → Volver. Botón
+next           → PERFIL DE COLECCIONISTA
+next           → ¿Quién eres?. Encabezado. En la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Sin seleccionar. Ana María Rodríguez. ana.rodriguez@example.com. Botón de selección
+next           → Sin seleccionar. Andrés Martínez. andres.martinez@example.com. Botón de selección
+next           → Sin seleccionar. Carlos Pérez. carlos.perez@example.com. Botón de selección
+next           → Sin seleccionar. Jaime Monsalve. jmonsalve@rtvc.com.co. Botón de selección
+next           → Sin seleccionar. Laura Gómez. laura.gomez@example.com. Botón de selección
+next           → Sin seleccionar. Manolo Bellon. manollo@caracol.com.co. Botón de selección
+activate       → Seleccionado
+next           → Sin seleccionar. Sofía Herrera. sofia.herrera@example.com. Botón de selección
+next           → Podrás cambiar de perfil luego.
+next           → Continuar como Manolo Bellon. Botón. Fuera de la lista
+activate       → Crear álbum. Botón
+previous       → Portada de Alex. Alex. 1984 · SALSA. Botón. En la lista
+previous       → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón
+previous       → Portada de A Night at the Opera. A Night at the Opera. Queen. 1975 · ROCK. Botón
+previous       → Portada de A Day at the Races. A Day at the Races. Queen. 1976 · ROCK. Botón
+previous       → Folk. Pestaña
+previous       → Clásica. Pestaña
+previous       → Rock. Pestaña
+previous       → Salsa. Pestaña
+previous       → seleccionado. Todos. Pestaña
+previous       → Editando. Editar casilla. Buscar por álbum o artista
+previous       → Álbumes. Encabezado
+previous       → Perfil: coleccionista Manolo Bellon
+previous       → VINILOS · CATÁLOGO
+previous       → (silence)
+previous       → Más opciones del teclado
+previous       → Coleccionistas. Pestaña. 3 de 3. En la lista. 3 elementos. Ventana Wine Music App
+previous       → Artistas. Pestaña. 2 de 3
+previous       → seleccionado. Álbumes. Pestaña. 1 de 3
+previous       → Crear álbum. Botón. Fuera de la lista
+activate       → Volver. Botón
+next           → NUEVO ÁLBUM
+next           → Datos del álbum. Encabezado
+next           → Editando. Editar casilla. URL de la portada
+activate       → (silence)
+type «https://picsum.photos/300» → h | t | p | s | https Dos puntos | Barra oblicua | p | i | c | s | u | picsum Punto | p | h | o | to | s | photos Barra oblicua | 30 | 0
+next           → Vista previa de la portada. Imagen
+next           → Editando. Editar casilla. Nombre
+next           → Error: Entrada no válida | Editando. Editar casilla. Fecha de lanzamiento (dd/mm/aaaa)
+next           → Error: Entrada no válida | Editando. Editar casilla. Género. Lista desplegable
+next           → Editando. Editar casilla. Sello. Lista desplegable
+
+## ONB + HU08 · Confirmación al guardar un track (D-18)
+open app       → (silence)
+next           → Vinilos
+next           → Compra, vende e intercambia discos de vinilo.
+next           → ¿CÓMO QUIERES INGRESAR?. Encabezado
+next           → Visitante. Explora álbumes, artistas y coleccionistas. Botón
+next           → Coleccionista. Comenta, marca favoritos y gestiona tu colección. Botón
+activate       → Volver. Botón
+next           → PERFIL DE COLECCIONISTA
+next           → ¿Quién eres?. Encabezado. En la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Sin seleccionar. Ana María Rodríguez. ana.rodriguez@example.com. Botón de selección
+next           → Sin seleccionar. Andrés Martínez. andres.martinez@example.com. Botón de selección
+next           → Sin seleccionar. Carlos Pérez. carlos.perez@example.com. Botón de selección
+next           → Sin seleccionar. Jaime Monsalve. jmonsalve@rtvc.com.co. Botón de selección
+next           → Sin seleccionar. Laura Gómez. laura.gomez@example.com. Botón de selección
+next           → Sin seleccionar. Manolo Bellon. manollo@caracol.com.co. Botón de selección
+activate       → Seleccionado
+next           → Sin seleccionar. Sofía Herrera. sofia.herrera@example.com. Botón de selección
+next           → Podrás cambiar de perfil luego.
+next           → Continuar como Manolo Bellon. Botón. Fuera de la lista
+activate       → Crear álbum. Botón
+next           → seleccionado. Álbumes. Pestaña. 1 de 3. En la lista. 3 elementos
+next           → Artistas. Pestaña. 2 de 3
+next           → Coleccionistas. Pestaña. 3 de 3
+next           → (silence)
+next           → VINILOS · CATÁLOGO. En la lista
+next           → Perfil: coleccionista Manolo Bellon
+next           → Álbumes. Encabezado
+next           → Editando. Editar casilla. Buscar por álbum o artista
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de A Day at the Races. A Day at the Races. Queen. 1976 · ROCK. Botón
+activate       → Volver. Botón. Fuera de la lista
+next           → FICHA DEL ÁLBUM
+next           → Portada de A Day at the Races. Imagen
+next           → EMI. 10/12/1976. ROCK. 2 TRACKS
+next           → A Day at the Races. Encabezado
+next           → por
+next           → Queen. Botón
+next           → El álbum fue grabado en los Estudios Sarm West, The Manor and Wessex en Inglaterra y con el ingeniero Mike Stone. El título del álbum es una referencia directa al anterior, A Night at the Opera. Ambos álbumes están titulados como películas de los hermanos Marx.
+next           → Leer más. Botón
+next           → Agregar track. Botón
+activate       → Hoja inferior
+next           → Nuevo track. Encabezado
+next           → A Day at the Races
+next           → TRACKS ACTUALES
+next           → A1
+next           → Somebody to Love
+next           → 4:56
+next           → B1
+next           → Tie Your Mother Down
+next           → 4:48
+next           → Será el track B1
+next           → Editando. Editar casilla. Nombre del track
+activate       → (silence)
+type «Prueba»  → P mayúscula | r | ue | b | a
+next           → Editando. Editar casilla. Duración (mm:ss)
+activate       → (silence)
+type «0345»    → 03 | :4 | 5
+next           → Cancelar. Botón
+next           → Agregar track. Botón
+activate       → Se agregó el track «Prueba» | teclado oculto
+next           → LADO A. Encabezado
+next           → A1. Somebody to Love. 4:56

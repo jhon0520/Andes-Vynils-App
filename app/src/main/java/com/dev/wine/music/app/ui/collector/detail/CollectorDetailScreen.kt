@@ -29,9 +29,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag as semanticsTestTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -159,7 +161,12 @@ private fun ContactRow(icon: ImageVector, text: String, description: String, tag
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.semantics(mergeDescendants = true) { contentDescription = description }.testTag(tag),
+        // Only the description ("Teléfono: …"): merging also read the number a second time (D-20). The tag
+        // goes inside because clearAndSetSemantics drops the rest.
+        modifier = Modifier.clearAndSetSemantics {
+            contentDescription = description
+            semanticsTestTag = tag
+        },
     ) {
         Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(text = text, style = SansBody, color = MaterialTheme.colorScheme.onBackground)

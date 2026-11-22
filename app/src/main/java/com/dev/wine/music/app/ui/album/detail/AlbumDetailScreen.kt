@@ -2,6 +2,7 @@ package com.dev.wine.music.app.ui.album.detail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -11,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +53,7 @@ import com.dev.wine.music.app.domain.model.NumberedTrack
 import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.ui.album.track.AddTrackSheet
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.rememberAnnouncer
 import com.dev.wine.music.app.ui.components.AlbumRecord
 import com.dev.wine.music.app.ui.components.DetailTopBar
 import com.dev.wine.music.app.ui.components.EmptySection
@@ -87,6 +88,8 @@ fun AlbumDetailScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val session by viewModel.session.collectAsStateWithLifecycle()
     var showAddTrack by rememberSaveable { mutableStateOf(viewModel.openAddTrackOnArrival) }
+    val announcer = rememberAnnouncer()
+    val context = LocalContext.current
     AlbumDetailContent(
         uiState = uiState,
         onBack = onBack,
@@ -101,9 +104,11 @@ fun AlbumDetailScreen(
         AddTrackSheet(
             album = album,
             onDismiss = { showAddTrack = false },
-            onSaved = {
+            onSaved = { trackName ->
                 showAddTrack = false
                 viewModel.loadAlbum()
+                // D-18: the sheet closes without a visible message; TalkBack confirms the new track.
+                announcer.announce(context.getString(R.string.track_added_announcement, trackName))
             },
         )
     }
@@ -200,7 +205,8 @@ private fun AlbumFacts(album: Album, modifier: Modifier = Modifier) {
         genre to "album_genre",
         pluralStringResource(R.plurals.album_track_count, album.tracks.size, album.tracks.size) to "album_track_count",
     ).filter { (value, _) -> value.isNotBlank() }
-    FlowRow(modifier = modifier.fillMaxWidth()) {
+    // Read as one line ("ELEKTRA, 01/08/1984, SALSA, 2 TRACKS") instead of four stops (D-20).
+    FlowRow(modifier = modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
         facts.forEachIndexed { index, (value, tag) ->
             // The separator is only visual: TalkBack reads the values one after another.
             if (index > 0) MetaText(" · ", Modifier.clearAndSetSemantics {})
@@ -264,23 +270,28 @@ private fun PerformerLink(
     modifier: Modifier = Modifier,
 ) {
     val openArtist = stringResource(R.string.album_performer_open, artist.name)
-    Text(
-        text = text,
-        style = style,
-        fontWeight = FontWeight.Medium,
-        color = MaterialTheme.colorScheme.onBackground,
+    // The click goes on a box around the text: on the text itself Compose reports a TextView and TalkBack
+    // does not say "Botón" (D-19).
+    Box(
         modifier = modifier
             .clickable(role = Role.Button, onClickLabel = openArtist, onClick = onClick)
             // At least 48 dp tall so the link is easy to tap (accessibility).
             .heightIn(min = 48.dp)
-            .wrapContentHeight(Alignment.CenterVertically)
-            .drawBehind {
+            .testTag("album_performer_${artist.id}"),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        Text(
+            text = text,
+            style = style,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.drawBehind {
                 val stroke = 2.dp.toPx()
                 val y = size.height - stroke / 2
                 drawLine(Terracotta, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
-            }
-            .testTag("album_performer_${artist.id}"),
-    )
+            },
+        )
+    }
 }
 
 @Composable
@@ -300,19 +311,23 @@ private fun ExpandableDescription(description: String, modifier: Modifier = Modi
             modifier = Modifier.testTag("album_description"),
         )
         if (expanded || isCut) {
-            Text(
-                text = stringResource(if (expanded) R.string.read_less else R.string.read_more),
-                style = SansBody,
-                fontWeight = FontWeight.Bold,
-                color = Terracotta,
+            // A box around the text, so TalkBack says "Botón" (D-19).
+            Box(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .clickable(role = Role.Button) { expanded = !expanded }
                     // At least 48 x 48 dp to touch, although the text is shorter.
                     .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-                    .wrapContentHeight(Alignment.CenterVertically)
                     .testTag("read_more_button"),
-            )
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = stringResource(if (expanded) R.string.read_less else R.string.read_more),
+                    style = SansBody,
+                    fontWeight = FontWeight.Bold,
+                    color = Terracotta,
+                )
+            }
         }
     }
 }
@@ -345,7 +360,12 @@ private fun Tracklist(tracks: List<NumberedTrack>, modifier: Modifier = Modifier
 private fun TrackRow(numbered: NumberedTrack) {
     val (position, track) = numbered
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp).testTag("track_item_${track.id}"),
+        // Position, name and duration are read as one track (D-20).
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
+            .padding(vertical = 16.dp)
+            .testTag("track_item_${track.id}"),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(

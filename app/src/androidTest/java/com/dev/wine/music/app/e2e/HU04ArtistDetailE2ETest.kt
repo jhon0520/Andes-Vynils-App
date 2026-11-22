@@ -73,7 +73,7 @@ class HU04ArtistDetailE2ETest {
 
         composeTestRule.onNodeWithTag(MUSICIAN_ALBUM_TAG).performScrollTo().performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_record_label").assertTextContains("ELEKTRA")
+        composeTestRule.onNodeWithTag("album_record_label", useUnmergedTree = true).assertTextContains("ELEKTRA")
 
         composeTestRule.onNodeWithTag("back_button").performClick()
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("artist_detail_body"), timeoutMillis = TIMEOUT)

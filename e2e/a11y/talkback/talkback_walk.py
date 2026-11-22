@@ -124,6 +124,10 @@ def main():
                 for _ in range(MAX_MOVES):
                     if arg in step('next' if op == 'to' else 'previous', lambda: device.key(ACTION, code)):
                         break
+                else:
+                    # Stop instead of activating whatever has the focus.
+                    out.write(f'!! «{arg}» not found after {MAX_MOVES} moves: walk stopped\n')
+                    raise SystemExit(f'«{arg}» not found')
             elif op == 'click':
                 step('activate', lambda: device.key(ACTION, KEY_SPACE), wait=2.5)
             elif op == 'back':

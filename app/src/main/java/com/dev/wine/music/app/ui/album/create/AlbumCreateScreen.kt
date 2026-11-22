@@ -52,6 +52,7 @@ import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.domain.model.RecordLabel
 import com.dev.wine.music.app.ui.album.create.AlbumCreateViewModel.Companion.MAX_DESCRIPTION
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.components.DetailTopBar
@@ -153,9 +154,12 @@ fun AlbumCreateContent(
 
 @Composable
 private fun FormNotice(errorCount: Int) {
-    if (errorCount == 0) return
+    val notice = if (errorCount > 0) pluralStringResource(R.plurals.album_form_review, errorCount, errorCount) else null
+    // D-18: the notice appears while the focus is on another field, so TalkBack says it.
+    AnnounceOnChange(message = notice, key = errorCount)
+    if (notice == null) return
     Text(
-        text = pluralStringResource(R.plurals.album_form_review, errorCount, errorCount),
+        text = notice,
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onErrorContainer,
         modifier = Modifier
@@ -183,7 +187,12 @@ private fun AlbumFields(uiState: AlbumCreateUiState, actions: AlbumCreateActions
     if (uiState.hasCoverPreview) {
         AsyncImage(
             model = uiState.cover.trim(),
-            contentDescription = stringResource(R.string.album_cover_description, uiState.name),
+            // Without a name yet it said "Portada de ." (D-20).
+            contentDescription = if (uiState.name.isBlank()) {
+                stringResource(R.string.album_cover_preview_description)
+            } else {
+                stringResource(R.string.album_cover_description, uiState.name.trim())
+            },
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(120.dp)
