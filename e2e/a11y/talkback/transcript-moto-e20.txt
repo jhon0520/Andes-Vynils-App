@@ -1,0 +1,387 @@
+
+## ONB · Entrar como coleccionista
+open app       → Wine Music App | LADO A · 33⅓
+next           → Vinilos
+next           → Compra, vende e intercambia discos de vinilo.
+next           → ¿CÓMO QUIERES INGRESAR?. Encabezado
+next           → Visitante. Explora álbumes, artistas y coleccionistas. Botón
+next           → Coleccionista. Comenta, marca favoritos y gestiona tu colección. Botón
+activate       → Volver. Botón
+next           → PERFIL DE COLECCIONISTA
+next           → ¿Quién eres?. Encabezado. En la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Sin seleccionar. Ana María Rodríguez. ana.rodriguez@example.com. Botón de selección
+next           → Sin seleccionar. Andrés Martínez. andres.martinez@example.com. Botón de selección
+next           → Sin seleccionar. Carlos Pérez. carlos.perez@example.com. Botón de selección
+next           → Sin seleccionar. Jaime Monsalve. jmonsalve@rtvc.com.co. Botón de selección
+next           → Sin seleccionar. Laura Gómez. laura.gomez@example.com. Botón de selección
+next           → Sin seleccionar. Manolo Bellon. manollo@caracol.com.co. Botón de selección
+activate       → Seleccionado
+next           → Sin seleccionar. Sofía Herrera. sofia.herrera@example.com. Botón de selección
+next           → Podrás cambiar de perfil luego.
+next           → Continuar como Manolo Bellon. Botón. Fuera de la lista
+next           → Más opciones del teclado | Menú de TalkBack
+previous       → Continuar como Manolo Bellon. Botón. Ventana Wine Music App
+activate       → VINILOS · CATÁLOGO. En la lista
+
+## HU01 · Catálogo: buscar y filtrar
+next           → Perfil: coleccionista Manolo Bellon
+next           → Álbumes. Encabezado
+next           → Editando. Editar casilla. Buscar por álbum o artista
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de A Day at the Races. A Day at the Races. Queen. 1976 · ROCK. Botón
+previous       → Folk. Pestaña
+previous       → Clásica. Pestaña
+previous       → Rock. Pestaña
+activate       → Rock | seleccionado
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de A Day at the Races. A Day at the Races. Queen. 1976 · ROCK. Botón
+previous       → Folk. Pestaña
+previous       → Clásica. Pestaña
+previous       → seleccionado. Rock. Pestaña
+previous       → Salsa. Pestaña
+activate       → seleccionado | Salsa
+type «Abbey» → Ab | be | y
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+previous       → Rock. Pestaña
+previous       → seleccionado. Salsa. Pestaña
+previous       → Todos. Pestaña
+activate       → Todos | seleccionado
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón
+next           → Crear álbum. Botón. Fuera de la lista
+
+## HU02 · Detalle del álbum
+previous       → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón. En la lista
+activate       → Volver. Botón. Fuera de la lista
+next           → FICHA DEL ÁLBUM
+next           → Portada de Abbey Road. Imagen
+next           → EMI
+next           → 26/09/1969
+next           → ROCK
+next           → 3 TRACKS
+next           → Abbey Road. Encabezado
+next           → por
+next           → The Beatles
+next           → Undécimo álbum de estudio de The Beatles, grabado en los estudios Abbey Road de Londres. Su portada es una de las más famosas de la música.
+next           → Leer más
+next           → Agregar track. Botón
+next           → LADO A. Encabezado
+next           → A1
+next           → Come Together
+next           → 4:20
+next           → A2
+next           → Something
+next           → 3:03
+next           → LADO B. Encabezado
+next           → B1
+next           → Here Comes the Sun
+next           → 3:05
+next           → RESEÑAS · 1. Encabezado
+next           → “Un clásico que nunca pasa de moda.”. Ana María Rodríguez. Calificación: 5 de 5
+next           → (silencio)
+next           → Volver. Botón
+next           → FICHA DEL ÁLBUM
+next           → Abbey Road. Encabezado
+next           → por
+next           → The Beatles
+next           → Undécimo álbum de estudio de The Beatles, grabado en los estudios Abbey Road de Londres. Su portada es una de las más famosas de la música.
+next           → Leer más
+next           → Agregar track. Botón
+next           → LADO A. Encabezado
+next           → A1
+
+## HU04 · Detalle del artista (desde el intérprete)
+activate       → (silencio)
+next           → Come Together
+next           → 4:20
+next           → A2
+next           → Something
+next           → 3:03
+next           → LADO B. Encabezado
+next           → B1
+next           → Here Comes the Sun
+next           → 3:05
+next           → RESEÑAS · 1. Encabezado
+next           → “Un clásico que nunca pasa de moda.”. Ana María Rodríguez. Calificación: 5 de 5
+next           → (silencio)
+next           → Volver. Botón
+next           → FICHA DEL ÁLBUM
+previous       → Volver. Botón
+previous       → (silencio)
+previous       → “Un clásico que nunca pasa de moda.”. Ana María Rodríguez. Calificación: 5 de 5
+previous       → RESEÑAS · 1. Encabezado
+previous       → 3:05
+previous       → Here Comes the Sun
+previous       → B1
+previous       → LADO B. Encabezado
+previous       → 3:03
+previous       → Something
+previous       → A2
+previous       → 4:20
+previous       → Come Together
+previous       → A1
+previous       → LADO A. Encabezado
+previous       → Agregar track. Botón
+previous       → Leer más | Presiona Acción + Space para activar
+previous       → Undécimo álbum de estudio de The Beatles, grabado en los estudios Abbey Road de Londres. Su portada es una de las más famosas de la música.
+previous       → The Beatles
+activate       → Volver. Botón
+next           → FICHA DEL ARTISTA
+next           → Foto de The Beatles. Imagen
+next           → The Beatles. Encabezado
+next           → BANDA · CREADA EL 01/08/1960
+next           → Banda británica de rock formada en Liverpool en 1960, integrada por John Lennon, Paul McCartney, George Harrison y Ringo Starr.
+next           → INTEGRANTES · 4. Encabezado
+next           → Foto de John Lennon. John Lennon
+next           → Foto de Paul McCartney. Paul McCartney
+next           → Foto de George Harrison. George Harrison
+next           → Foto de Ringo Starr. Ringo Starr
+next           → DISCOGRAFÍA · 3. Encabezado
+next           → Portada de Sgt. Pepper's Lonely Hearts Club Band. Sgt. Pepper's Lonely Hearts Club Band. 1967 · EMI. Botón
+next           → Portada de Abbey Road. Abbey Road. 1969 · EMI. Botón
+next           → Portada de Let It Be. Let It Be. 1970 · EMI. Botón
+back           → Volver. Botón | Presiona Acción + Space para activar
+back           → VINILOS · CATÁLOGO. En la lista
+
+## HU03 · Artistas: filtrar bandas
+next           → Perfil: coleccionista Manolo Bellon
+next           → Álbumes. Encabezado
+next           → Editando. Abbey. Editar casilla
+next           → Limpiar búsqueda. Botón
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón
+next           → Crear álbum. Botón. Fuera de la lista
+next           → seleccionado. Álbumes. Pestaña. 1 de 3. En la lista. 3 elementos
+next           → Artistas. Pestaña. 2 de 3
+activate       → Artistas | seleccionado
+next           → Coleccionistas. Pestaña. 3 de 3
+next           → (silencio)
+next           → Artistas. Encabezado. Fuera de la lista
+next           → seleccionado. Todos. Pestaña. 1 de 3. En la lista. 3 elementos
+next           → Músicos. Pestaña. 2 de 3
+next           → Bandas. Pestaña. 3 de 3
+activate       → Bandas | seleccionado
+next           → Foto de Queen. Queen. Banda. Botón. En la lista
+next           → Foto de Soda Stereo. Soda Stereo. Banda. Botón
+next           → Foto de The Beatles. The Beatles. Banda. Botón
+next           → Álbumes. Pestaña. 1 de 3. En la lista. 3 elementos
+
+## HU05 · Coleccionistas: búsqueda sin resultados
+next           → seleccionado. Artistas. Pestaña. 2 de 3
+next           → Coleccionistas. Pestaña. 3 de 3
+activate       → Coleccionistas | seleccionado
+next           → (silencio)
+next           → Coleccionistas. Encabezado. Fuera de la lista
+next           → Editando. Editar casilla. Buscar por nombre o correo
+activate       → (silencio)
+type «zzz» → z
+next           → Limpiar búsqueda. Botón
+next           → Ana María Rodríguez. ana.rodriguez@example.com. Botón. En la lista
+next           → Andrés Martínez. andres.martinez@example.com. Botón
+next           → Carlos Pérez. carlos.perez@example.com. Botón
+next           → Laura Gómez. laura.gomez@example.com. Botón
+previous       → Carlos Pérez. carlos.perez@example.com. Botón
+previous       → Andrés Martínez. andres.martinez@example.com. Botón
+previous       → Ana María Rodríguez. ana.rodriguez@example.com. Botón
+previous       → Limpiar búsqueda. Botón. Fuera de la lista
+previous       → Editando. z. Editar casilla
+type «qwxk» → q | w | Presiona Acción + Mayús + Space para mantener presionado. Acciones disponible; presiona
+next           → Limpiar búsqueda. Botón
+next           → 0 resultados
+next           → Esta funda está vacía. Encabezado
+next           → No encontramos coleccionistas para «zqxw».
+next           → Limpiar búsqueda. Botón
+activate       → Texto borrado | Editando. Editar casilla. Buscar por nombre o correo
+next           → Ana María Rodríguez. ana.rodriguez@example.com. Botón. En la lista
+next           → Andrés Martínez. andres.martinez@example.com. Botón
+next           → Carlos Pérez. carlos.perez@example.com. Botón
+
+## HU06 · Detalle del coleccionista
+next           → Jaime Monsalve. jmonsalve@rtvc.com.co. Botón
+next           → Laura Gómez. laura.gomez@example.com. Botón
+next           → Manolo Bellon. manollo@caracol.com.co. Botón
+next           → Sofía Herrera. sofia.herrera@example.com. Botón
+next           → Álbumes. Pestaña. 1 de 3. En la lista. 3 elementos
+next           → Artistas. Pestaña. 2 de 3
+next           → seleccionado. Coleccionistas. Pestaña. 3 de 3
+next           → Más opciones del teclado
+next           → (silencio)
+next           → Coleccionistas. Encabezado. Ventana Wine Music App
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Ana María Rodríguez. ana.rodriguez@example.com. Botón. En la lista
+activate       → Volver. Botón. Fuera de la lista
+next           → PERFIL DEL COLECCIONISTA
+next           → Ana María Rodríguez. Encabezado
+next           → Teléfono: 3104567890. 3104567890
+next           → Correo: ana.rodriguez@example.com. ana.rodriguez@example.com
+next           → ARTISTAS FAVORITOS · 3. Encabezado
+next           → Foto de Carlos Vives. Carlos Vives. MÚSICO. Botón
+next           → Foto de Rubén Blades Bellido de Luna. Rubén Blades Bellido de Luna. MÚSICO. Botón
+next           → Foto de Willie Colón. Willie Colón. MÚSICO. Botón
+next           → COLECCIÓN · 3. Encabezado
+next           → Portada de Abbey Road. Abbey Road. PRECIO: 60 · ACTIVO. Botón
+next           → Portada de Clásicos de la Provincia. Clásicos de la Provincia. PRECIO: 30 · INACTIVO. Botón
+next           → Portada de Siembra. Siembra. PRECIO: 45 · ACTIVO. Botón
+next           → RESEÑAS · 2. Encabezado
+next           → SIEMBRA. “Pedro Navaja es una obra maestra de la salsa.”. Calificación: 5 de 5. Botón
+back           → Coleccionistas. Encabezado
+next           → Editando. Editar casilla. Buscar por nombre o correo
+next           → Ana María Rodríguez. ana.rodriguez@example.com. Botón. En la lista
+next           → Andrés Martínez. andres.martinez@example.com. Botón
+next           → Carlos Pérez. carlos.perez@example.com. Botón
+next           → Jaime Monsalve. jmonsalve@rtvc.com.co. Botón
+next           → Laura Gómez. laura.gomez@example.com. Botón
+next           → Manolo Bellon. manollo@caracol.com.co. Botón
+next           → Sofía Herrera. sofia.herrera@example.com. Botón
+next           → Álbumes. Pestaña. 1 de 3. En la lista. 3 elementos
+activate       → Álbumes | Editando. Abbey. Editar casilla. En la lista
+
+## HU07 · Crear álbum
+next           → Limpiar búsqueda. Botón
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón
+next           → Crear álbum. Botón. Fuera de la lista
+activate       → Volver. Botón
+next           → NUEVO ÁLBUM
+next           → Datos del álbum. Encabezado
+next           → Editando. Editar casilla. URL de la portada
+next           → Error: Entrada no válida | Editando. Editar casilla. Nombre
+next           → Error: Entrada no válida | Editando. Editar casilla. Fecha de lanzamiento (dd/mm/aaaa)
+next           → Error: Entrada no válida | Editando. Editar casilla. Género. Lista desplegable
+next           → Editando. Editar casilla. Sello. Lista desplegable
+next           → Editando. Editar casilla. Descripción. 0/500
+next           → Crear álbum. Botón. Inhabilitado
+next           → Más opciones del teclado
+next           → (silencio)
+next           → Volver. Botón. Ventana Wine Music App
+next           → NUEVO ÁLBUM
+next           → Revisa 3 campos.
+next           → Error: Entrada no válida. Editando. Editar casilla. URL de la portada. Este campo es obligatorio.
+next           → Error: Entrada no válida. Editando. Editar casilla. Nombre. Este campo es obligatorio.
+next           → Error: Entrada no válida. Editando. Editar casilla. Fecha de lanzamiento (dd/mm/aaaa). Este campo es obligatorio.
+next           → Error: Entrada no válida | Editando. Editar casilla. Género. Lista desplegable
+previous       → Error: Entrada no válida. Editando. Editar casilla. Fecha de lanzamiento (dd/mm/aaaa). Este campo es obligatorio.
+previous       → Error: Entrada no válida. Editando. Editar casilla. Nombre. Este campo es obligatorio.
+previous       → Error: Entrada no válida. Editando. Editar casilla. URL de la portada. Este campo es obligatorio.
+activate       → (silencio)
+type «https://picsum.photos/300» → ht. Entrada no válida: Entrada no válida | t | ps | https Dos puntos | Barra oblicua | p | i | c | su | m | picsum Punto | p | h | o | t | o | s | photos Barra oblicua | 3 | 0
+next           → Portada de . Imagen
+activate       → (silencio)
+type «TalkBack%sA11Y» → T mayúscula | a | lk | B mayúscula. Entrada no válida: Entrada no válida | ac | 300TalkBack | A mayúscula | 11 | Y mayúscula | Volver. Botón
+next           → NUEVO ÁLBUM
+activate       → (silencio)
+type «22112026» → 2 | 1 | 2 | 0 | 2 | 6
+next           → Datos del álbum. Encabezado
+next           → Revisa 4 campos.
+
+## HU07 · (se reinicia el formulario: error del guion al escribir)
+back           → VINILOS · CATÁLOGO. En la lista
+next           → Perfil: coleccionista Manolo Bellon
+next           → Álbumes. Encabezado
+next           → Editando. Abbey. Editar casilla
+next           → Limpiar búsqueda. Botón
+next           → seleccionado. Todos. Pestaña
+next           → Salsa. Pestaña
+next           → Rock. Pestaña
+next           → Clásica. Pestaña
+next           → Folk. Pestaña
+next           → Portada de Abbey Road. Abbey Road. The Beatles. 1969 · ROCK. Botón
+next           → Crear álbum. Botón. Fuera de la lista
+activate       → Volver. Botón | teclado oculto
+next           → NUEVO ÁLBUM
+next           → Datos del álbum. Encabezado
+next           → Editando. Editar casilla. URL de la portada
+activate       → (silencio)
+type «https://picsum.photos/300» → ht | tp | s | https Dos puntos | Barra oblicua | p | i | c | s | u | m | .p | h | o | t | os | photos Barra oblicua | 3 | 0
+next           → Portada de . Imagen
+next           → Editando. Editar casilla. Nombre
+activate       → (silencio)
+type «TalkBack%sA11Y» → T mayúscula | al | kB | ac | k | TalkBack | A mayúscula | 1 | Y mayúscula
+next           → Editando. Editar casilla. Fecha de lanzamiento (dd/mm/aaaa)
+activate       → (silencio)
+type «22112026» → 22 | /11 | /2 | Menú de TalkBack | 026
+next           → Editando. Editar casilla. Género. Lista desplegable
+activate       → Ventana emergente | Salsa
+next           → Rock | Presiona Acción + Space para activar
+next           → Clásica
+next           → Folk | Presiona Acción + Space para activar
+previous       → Clásica | Presiona Acción + Space para activar
+previous       → Rock | Presiona Acción + Space para activar
+activate       → Wine Music App | Editando. Rock. Editar casilla. Género. Lista desplegable
+next           → Editando. Editar casilla. Sello. Lista desplegable
+activate       → Ventana emergente | Sony Music
+next           → EMI | Presiona Acción + Space para activar
+activate       → Wine Music App | Editando. EMI. Editar casilla. Sello. Lista desplegable
+next           → Editando. Editar casilla. Descripción. 0/500
+activate       → (silencio)
+type «Prueba%scon%sTalkBack» → P mayúscula | ru | e | b | a | c | on | con | T mayúscula | al | k | B mayúscula | a | c | k
+next           → Crear álbum. Botón
+activate       → teclado oculto | Diálogo
+next           → «TalkBack A11Y» ya está en el catálogo.
+next           → Agregar tracks. Botón
+next           → Ahora no. Botón
+next           → Ver álbum. Botón
+previous       → Ahora no. Botón
+previous       → Agregar tracks. Botón
+previous       → «TalkBack A11Y» ya está en el catálogo.
+previous       → Álbum creado
+
+## HU08 · Agregar un track
+next           → «TalkBack A11Y» ya está en el catálogo.
+next           → Agregar tracks. Botón
+activate       → Hoja inferior
+next           → (silencio)
+next           → Controlador de arrastre. Ventana Hoja inferior
+next           → Nuevo track. Encabezado
+next           → TalkBack A11Y
+next           → Será el track A1
+next           → Editando. Editar casilla. Nombre del track
+next           → Error: Entrada no válida | Editando. Editar casilla. Duración (mm:ss)
+next           → Cancelar. Botón
+previous       → Editando. Editar casilla. Duración (mm:ss)
+previous       → Error: Entrada no válida. Editando. Editar casilla. Nombre del track. Este dato es obligatorio.
+activate       → (silencio)
+type «Prueba» → P mayúscula | r | u | e | b | a
+next           → Error: Entrada no válida. Editando. Editar casilla. Duración (mm:ss). Este dato es obligatorio.
+activate       → (silencio)
+type «0599» → 05. Entrada no válida: Entrada no válida | :99
+next           → Cancelar. Botón
+next           → Agregar track. Botón. Inhabilitado
+previous       → Cancelar. Botón
+previous       → Error: Entrada no válida. Editando. 05:99. Editar casilla. Duración (mm:ss). Usa el formato mm:ss, con segundos entre 00 y 59.
+activate       → (silencio)
+type «0430» → 04 | :3 | 0
+next           → Cancelar. Botón
+next           → Agregar track. Botón
+activate       → teclado oculto | Wine Music App
+next           → FICHA DEL ÁLBUM
+next           → Portada de TalkBack A11Y. Imagen
+next           → EMI
+next           → 22/11/2026
+next           → ROCK
+next           → 1 TRACK
+next           → TalkBack A11Y. Encabezado
+next           → Prueba con TalkBack
+next           → Agregar track. Botón
+next           → LADO A. Encabezado
+next           → A1
+next           → Prueba
+next           → 04:30
