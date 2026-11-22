@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,7 +119,7 @@ private fun CollectorDetailBody(
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.testTag("collector_name"),
+            modifier = Modifier.semantics { heading() }.testTag("collector_name"),
         )
         Contact(collector = detail.collector, modifier = Modifier.padding(top = 12.dp))
         Favorites(artists = detail.favoriteArtists, onArtistClick = onArtistClick, modifier = Modifier.padding(top = 32.dp))
@@ -192,7 +193,7 @@ private fun FavoriteRow(artist: Artist, onClick: () -> Unit) {
     ) {
         AsyncImage(
             model = artist.image,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.artist_image_description, artist.name),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(48.dp)
@@ -254,7 +255,7 @@ private fun CollectionRow(item: CollectorAlbum, onClick: () -> Unit) {
 private fun AlbumCover(album: Album) {
     AsyncImage(
         model = album.cover,
-        contentDescription = null,
+        contentDescription = stringResource(R.string.album_cover_description, album.name),
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(56.dp)

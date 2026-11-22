@@ -3,6 +3,8 @@ package com.dev.wine.music.app.domain.usecase
 import androidx.collection.SparseArrayCompat
 import com.dev.wine.music.app.domain.coroutines.DefaultDispatcher
 import com.dev.wine.music.app.domain.model.Album
+import com.dev.wine.music.app.domain.model.Artist
+import com.dev.wine.music.app.domain.model.CollectorAlbum
 import com.dev.wine.music.app.domain.model.CollectorDetail
 import com.dev.wine.music.app.domain.repository.AlbumRepository
 import com.dev.wine.music.app.domain.repository.CollectorRepository
@@ -40,11 +42,17 @@ class GetCollectorDetailUseCase @Inject constructor(
             val albumByComment = SparseArrayCompat<Album>()
             catalogAlbums.fastForEach { album -> album.comments.fastForEach { albumByComment.put(it.id, album) } }
             loaded.copy(
-                favoriteArtists = loaded.favoriteArtists.sortedBy { it.name.lowercase() },
-                albums = albums.sortedBy { it.album.name.lowercase() },
+                favoriteArtists = loaded.favoriteArtists.sortedWith(ARTIST_BY_NAME),
+                albums = albums.sortedWith(ALBUM_BY_NAME),
                 reviews = loaded.reviews.fastMap { it.copy(album = albumByComment.get(it.id)) },
             )
         }
+    }
+
+    private companion object {
+        // Compare ignoring case without creating a lowercase copy of each name on every comparison.
+        val ARTIST_BY_NAME = compareBy<Artist, String>(String.CASE_INSENSITIVE_ORDER) { it.name }
+        val ALBUM_BY_NAME = compareBy<CollectorAlbum, String>(String.CASE_INSENSITIVE_ORDER) { it.album.name }
     }
 
     /** The album of each review is a nice-to-have: if the catalog fails, the collector still shows. */
