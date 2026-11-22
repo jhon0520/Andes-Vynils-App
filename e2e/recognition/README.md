@@ -34,7 +34,25 @@ done
 
 Una corrida está **en verde** si termina con `// Monkey finished` y el archivo `-crash.txt` está vacío. Si monkey encuentra un cierre o un ANR, se detiene y escribe `// CRASH` o `// NOT RESPONDING` con la traza.
 
-Solo se corre en emulador: en un teléfono personal, monkey puede bajar la barra de notificaciones y cambiar ajustes del sistema.
+El script [`scripts/run_monkey.sh`](scripts/run_monkey.sh) hace lo mismo y además, mientras corre monkey, cierra la barra de notificaciones cada segundo, así que se puede usar en un teléfono físico sin que cambie ajustes del sistema. También guarda la última pantalla y los resultados HTTP de cada corrida:
+
+```bash
+e2e/recognition/scripts/run_monkey.sh <serial> <dispositivo> 3000 1101 2202 3303          # REC-01
+WIFI_OFF_AFTER=180 e2e/recognition/scripts/run_monkey.sh <serial> <dispositivo>-wifi-off 5000 1101 2202 3303   # REC-02
+```
+
+Para REC-02 la app debe llegar al backend **por el wifi**: compilarla con la IP del equipo en la red local o con Render. Si se usa `adb reverse`, el tráfico va por el USB y apagar el wifi no lo corta; en ese caso `BACKEND_REVERSE=1` quita también el túnel en el momento del corte.
+
+## Texto y pantalla agrandados (A11Y-03)
+
+```bash
+adb -s <serial> shell settings put system font_scale 2.0   # 1.3 es el máximo en Android 11
+adb -s <serial> shell wm density <densidad × 1.3>          # tamaño de pantalla «más grande»
+python3 e2e/recognition/explore.py --serial <serial> --out e2e/recognition/results/a11y-large-text/<dispositivo> --max-actions 200
+adb -s <serial> shell settings put system font_scale 1.0 && adb -s <serial> shell wm density reset
+```
+
+El explorador no hace *scroll*: lo que queda debajo del borde (por ejemplo, «Coleccionista» al 200 %) hay que recorrerlo a mano.
 
 ## Exploración sistemática
 
