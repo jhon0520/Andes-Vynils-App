@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -116,33 +118,64 @@ fun CollectorPickerContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Text(
-            text = stringResource(R.string.collector_picker_question),
-            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp).semantics { heading() },
-        )
-        SearchField(
-            query = uiState.query,
-            onQueryChange = onQueryChange,
-            modifier = Modifier.padding(horizontal = 24.dp),
-        )
-        Box(modifier = Modifier.weight(1f)) {
-            when (val collectors = uiState.collectors) {
-                UiState.Loading -> LoadingView()
-                is UiState.Error -> ErrorView(onRetry = onRetry, type = collectors.type)
+        // Title, search and list scroll together; only "Continuar" stays fixed. With a large font the
+        // title and the search field alone can fill the screen, and a fixed header left the list a few dp tall.
+        val collectors = uiState.collectors
+        val showsRows = collectors is UiState.Success && collectors.data.isNotEmpty()
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .selectableGroup()
+                // "collector_list" keeps meaning "the collectors are on screen" for the E2E and profiling steps.
+                .testTag(if (showsRows) "collector_list" else "collector_picker_body"),
+        ) {
+            item(key = "question") {
+                Text(
+                    text = stringResource(R.string.collector_picker_question),
+                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp).semantics { heading() },
+                )
+            }
+            item(key = "search") {
+                SearchField(
+                    query = uiState.query,
+                    onQueryChange = onQueryChange,
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                )
+            }
+            when (collectors) {
+                UiState.Loading -> stateItem { LoadingView() }
+                is UiState.Error -> stateItem { ErrorView(onRetry = onRetry, type = collectors.type) }
                 is UiState.Success -> when {
-                    uiState.totalCount == 0 -> EmptyView()
-                    collectors.data.isEmpty() -> NoResultsView(
-                        message = stringResource(R.string.collector_no_results_query, uiState.query),
-                        onClear = { onQueryChange("") },
-                    )
-                    else -> CollectorList(
-                        collectors = collectors.data,
-                        selectedId = uiState.selected?.id,
-                        onCollectorSelect = onCollectorSelect,
-                    )
+                    uiState.totalCount == 0 -> stateItem { EmptyView() }
+                    collectors.data.isEmpty() -> stateItem {
+                        NoResultsView(
+                            message = stringResource(R.string.collector_no_results_query, uiState.query),
+                            onClear = { onQueryChange("") },
+                        )
+                    }
+                    else -> items(collectors.data, key = { it.id }) { collector ->
+                        CollectorRow(
+                            collector = collector,
+                            selected = collector.id == uiState.selected?.id,
+                            onClick = { onCollectorSelect(collector.id) },
+                        )
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                        )
+                    }
                 }
+            }
+            item(key = "change_later") {
+                Text(
+                    text = stringResource(R.string.collector_change_later),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp),
+                )
             }
         }
         Footer(selected = uiState.selected, enabled = uiState.canContinue, onContinue = onContinue)
@@ -170,31 +203,16 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit, modifier
     )
 }
 
-@Composable
-private fun CollectorList(
-    collectors: List<Collector>,
-    selectedId: Int?,
-    onCollectorSelect: (Int) -> Unit,
-) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .selectableGroup()
-            .testTag("collector_list"),
-    ) {
-        items(collectors, key = { it.id }) { collector ->
-            CollectorRow(
-                collector = collector,
-                selected = collector.id == selectedId,
-                onClick = { onCollectorSelect(collector.id) },
-            )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outlineVariant,
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
+/** Loading, error and empty states take the space below the search field, at least [StateMinHeight]. */
+private fun LazyListScope.stateItem(content: @Composable () -> Unit) {
+    item(key = "state") {
+        Box(modifier = Modifier.heightIn(min = StateMinHeight).fillParentMaxHeight(0.6f).fillMaxWidth()) {
+            content()
         }
     }
 }
+
+private val StateMinHeight = 240.dp
 
 @OptIn(ExperimentalComposeUiApi::class) // invisibleToUser
 @Composable
@@ -252,12 +270,6 @@ private fun CollectorRow(collector: Collector, selected: Boolean, onClick: () ->
 @Composable
 private fun Footer(selected: Collector?, enabled: Boolean, onContinue: () -> Unit) {
     Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
-        Text(
-            text = stringResource(R.string.collector_change_later),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(12.dp))
         Button(
             onClick = onContinue,
             enabled = enabled,

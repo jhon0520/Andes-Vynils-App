@@ -1,16 +1,21 @@
 package com.dev.wine.music.app.ui.album
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.dev.wine.music.app.R
@@ -19,6 +24,10 @@ import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.UserSession
+import com.dev.wine.music.app.ui.a11y.MAX_FONT_SCALE
+import com.dev.wine.music.app.ui.a11y.PhoneWithFontScale
+import com.dev.wine.music.app.ui.a11y.assertFullyInside
+import com.dev.wine.music.app.ui.a11y.bounds
 import com.dev.wine.music.app.ui.album.list.AlbumCatalog
 import com.dev.wine.music.app.ui.album.list.AlbumListContent
 import com.dev.wine.music.app.ui.common.UiState
@@ -60,21 +69,25 @@ class AlbumListContentTest {
         onRetry: () -> Unit = {},
         session: UserSession? = null,
         onCreateAlbumClick: () -> Unit = {},
+        fontScale: Float? = null,
     ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
-                AlbumListContent(
-                    uiState = uiState,
-                    query = query,
-                    selectedGenre = selectedGenre,
-                    onQueryChange = onQueryChange,
-                    onGenreSelect = onGenreSelect,
-                    onClearFilters = onClearFilters,
-                    onAlbumClick = onAlbumClick,
-                    onRetry = onRetry,
-                    session = session,
-                    onCreateAlbumClick = onCreateAlbumClick,
-                )
+                val content = @Composable {
+                    AlbumListContent(
+                        uiState = uiState,
+                        query = query,
+                        selectedGenre = selectedGenre,
+                        onQueryChange = onQueryChange,
+                        onGenreSelect = onGenreSelect,
+                        onClearFilters = onClearFilters,
+                        onAlbumClick = onAlbumClick,
+                        onRetry = onRetry,
+                        session = session,
+                        onCreateAlbumClick = onCreateAlbumClick,
+                    )
+                }
+                if (fontScale == null) content() else PhoneWithFontScale(fontScale) { content() }
             }
         }
     }
@@ -214,5 +227,48 @@ class AlbumListContentTest {
 
         composeTestRule.onNodeWithTag("profile_badge")
             .assertContentDescriptionEquals(context.getString(R.string.profile_badge_visitor_description))
+    }
+
+    private val collector = UserSession.Collector(id = 100, name = "Manolo Bellon", email = "manollo@caracol.com.co")
+
+    private fun manyAlbums() = (1..6).map { album.copy(id = it, name = "Álbum $it") }
+
+    /** D-17: with the font at 200 % the header scrolls away and a whole album card fits on screen. */
+    @Test
+    fun withTheLargestFontAWholeAlbumFitsOnScreen() {
+        val albums = manyAlbums()
+        setContent(UiState.Success(AlbumCatalog(albums, totalCount = albums.size)), fontScale = MAX_FONT_SCALE)
+
+        composeTestRule.onNodeWithTag("album_list").performScrollToNode(hasTestTag("album_item_1"))
+        composeTestRule.onNodeWithTag("album_item_1").assertFullyInside(composeTestRule.onNodeWithTag("album_list"))
+    }
+
+    /** D-16: at the end of the list the "Crear álbum" button does not cover the last album. */
+    @Test
+    fun withTheLargestFontTheCreateButtonDoesNotCoverTheLastAlbum() {
+        val albums = manyAlbums()
+        setContent(
+            UiState.Success(AlbumCatalog(albums, totalCount = albums.size)),
+            session = collector,
+            fontScale = MAX_FONT_SCALE,
+        )
+
+        // Header, search and tabs are the first three items of the grid.
+        composeTestRule.onNodeWithTag("album_list").performScrollToIndex(albums.size + 2)
+        composeTestRule.waitForIdle()
+        val lastAlbum = composeTestRule.onNodeWithTag("album_item_${albums.last().id}").bounds()
+        val button = composeTestRule.onNodeWithTag("create_album_button").bounds()
+        assertTrue("Last album $lastAlbum is under the button $button", lastAlbum.bottom <= button.top)
+    }
+
+    /** D-17: the profile badge grows with the font instead of cutting its initials. */
+    @Test
+    fun withTheLargestFontTheProfileBadgeGrowsAndStaysRound() {
+        setContent(UiState.Success(AlbumCatalog(listOf(album), totalCount = 1)), session = collector, fontScale = MAX_FONT_SCALE)
+
+        val badge = composeTestRule.onNodeWithTag("profile_badge").fetchSemanticsNode().size
+        val minSize = with(composeTestRule.density) { 48.dp.roundToPx() }
+        assertEquals(badge.width, badge.height)
+        assertTrue("Badge ${badge.width}px should be wider than 48 dp ($minSize px)", badge.width > minSize)
     }
 }

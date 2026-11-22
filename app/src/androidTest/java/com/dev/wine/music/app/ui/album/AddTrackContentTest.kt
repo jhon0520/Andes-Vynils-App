@@ -1,5 +1,6 @@
 package com.dev.wine.music.app.ui.album
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -11,6 +12,9 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.domain.model.Track
+import com.dev.wine.music.app.ui.a11y.MAX_FONT_SCALE
+import com.dev.wine.music.app.ui.a11y.PhoneWithFontScale
+import com.dev.wine.music.app.ui.a11y.bounds
 import com.dev.wine.music.app.ui.album.track.AddTrackContent
 import com.dev.wine.music.app.ui.album.track.AddTrackUiState
 import com.dev.wine.music.app.ui.common.ErrorType
@@ -39,19 +43,27 @@ class AddTrackContentTest {
         tracks = listOf(Track(1, "Decisiones", "5:05"), Track(2, "Desapariciones", "6:29")),
     )
 
-    private fun setContent(state: AddTrackUiState, onSave: () -> Unit = {}, onCancel: () -> Unit = {}) {
+    private fun setContent(
+        state: AddTrackUiState,
+        onSave: () -> Unit = {},
+        onCancel: () -> Unit = {},
+        fontScale: Float? = null,
+    ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
-                AddTrackContent(
-                    album = album,
-                    uiState = state,
-                    onNameChange = {},
-                    onDurationChange = {},
-                    onNameBlur = {},
-                    onDurationBlur = {},
-                    onSave = onSave,
-                    onCancel = onCancel,
-                )
+                val content = @Composable {
+                    AddTrackContent(
+                        album = album,
+                        uiState = state,
+                        onNameChange = {},
+                        onDurationChange = {},
+                        onNameBlur = {},
+                        onDurationBlur = {},
+                        onSave = onSave,
+                        onCancel = onCancel,
+                    )
+                }
+                if (fontScale == null) content() else PhoneWithFontScale(fontScale) { content() }
             }
         }
     }
@@ -106,5 +118,24 @@ class AddTrackContentTest {
         composeTestRule.onNodeWithTag("add_track_cancel").performClick()
 
         assertTrue(cancelled)
+    }
+
+    @Test
+    fun withTheDefaultFontBothButtonsShareALine() {
+        setContent(AddTrackUiState(), fontScale = 1f)
+
+        val cancel = composeTestRule.onNodeWithTag("add_track_cancel").bounds()
+        val submit = composeTestRule.onNodeWithTag("add_track_submit").bounds()
+        assertTrue("Buttons should be on the same line: $cancel / $submit", submit.top < cancel.bottom && cancel.top < submit.bottom)
+    }
+
+    /** D-15: with the font at 200 % "Agregar track" moves below "Cancelar" instead of splitting its words. */
+    @Test
+    fun withTheLargestFontTheSubmitButtonMovesBelowCancel() {
+        setContent(AddTrackUiState(), fontScale = MAX_FONT_SCALE)
+
+        val cancel = composeTestRule.onNodeWithTag("add_track_cancel").bounds()
+        val submit = composeTestRule.onNodeWithTag("add_track_submit").bounds()
+        assertTrue("Submit $submit should be below cancel $cancel", submit.top >= cancel.bottom)
     }
 }

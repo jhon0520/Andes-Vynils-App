@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dev.wine.music.app.domain.model.Album
 import com.dev.wine.music.app.ui.theme.DetailMono
+import com.dev.wine.music.app.ui.theme.Hyphenated
 import com.dev.wine.music.app.ui.theme.SansBody
 
 /** Sleeve width over the whole card width: the rest is the record peeking out on the right. */
@@ -31,7 +32,8 @@ fun AlbumCard(
         // Every text reserves a fixed number of lines, so all cards in the grid have the same height.
         Text(
             text = album.name,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp, lineHeight = 22.sp),
+            // Half the screen wide: with a large font a long word ("Siembra") is split at a syllable.
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp, lineHeight = 22.sp).merge(Hyphenated),
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
             minLines = 2,
