@@ -1,0 +1,112 @@
+{
+  "scenario": "P-ONB",
+  "build": "despues",
+  "run": 3,
+  "device": {
+    "manufacturer": "Google",
+    "model": "Android SDK built for x86",
+    "androidRelease": "8.0.0",
+    "sdk": 26
+  },
+  "recordedAt": "2026-11-22T02:12:15.624Z",
+  "durationMs": 7956,
+  "coldStart": [
+    {
+      "totalTimeMs": 2261,
+      "waitTimeMs": 2269,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2251,
+      "waitTimeMs": 2259,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2249,
+      "waitTimeMs": 2258,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2255,
+      "waitTimeMs": 2264,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2260,
+      "waitTimeMs": 2267,
+      "launchState": null
+    }
+  ],
+  "timings": {
+    "lista-de-coleccionistas": {
+      "ms": 1261,
+      "appiumRoundTripMs": 60
+    },
+    "catalogo": {
+      "ms": 1132,
+      "appiumRoundTripMs": 68
+    }
+  },
+  "cpu": {
+    "cores": 4,
+    "totalMs": 3900,
+    "mainThreadMs": 1740,
+    "otherThreadsMs": 2160,
+    "avgPct": 12.2,
+    "peakPct": 41.0
+  },
+  "memory": {
+    "totalPssKb": 46878,
+    "javaHeapKb": 9520,
+    "nativeHeapKb": 7040,
+    "graphicsKb": 0,
+    "codeKb": 18508,
+    "activities": 1,
+    "appContexts": 2,
+    "peakRssKb": 123964,
+    "peakThreads": 28
+  },
+  "frames": {
+    "total": 127,
+    "janky": 80,
+    "jankyPct": 62.99,
+    "slowOver16ms": 76,
+    "frozenOver700ms": 0,
+    "p50Ms": 18,
+    "p90Ms": 46,
+    "p95Ms": 105,
+    "p99Ms": 150,
+    "slowUiThread": 35,
+    "deadlineMissed": null
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 29
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 15
+      }
+    ],
+    "segments": []
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
