@@ -27,6 +27,7 @@
     <string name="error_not_found">No encontramos lo que buscas. Puede que ya no exista.</string>
     <string name="album_detail_eyebrow">Ficha del álbum</string>
     <string name="album_performers_prefix">por</string>
+    <string name="album_performer_open">Ver el detalle de %1$s</string>
     <plurals name="album_track_count">
         <item quantity="one">%1$d track</item>
         <item quantity="other">%1$d tracks</item>

@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Album
+import com.dev.wine.music.app.domain.model.Artist
+import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.NumberedTrack
 import com.dev.wine.music.app.domain.model.UserSession
@@ -70,6 +75,7 @@ private const val COVER_WIDTH = 0.82f
 @Composable
 fun AlbumDetailScreen(
     onBack: () -> Unit,
+    onArtistClick: (artistId: Int, type: ArtistType) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AlbumDetailViewModel = hiltViewModel(),
 ) {
@@ -83,6 +89,7 @@ fun AlbumDetailScreen(
         modifier = modifier,
         session = session,
         onAddTrackClick = { showAddTrack = true },
+        onArtistClick = onArtistClick,
     )
     val album = (uiState as? UiState.Success)?.data
     if (showAddTrack && album != null && session is UserSession.Collector) {
@@ -105,6 +112,7 @@ fun AlbumDetailContent(
     modifier: Modifier = Modifier,
     session: UserSession? = null,
     onAddTrackClick: () -> Unit = {},
+    onArtistClick: (artistId: Int, type: ArtistType) -> Unit = { _, _ -> },
 ) {
     Column(modifier = modifier.fillMaxSize().testTag("album_detail")) {
         DetailTopBar(eyebrow = stringResource(R.string.album_detail_eyebrow), onBack = onBack)
@@ -116,13 +124,19 @@ fun AlbumDetailContent(
                 // Only a collector can add tracks, so only a collector sees the button.
                 canAddTrack = session is UserSession.Collector,
                 onAddTrackClick = onAddTrackClick,
+                onArtistClick = onArtistClick,
             )
         }
     }
 }
 
 @Composable
-private fun AlbumDetailBody(album: Album, canAddTrack: Boolean, onAddTrackClick: () -> Unit) {
+private fun AlbumDetailBody(
+    album: Album,
+    canAddTrack: Boolean,
+    onAddTrackClick: () -> Unit,
+    onArtistClick: (Int, ArtistType) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -145,7 +159,11 @@ private fun AlbumDetailBody(album: Album, canAddTrack: Boolean, onAddTrackClick:
             modifier = Modifier.padding(top = 8.dp),
         )
         if (album.performers.isNotEmpty()) {
-            Performers(names = album.performerNames, modifier = Modifier.padding(top = 8.dp))
+            Performers(
+                performers = album.performers,
+                onArtistClick = onArtistClick,
+                modifier = Modifier.padding(top = 8.dp),
+            )
         }
         if (album.description.isNotBlank()) {
             ExpandableDescription(description = album.description, modifier = Modifier.padding(top = 20.dp))
@@ -195,30 +213,68 @@ private fun MetaText(text: String, modifier: Modifier = Modifier) {
     )
 }
 
-/** "por Rubén Blades", with the names underlined in terracotta as in the mockup. */
+/**
+ * "por Rubén Blades, Seis del Solar", with each name underlined in terracotta as in the mockup.
+ * Each name is its own link to the artist detail (HU04), so an album with several performers
+ * opens the one that was tapped.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Performers(names: String, modifier: Modifier = Modifier) {
-    Row(modifier = modifier, verticalAlignment = Alignment.Bottom) {
+private fun Performers(
+    performers: List<Artist>,
+    onArtistClick: (Int, ArtistType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val style = SansBody.copy(fontSize = 17.sp)
+    FlowRow(
+        modifier = modifier.testTag("album_performers"),
+        verticalArrangement = Arrangement.Center,
+    ) {
         Text(
             text = stringResource(R.string.album_performers_prefix),
-            style = SansBody.copy(fontSize = 17.sp),
+            style = style,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.align(Alignment.CenterVertically).padding(end = 8.dp),
         )
-        Text(
-            text = names,
-            style = SansBody.copy(fontSize = 17.sp),
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .drawBehind {
-                    val stroke = 2.dp.toPx()
-                    val y = size.height - stroke / 2
-                    drawLine(Terracotta, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
-                }
-                .testTag("album_performers"),
-        )
+        performers.forEachIndexed { index, artist ->
+            PerformerLink(
+                artist = artist,
+                // The comma belongs to the name before it, so it never starts a new line.
+                text = if (index < performers.lastIndex) "${artist.name}," else artist.name,
+                style = style,
+                onClick = { onArtistClick(artist.id, artist.type) },
+                modifier = Modifier.align(Alignment.CenterVertically).padding(end = 8.dp),
+            )
+        }
     }
+}
+
+@Composable
+private fun PerformerLink(
+    artist: Artist,
+    text: String,
+    style: TextStyle,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val openArtist = stringResource(R.string.album_performer_open, artist.name)
+    Text(
+        text = text,
+        style = style,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = modifier
+            .clickable(role = Role.Button, onClickLabel = openArtist, onClick = onClick)
+            // At least 48 dp tall so the link is easy to tap (accessibility).
+            .heightIn(min = 48.dp)
+            .wrapContentHeight(Alignment.CenterVertically)
+            .drawBehind {
+                val stroke = 2.dp.toPx()
+                val y = size.height - stroke / 2
+                drawLine(Terracotta, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
+            }
+            .testTag("album_performer_${artist.id}"),
+    )
 }
 
 @Composable

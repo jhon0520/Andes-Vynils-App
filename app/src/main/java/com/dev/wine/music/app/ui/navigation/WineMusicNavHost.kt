@@ -73,6 +73,7 @@ fun WineMusicNavHost(
         composable<AlbumDetailRoute> {
             AlbumDetailScreen(
                 onBack = dropUnlessResumed { navController.popBackStack() },
+                onArtistClick = { artistId, type -> navController.navigate(ArtistDetailRoute(artistId, type.name)) },
             )
         }
         composable<ArtistsRoute> {

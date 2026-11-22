@@ -21,6 +21,7 @@ import com.dev.wine.music.app.ui.album.detail.AlbumDetailContent
 import com.dev.wine.music.app.ui.common.ErrorType
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.theme.WineMusicAppTheme
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -61,6 +62,7 @@ class AlbumDetailContentTest {
         onRetry: () -> Unit = {},
         session: UserSession? = UserSession.Visitor,
         onAddTrackClick: () -> Unit = {},
+        onArtistClick: (Int, ArtistType) -> Unit = { _, _ -> },
     ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
@@ -70,6 +72,7 @@ class AlbumDetailContentTest {
                     onRetry = onRetry,
                     session = session,
                     onAddTrackClick = onAddTrackClick,
+                    onArtistClick = onArtistClick,
                 )
             }
         }
@@ -80,11 +83,38 @@ class AlbumDetailContentTest {
         setContent(UiState.Success(album))
 
         composeTestRule.onNodeWithText("Buscando América").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("album_performers").assertTextEquals("Rubén Blades")
+        composeTestRule.onNodeWithTag("album_performer_100").assertTextEquals("Rubén Blades")
         composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("ELEKTRA")
         composeTestRule.onNodeWithTag("album_release_date").assertTextEquals("01/08/1984")
         composeTestRule.onNodeWithTag("album_genre").assertTextEquals(context.getString(R.string.genre_salsa).uppercase())
         composeTestRule.onNodeWithTag("album_track_count").assertTextEquals("3 TRACKS")
+    }
+
+    @Test
+    fun tappingAPerformerOpensThatArtist() {
+        var opened: Pair<Int, ArtistType>? = null
+        setContent(UiState.Success(album), onArtistClick = { id, type -> opened = id to type })
+
+        composeTestRule.onNodeWithTag("album_performer_100").performClick()
+
+        assertEquals(100 to ArtistType.MUSICIAN, opened)
+    }
+
+    @Test
+    fun eachPerformerIsItsOwnLink() {
+        val opened = mutableListOf<Pair<Int, ArtistType>>()
+        val twoPerformers = album.copy(
+            performers = listOf(
+                Artist(100, "Rubén Blades", "", "", ArtistType.MUSICIAN),
+                Artist(101, "Seis del Solar", "", "", ArtistType.BAND),
+            ),
+        )
+        setContent(UiState.Success(twoPerformers), onArtistClick = { id, type -> opened += id to type })
+
+        composeTestRule.onNodeWithTag("album_performer_100").assertTextEquals("Rubén Blades,")
+        composeTestRule.onNodeWithTag("album_performer_101").assertTextEquals("Seis del Solar").performClick()
+
+        assertEquals(listOf(101 to ArtistType.BAND), opened)
     }
 
     @Test

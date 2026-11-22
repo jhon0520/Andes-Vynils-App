@@ -1,6 +1,7 @@
 {
   "CATALOG_ALBUM": "A Night at the Opera",
   "SALSA_ALBUM_ID": "album_item_100",
+  "SALSA_PERFORMER_ID": "album_performer_100",
   "ROCK_ALBUM": "A Day at the Races",
   "PERFORMER_QUERY": "ruben",
   "NO_MATCH_QUERY": "zzz-e2e-no-results",
