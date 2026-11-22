@@ -1,0 +1,104 @@
+{
+  "scenario": "P-HU05",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "Google",
+    "model": "Android SDK built for x86",
+    "androidRelease": "8.0.0",
+    "sdk": 26
+  },
+  "recordedAt": "2026-11-22T02:02:25.494Z",
+  "durationMs": 13610,
+  "coldStart": null,
+  "timings": {
+    "coleccionistas-primera-vez": {
+      "ms": 809,
+      "appiumRoundTripMs": 63
+    },
+    "coleccionistas-regreso": {
+      "ms": 557,
+      "appiumRoundTripMs": 46
+    }
+  },
+  "cpu": {
+    "cores": 4,
+    "totalMs": 6390,
+    "mainThreadMs": 2790,
+    "otherThreadsMs": 3600,
+    "avgPct": 11.8,
+    "peakPct": 51.4
+  },
+  "memory": {
+    "totalPssKb": 50432,
+    "javaHeapKb": 9300,
+    "nativeHeapKb": 9152,
+    "graphicsKb": 0,
+    "codeKb": 18668,
+    "activities": 1,
+    "appContexts": 2,
+    "peakRssKb": 134460,
+    "peakThreads": 37
+  },
+  "frames": {
+    "total": 186,
+    "janky": 93,
+    "jankyPct": 50,
+    "slowOver16ms": 92,
+    "frozenOver700ms": 0,
+    "p50Ms": 16,
+    "p90Ms": 65,
+    "p95Ms": 150,
+    "p99Ms": 250,
+    "slowUiThread": 47,
+    "deadlineMissed": null
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 37
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 16
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors"
+          }
+        ]
+      },
+      {
+        "name": "buscar",
+        "requests": []
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

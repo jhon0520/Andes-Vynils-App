@@ -2,18 +2,24 @@ package com.dev.wine.music.app.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.dev.wine.music.app.ui.album.create.AlbumCreateScreen
 import com.dev.wine.music.app.ui.album.detail.AlbumDetailScreen
 import com.dev.wine.music.app.ui.album.list.AlbumListScreen
 import com.dev.wine.music.app.ui.artist.ArtistListScreen
 import com.dev.wine.music.app.ui.artist.detail.ArtistDetailScreen
 import com.dev.wine.music.app.ui.collector.CollectorListScreen
+import com.dev.wine.music.app.ui.collector.detail.CollectorDetailScreen
 import com.dev.wine.music.app.ui.onboarding.CollectorPickerScreen
 import com.dev.wine.music.app.ui.onboarding.RoleSelectionScreen
+
+private const val CATALOG_CHANGED_KEY = "catalog_changed"
 
 @Composable
 fun WineMusicNavHost(
@@ -42,18 +48,32 @@ fun WineMusicNavHost(
                 )
             }
         }
-        composable<AlbumsRoute> {
+        composable<AlbumsRoute> { entry ->
+            val catalogChanged by entry.savedStateHandle
+                .getStateFlow(CATALOG_CHANGED_KEY, false)
+                .collectAsStateWithLifecycle()
             AlbumListScreen(
                 onAlbumClick = { albumId -> navController.navigate(AlbumDetailRoute(albumId)) },
-                // TODO: navigate to the create album form when its HU is implemented.
-                onCreateAlbumClick = {},
+                onCreateAlbumClick = dropUnlessResumed { navController.navigate(AlbumCreateRoute) },
+                catalogChanged = catalogChanged,
+                onCatalogRefreshed = { entry.savedStateHandle[CATALOG_CHANGED_KEY] = false },
+            )
+        }
+        composable<AlbumCreateRoute> {
+            AlbumCreateScreen(
+                onBack = dropUnlessResumed { navController.popBackStack() },
+                onAddTracks = { albumId -> navController.openCreatedAlbum(albumId, openAddTrack = true) },
+                onViewAlbum = { albumId -> navController.openCreatedAlbum(albumId, openAddTrack = false) },
+                onNotNow = {
+                    navController.markCatalogChanged()
+                    navController.popBackStack()
+                },
             )
         }
         composable<AlbumDetailRoute> {
             AlbumDetailScreen(
                 onBack = dropUnlessResumed { navController.popBackStack() },
-                // TODO: navigate to the add track form when its HU is implemented.
-                onAddTrackClick = {},
+                onArtistClick = { artistId, type -> navController.navigate(ArtistDetailRoute(artistId, type.name)) },
             )
         }
         composable<ArtistsRoute> {
@@ -69,10 +89,29 @@ fun WineMusicNavHost(
         }
         composable<CollectorsRoute> {
             CollectorListScreen(
-                // TODO: navigate to the collector detail when HU06 is implemented.
-                onCollectorClick = {},
+                onCollectorClick = { collectorId -> navController.navigate(CollectorDetailRoute(collectorId)) },
             )
         }
+        composable<CollectorDetailRoute> {
+            CollectorDetailScreen(
+                onBack = dropUnlessResumed { navController.popBackStack() },
+                onArtistClick = { artistId, type -> navController.navigate(ArtistDetailRoute(artistId, type.name)) },
+                onAlbumClick = { albumId -> navController.navigate(AlbumDetailRoute(albumId)) },
+            )
+        }
+    }
+}
+
+/** The catalog keeps its ViewModel in the back stack, so it is told to load the new album. */
+private fun NavHostController.markCatalogChanged() {
+    getBackStackEntry<AlbumsRoute>().savedStateHandle[CATALOG_CHANGED_KEY] = true
+}
+
+/** Replaces the form with the album, so back from the detail returns to the catalog. */
+private fun NavHostController.openCreatedAlbum(albumId: Int, openAddTrack: Boolean) {
+    markCatalogChanged()
+    navigate(AlbumDetailRoute(albumId, openAddTrack)) {
+        popUpTo<AlbumCreateRoute> { inclusive = true }
     }
 }
 

@@ -1,0 +1,140 @@
+{
+  "scenario": "P-HU08",
+  "build": "despues",
+  "run": 3,
+  "device": {
+    "manufacturer": "motorola",
+    "model": "moto g13",
+    "androidRelease": "14",
+    "sdk": 34
+  },
+  "recordedAt": "2026-11-22T00:46:52.001Z",
+  "durationMs": 33681,
+  "coldStart": null,
+  "timings": {
+    "detalle-album": {
+      "ms": 1348,
+      "appiumRoundTripMs": 36
+    },
+    "hoja-agregar-track": {
+      "ms": 2016,
+      "appiumRoundTripMs": 47
+    },
+    "track-guardado": {
+      "ms": 1438,
+      "appiumRoundTripMs": 125
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 17490,
+    "mainThreadMs": 9050,
+    "otherThreadsMs": 8440,
+    "avgPct": 6.5,
+    "peakPct": 41.9
+  },
+  "memory": {
+    "totalPssKb": 174629,
+    "javaHeapKb": 21932,
+    "nativeHeapKb": 24396,
+    "graphicsKb": 68880,
+    "codeKb": 29892,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 249028,
+    "peakThreads": 73
+  },
+  "frames": {
+    "total": 686,
+    "janky": 46,
+    "jankyPct": 6.71,
+    "slowOver16ms": 133,
+    "frozenOver700ms": 2,
+    "p50Ms": 11,
+    "p90Ms": 30,
+    "p95Ms": 65,
+    "p99Ms": 300,
+    "slowUiThread": 39,
+    "deadlineMissed": 46
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 5,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      },
+      {
+        "method": "POST",
+        "path": "/albums/100/tracks"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 12
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 8
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 13
+      },
+      {
+        "status": 200,
+        "path": "/albums/100/tracks",
+        "ms": 17
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 9
+      }
+    ],
+    "segments": [
+      {
+        "name": "detalle-album",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          }
+        ]
+      },
+      {
+        "name": "guardar-track",
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/albums/100/tracks"
+          },
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

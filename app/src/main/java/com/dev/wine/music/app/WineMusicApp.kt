@@ -8,7 +8,9 @@ import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.dev.wine.music.app.data.cache.RepositoryCache
+import com.dev.wine.music.app.data.remote.ImageRequestInterceptor
 import dagger.hilt.android.HiltAndroidApp
+import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 /**
@@ -21,6 +23,8 @@ import javax.inject.Inject
  * - Covers are opaque JPEGs, so they are decoded as RGB_565 (2 bytes per pixel instead of 4).
  * - When the system asks the app to trim memory, the repository cache is dropped
  *   (Coil already trims its own memory cache).
+ * - Image requests identify the app with a User-Agent: Wikimedia refuses them otherwise
+ *   (see [ImageRequestInterceptor]).
  * - Debug builds turn on StrictMode, which logs disk or network work on the main thread.
  */
 @HiltAndroidApp
@@ -44,6 +48,11 @@ class WineMusicApp : Application(), ImageLoaderFactory {
             DiskCache.Builder()
                 .directory(cacheDir.resolve(IMAGE_CACHE_DIR))
                 .maxSizeBytes(IMAGE_DISK_CACHE_BYTES)
+                .build()
+        }
+        .okHttpClient {
+            OkHttpClient.Builder()
+                .addInterceptor(ImageRequestInterceptor(IMAGE_USER_AGENT))
                 .build()
         }
         // Cover URLs point to external sites whose headers often forbid caching.
@@ -83,5 +92,7 @@ class WineMusicApp : Application(), ImageLoaderFactory {
         const val IMAGE_MEMORY_PERCENT = 0.20
         const val IMAGE_DISK_CACHE_BYTES = 50L * 1024 * 1024
         const val IMAGE_CACHE_DIR = "image_cache"
+        const val IMAGE_USER_AGENT =
+            "WineMusic/${BuildConfig.VERSION_NAME} (Android; https://github.com/jhon0520/Andes-Vynils-App)"
     }
 }

@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,7 +57,8 @@ fun SectionTitle(text: String) {
             style = LabelMono,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(bottom = 10.dp),
+            // TalkBack users jump between sections with the headings navigation.
+            modifier = Modifier.padding(bottom = 10.dp).semantics { heading() },
         )
         HorizontalDivider(thickness = 1.5.dp, color = MaterialTheme.colorScheme.onBackground)
     }

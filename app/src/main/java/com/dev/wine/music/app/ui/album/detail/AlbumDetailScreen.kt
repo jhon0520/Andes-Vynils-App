@@ -2,13 +2,16 @@ package com.dev.wine.music.app.ui.album.detail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,13 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,15 +46,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Album
+import com.dev.wine.music.app.domain.model.Artist
+import com.dev.wine.music.app.domain.model.ArtistType
 import com.dev.wine.music.app.domain.model.Comment
 import com.dev.wine.music.app.domain.model.NumberedTrack
 import com.dev.wine.music.app.domain.model.UserSession
+import com.dev.wine.music.app.ui.album.track.AddTrackSheet
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.rememberAnnouncer
 import com.dev.wine.music.app.ui.components.AlbumRecord
 import com.dev.wine.music.app.ui.components.DetailTopBar
 import com.dev.wine.music.app.ui.components.EmptySection
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
+import com.dev.wine.music.app.ui.components.RatingStars
 import com.dev.wine.music.app.ui.components.SectionTitle
 import com.dev.wine.music.app.ui.components.TerracottaAddButton
 import com.dev.wine.music.app.ui.components.labelRes
@@ -70,20 +81,37 @@ private const val COVER_WIDTH = 0.82f
 @Composable
 fun AlbumDetailScreen(
     onBack: () -> Unit,
-    onAddTrackClick: () -> Unit,
+    onArtistClick: (artistId: Int, type: ArtistType) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AlbumDetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val session by viewModel.session.collectAsStateWithLifecycle()
+    var showAddTrack by rememberSaveable { mutableStateOf(viewModel.openAddTrackOnArrival) }
+    val announcer = rememberAnnouncer()
+    val context = LocalContext.current
     AlbumDetailContent(
         uiState = uiState,
         onBack = onBack,
         onRetry = viewModel::loadAlbum,
         modifier = modifier,
         session = session,
-        onAddTrackClick = onAddTrackClick,
+        onAddTrackClick = { showAddTrack = true },
+        onArtistClick = onArtistClick,
     )
+    val album = (uiState as? UiState.Success)?.data
+    if (showAddTrack && album != null && session is UserSession.Collector) {
+        AddTrackSheet(
+            album = album,
+            onDismiss = { showAddTrack = false },
+            onSaved = { trackName ->
+                showAddTrack = false
+                viewModel.loadAlbum()
+                // D-18: the sheet closes without a visible message; TalkBack confirms the new track.
+                announcer.announce(context.getString(R.string.track_added_announcement, trackName))
+            },
+        )
+    }
 }
 
 @Composable
@@ -94,6 +122,7 @@ fun AlbumDetailContent(
     modifier: Modifier = Modifier,
     session: UserSession? = null,
     onAddTrackClick: () -> Unit = {},
+    onArtistClick: (artistId: Int, type: ArtistType) -> Unit = { _, _ -> },
 ) {
     Column(modifier = modifier.fillMaxSize().testTag("album_detail")) {
         DetailTopBar(eyebrow = stringResource(R.string.album_detail_eyebrow), onBack = onBack)
@@ -105,13 +134,19 @@ fun AlbumDetailContent(
                 // Only a collector can add tracks, so only a collector sees the button.
                 canAddTrack = session is UserSession.Collector,
                 onAddTrackClick = onAddTrackClick,
+                onArtistClick = onArtistClick,
             )
         }
     }
 }
 
 @Composable
-private fun AlbumDetailBody(album: Album, canAddTrack: Boolean, onAddTrackClick: () -> Unit) {
+private fun AlbumDetailBody(
+    album: Album,
+    canAddTrack: Boolean,
+    onAddTrackClick: () -> Unit,
+    onArtistClick: (Int, ArtistType) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -131,10 +166,14 @@ private fun AlbumDetailBody(album: Album, canAddTrack: Boolean, onAddTrackClick:
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp).semantics { heading() },
         )
         if (album.performers.isNotEmpty()) {
-            Performers(names = album.performerNames, modifier = Modifier.padding(top = 8.dp))
+            Performers(
+                performers = album.performers,
+                onArtistClick = onArtistClick,
+                modifier = Modifier.padding(top = 8.dp),
+            )
         }
         if (album.description.isNotBlank()) {
             ExpandableDescription(description = album.description, modifier = Modifier.padding(top = 20.dp))
@@ -166,9 +205,11 @@ private fun AlbumFacts(album: Album, modifier: Modifier = Modifier) {
         genre to "album_genre",
         pluralStringResource(R.plurals.album_track_count, album.tracks.size, album.tracks.size) to "album_track_count",
     ).filter { (value, _) -> value.isNotBlank() }
-    FlowRow(modifier = modifier.fillMaxWidth()) {
+    // Read as one line ("ELEKTRA, 01/08/1984, SALSA, 2 TRACKS") instead of four stops (D-20).
+    FlowRow(modifier = modifier.fillMaxWidth().semantics(mergeDescendants = true) {}) {
         facts.forEachIndexed { index, (value, tag) ->
-            if (index > 0) MetaText(" · ")
+            // The separator is only visual: TalkBack reads the values one after another.
+            if (index > 0) MetaText(" · ", Modifier.clearAndSetSemantics {})
             MetaText(value.uppercase(), Modifier.testTag(tag))
         }
     }
@@ -184,28 +225,71 @@ private fun MetaText(text: String, modifier: Modifier = Modifier) {
     )
 }
 
-/** "por Rubén Blades", with the names underlined in terracotta as in the mockup. */
+/**
+ * "por Rubén Blades, Seis del Solar", with each name underlined in terracotta as in the mockup.
+ * Each name is its own link to the artist detail (HU04), so an album with several performers
+ * opens the one that was tapped.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Performers(names: String, modifier: Modifier = Modifier) {
-    Row(modifier = modifier, verticalAlignment = Alignment.Bottom) {
+private fun Performers(
+    performers: List<Artist>,
+    onArtistClick: (Int, ArtistType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val style = SansBody.copy(fontSize = 17.sp)
+    FlowRow(
+        modifier = modifier.testTag("album_performers"),
+        verticalArrangement = Arrangement.Center,
+    ) {
         Text(
             text = stringResource(R.string.album_performers_prefix),
-            style = SansBody.copy(fontSize = 17.sp),
+            style = style,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.align(Alignment.CenterVertically).padding(end = 8.dp),
         )
+        performers.forEachIndexed { index, artist ->
+            PerformerLink(
+                artist = artist,
+                // The comma belongs to the name before it, so it never starts a new line.
+                text = if (index < performers.lastIndex) "${artist.name}," else artist.name,
+                style = style,
+                onClick = { onArtistClick(artist.id, artist.type) },
+                modifier = Modifier.align(Alignment.CenterVertically).padding(end = 8.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun PerformerLink(
+    artist: Artist,
+    text: String,
+    style: TextStyle,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val openArtist = stringResource(R.string.album_performer_open, artist.name)
+    // The click goes on a box around the text: on the text itself Compose reports a TextView and TalkBack
+    // does not say "Botón" (D-19).
+    Box(
+        modifier = modifier
+            .clickable(role = Role.Button, onClickLabel = openArtist, onClick = onClick)
+            // At least 48 dp tall so the link is easy to tap (accessibility).
+            .heightIn(min = 48.dp)
+            .testTag("album_performer_${artist.id}"),
+        contentAlignment = Alignment.CenterStart,
+    ) {
         Text(
-            text = names,
-            style = SansBody.copy(fontSize = 17.sp),
+            text = text,
+            style = style,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .drawBehind {
-                    val stroke = 2.dp.toPx()
-                    val y = size.height - stroke / 2
-                    drawLine(Terracotta, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
-                }
-                .testTag("album_performers"),
+            modifier = Modifier.drawBehind {
+                val stroke = 2.dp.toPx()
+                val y = size.height - stroke / 2
+                drawLine(Terracotta, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
+            },
         )
     }
 }
@@ -227,17 +311,23 @@ private fun ExpandableDescription(description: String, modifier: Modifier = Modi
             modifier = Modifier.testTag("album_description"),
         )
         if (expanded || isCut) {
-            Text(
-                text = stringResource(if (expanded) R.string.read_less else R.string.read_more),
-                style = SansBody,
-                fontWeight = FontWeight.Bold,
-                color = Terracotta,
+            // A box around the text, so TalkBack says "Botón" (D-19).
+            Box(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .clickable(role = Role.Button) { expanded = !expanded }
-                    .padding(vertical = 8.dp)
+                    // At least 48 x 48 dp to touch, although the text is shorter.
+                    .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
                     .testTag("read_more_button"),
-            )
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = stringResource(if (expanded) R.string.read_less else R.string.read_more),
+                    style = SansBody,
+                    fontWeight = FontWeight.Bold,
+                    color = Terracotta,
+                )
+            }
         }
     }
 }
@@ -270,7 +360,12 @@ private fun Tracklist(tracks: List<NumberedTrack>, modifier: Modifier = Modifier
 private fun TrackRow(numbered: NumberedTrack) {
     val (position, track) = numbered
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp).testTag("track_item_${track.id}"),
+        // Position, name and duration are read as one track (D-20).
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
+            .padding(vertical = 16.dp)
+            .testTag("track_item_${track.id}"),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -314,7 +409,8 @@ private fun Reviews(comments: List<Comment>, modifier: Modifier = Modifier) {
 /** The review as a quote, then "Author · ★★★★★". */
 @Composable
 private fun ReviewItem(comment: Comment) {
-    Column(modifier = Modifier.fillMaxWidth().testTag("review_item_${comment.id}")) {
+    // Quote, author and stars are read as one review.
+    Column(modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {}.testTag("review_item_${comment.id}")) {
         Text(
             text = "“${comment.description}”",
             style = MaterialTheme.typography.headlineSmall,
@@ -327,21 +423,9 @@ private fun ReviewItem(comment: Comment) {
                 style = meta,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(text = " · ", style = meta, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(text = " · ", style = meta, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.clearAndSetSemantics {})
             RatingStars(comment.rating)
         }
     }
-}
-
-/** Five stars, filled up to [rating]; read aloud as "Calificación: 4 de 5". */
-@Composable
-private fun RatingStars(rating: Int) {
-    val description = stringResource(R.string.review_rating_description, rating, Comment.MAX_RATING)
-    Text(
-        text = "★".repeat(rating) + "☆".repeat(Comment.MAX_RATING - rating),
-        style = SansBody.copy(fontSize = 17.sp, letterSpacing = 1.sp),
-        color = Terracotta,
-        modifier = Modifier.semantics { contentDescription = description },
-    )
 }
 

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dev.wine.music.app.ui.theme.NavBarBackground
 import com.dev.wine.music.app.ui.theme.NavBarDivider
@@ -117,9 +118,14 @@ private fun VinylBottomBar(
                     icon = { Icon(painterResource(destination.iconRes), contentDescription = null) },
                     label = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            // The bar has a fixed height: with a large font a second line would be cut, so the
+                            // label stays on one line and ends in "…". TalkBack still reads the whole label.
                             Text(
                                 text = stringResource(destination.labelRes),
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis,
                             )
                             Box(
                                 modifier = Modifier

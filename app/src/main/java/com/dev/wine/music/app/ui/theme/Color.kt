@@ -11,7 +11,8 @@ val LightBackground = Color(0xFFF3EEE4)
 val DarkBackground = Color(0xFF3A342C)
 
 // Onboarding tokens, approximated from the mockup.
-val Terracotta = Color(0xFFC2410C)
+// Darkened from #C2410C to reach 4.5:1 (WCAG AA) on LightBackground and under SleeveText.
+val Terracotta = Color(0xFFB53C0B)
 val RecordGreen = Color(0xFF2E4A3F)
 val RecordBlack = Color(0xFF1C1917)
 val RecordGroove = Color(0xFF3A3532)
@@ -20,7 +21,8 @@ val SleeveText = Color(0xFFF3EEE4)
 // Bottom navigation bar tokens, approximated from the catalog mockup.
 val NavBarBackground = Color(0xFFEDE6DA)
 val NavBarDivider = Color(0xFFD9D0C1)
-val NavBarInactive = Color(0xFF6B635A)
+// Darkened from #6B635A to reach 4.5:1 on SleeveSand (onSurfaceVariant over surfaceVariant).
+val NavBarInactive = Color(0xFF5E574E)
 
 // Catalog sleeve palette and the soft shadow under each sleeve, from the catalog mockup.
 val SleeveBrown = Color(0xFF6B4F30)

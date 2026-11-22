@@ -1,0 +1,197 @@
+{
+  "scenario": "P-HU06",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "Google",
+    "model": "Android SDK built for x86",
+    "androidRelease": "8.0.0",
+    "sdk": 26
+  },
+  "recordedAt": "2026-11-22T01:54:34.902Z",
+  "durationMs": 37009,
+  "coldStart": null,
+  "timings": {
+    "detalle-primera-vez": {
+      "ms": 1746,
+      "appiumRoundTripMs": 237
+    },
+    "artista-favorito": {
+      "ms": 1642,
+      "appiumRoundTripMs": 105
+    },
+    "detalle-segunda-vez": {
+      "ms": 1259,
+      "appiumRoundTripMs": 106
+    }
+  },
+  "cpu": {
+    "cores": 4,
+    "totalMs": 22480,
+    "mainThreadMs": 9110,
+    "otherThreadsMs": 13370,
+    "avgPct": 15.2,
+    "peakPct": 76.7
+  },
+  "memory": {
+    "totalPssKb": 53776,
+    "javaHeapKb": 11036,
+    "nativeHeapKb": 10680,
+    "graphicsKb": 0,
+    "codeKb": 18676,
+    "activities": 1,
+    "appContexts": 2,
+    "peakRssKb": 139492,
+    "peakThreads": 38
+  },
+  "frames": {
+    "total": 161,
+    "janky": 134,
+    "jankyPct": 83.23,
+    "slowOver16ms": 132,
+    "frozenOver700ms": 3,
+    "p50Ms": 44,
+    "p90Ms": 300,
+    "p95Ms": 450,
+    "p99Ms": 750,
+    "slowUiThread": 84,
+    "deadlineMissed": null
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 9,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors/100"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors/100/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/bands"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians/100"
+      },
+      {
+        "method": "GET",
+        "path": "/performerprizes"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors/100"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors/100/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 38
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 19
+      },
+      {
+        "status": 200,
+        "path": "/collectors/100",
+        "ms": 17
+      },
+      {
+        "status": 200,
+        "path": "/collectors/100/albums",
+        "ms": 15
+      },
+      {
+        "status": 200,
+        "path": "/bands",
+        "ms": 47
+      },
+      {
+        "status": 200,
+        "path": "/musicians/100",
+        "ms": 81
+      },
+      {
+        "status": 200,
+        "path": "/performerprizes",
+        "ms": 66
+      },
+      {
+        "status": 200,
+        "path": "/collectors/100",
+        "ms": 46
+      },
+      {
+        "status": 200,
+        "path": "/collectors/100/albums",
+        "ms": 46
+      }
+    ],
+    "segments": [
+      {
+        "name": "detalle-primera-vez",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors/100"
+          },
+          {
+            "method": "GET",
+            "path": "/collectors/100/albums"
+          }
+        ]
+      },
+      {
+        "name": "artista-favorito",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/bands"
+          },
+          {
+            "method": "GET",
+            "path": "/musicians/100"
+          },
+          {
+            "method": "GET",
+            "path": "/performerprizes"
+          }
+        ]
+      },
+      {
+        "name": "detalle-segunda-vez",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors/100"
+          },
+          {
+            "method": "GET",
+            "path": "/collectors/100/albums"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

@@ -1,0 +1,78 @@
+{
+  "scenario": "P-HU01",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "unknown",
+    "model": "Android SDK built for x86",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-22T01:02:11.811Z",
+  "durationMs": 27809,
+  "coldStart": null,
+  "timings": {
+    "catalogo": {
+      "ms": 1430,
+      "appiumRoundTripMs": 110
+    }
+  },
+  "cpu": {
+    "cores": 6,
+    "totalMs": 10450,
+    "mainThreadMs": 3280,
+    "otherThreadsMs": 7170,
+    "avgPct": 6.3,
+    "peakPct": 33.2
+  },
+  "memory": {
+    "totalPssKb": 103790,
+    "javaHeapKb": 29332,
+    "nativeHeapKb": 31284,
+    "graphicsKb": 0,
+    "codeKb": 28612,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 209096,
+    "peakThreads": 36
+  },
+  "frames": {
+    "total": 513,
+    "janky": 428,
+    "jankyPct": 83.43,
+    "slowOver16ms": 426,
+    "frozenOver700ms": 0,
+    "p50Ms": 20,
+    "p90Ms": 24,
+    "p95Ms": 30,
+    "p99Ms": 69,
+    "slowUiThread": 18,
+    "deadlineMissed": 29
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 1,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 43
+      }
+    ],
+    "segments": [
+      {
+        "name": "buscar-y-filtrar",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

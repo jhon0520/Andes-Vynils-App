@@ -1,0 +1,13 @@
+{
+  "manufacturer": "unknown",
+  "model": "Android SDK built for x86",
+  "marketName": "",
+  "androidRelease": "11",
+  "sdk": 30,
+  "soc": "ranchu",
+  "cores": 6,
+  "cpuMaxGhz": 0,
+  "ramGb": 1.9,
+  "screen": "1080x2220",
+  "density": 440
+}

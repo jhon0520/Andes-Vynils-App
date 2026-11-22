@@ -1,0 +1,13 @@
+{
+  "manufacturer": "motorola",
+  "model": "moto g13",
+  "marketName": "",
+  "androidRelease": "14",
+  "sdk": 34,
+  "soc": "Mediatek MT6769",
+  "cores": 8,
+  "cpuMaxGhz": 2.0,
+  "ramGb": 3.7,
+  "screen": "720x1600",
+  "density": 280
+}

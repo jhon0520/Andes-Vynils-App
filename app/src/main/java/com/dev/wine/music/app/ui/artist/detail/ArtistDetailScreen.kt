@@ -24,6 +24,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -92,7 +94,8 @@ private fun ArtistDetailBody(detail: ArtistDetail, onAlbumClick: (Int) -> Unit) 
         // The image shape tells the type apart, as in the list: square for bands, round for musicians.
         AsyncImage(
             model = artist.image,
-            contentDescription = artist.name,
+            // "Foto de …", not the bare name: the name is the heading right below.
+            contentDescription = stringResource(R.string.artist_image_description, artist.name),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -106,7 +109,7 @@ private fun ArtistDetailBody(detail: ArtistDetail, onAlbumClick: (Int) -> Unit) 
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(top = 24.dp).testTag("artist_name"),
+            modifier = Modifier.padding(top = 24.dp).semantics { heading() }.testTag("artist_name"),
         )
         ArtistFacts(detail = detail, isBand = isBand, modifier = Modifier.padding(top = 8.dp))
         if (artist.description.isNotBlank()) {
@@ -175,11 +178,12 @@ private fun PersonRow(name: String, image: String, tag: String, square: Boolean 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxWidth().padding(top = 16.dp).testTag(tag),
+        // Image and name are read as one item.
+        modifier = Modifier.fillMaxWidth().padding(top = 16.dp).semantics(mergeDescendants = true) {}.testTag(tag),
     ) {
         AsyncImage(
             model = image,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.artist_image_description, name),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(48.dp)
@@ -216,7 +220,7 @@ private fun AlbumRow(album: Album, onClick: () -> Unit) {
     ) {
         AsyncImage(
             model = album.cover,
-            contentDescription = null,
+            contentDescription = stringResource(R.string.album_cover_description, album.name),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(56.dp)

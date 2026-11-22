@@ -1,6 +1,7 @@
 {
   "CATALOG_ALBUM": "A Night at the Opera",
   "SALSA_ALBUM_ID": "album_item_100",
+  "SALSA_PERFORMER_ID": "album_performer_100",
   "ROCK_ALBUM": "A Day at the Races",
   "PERFORMER_QUERY": "ruben",
   "NO_MATCH_QUERY": "zzz-e2e-no-results",
@@ -15,5 +16,14 @@
   "COLLECTOR_NAME": "Jaime Monsalve",
   "COLLECTOR_CONTINUE": "Continuar como Jaime Monsalve",
   "OTHER_COLLECTOR_NAME": "Manolo Bellon",
-  "OTHER_COLLECTOR_EMAIL_QUERY": "caracol"
+  "OTHER_COLLECTOR_EMAIL_QUERY": "caracol",
+  "NEW_ALBUM_COVER": "https://example.com/kraken.jpg",
+  "NEW_ALBUM_DATE": "01081984",
+  "NEW_ALBUM_DESCRIPTION": "Created by a Kraken scenario",
+  "NEW_TRACK_DURATION": "0330",
+  "DETAIL_COLLECTOR_ITEM_ID": "collector_item_100",
+  "DETAIL_COLLECTOR_NAME": "Manolo Bellon",
+  "FAVORITE_ITEM_ID": "favorite_item_100",
+  "COLLECTOR_ALBUM_ID": "collector_album_100",
+  "COLLECTOR_REVIEW_ID": "collector_review_100"
 }

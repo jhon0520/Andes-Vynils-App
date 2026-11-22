@@ -9,7 +9,9 @@
     <string name="retry">Reintentar</string>
     <string name="error_loading">Algo salió mal.</string>
     <string name="empty_list">Nada por aquí todavía.</string>
+    <string name="artist_image_description">Foto de %1$s</string>
     <string name="album_cover_description">Portada de %1$s</string>
+    <string name="album_cover_preview_description">Vista previa de la portada</string>
     <string name="catalog_eyebrow">Vinilos · Catálogo</string>
     <string name="create_album">Crear álbum</string>
     <string name="album_search_hint">Buscar por álbum o artista</string>
@@ -21,12 +23,18 @@
     <string name="genre_folk">Folk</string>
     <string name="no_results_count">0 resultados</string>
     <string name="no_results_title">Esta funda está vacía</string>
+    <plurals name="results_count">
+        <item quantity="one">%1$d resultado</item>
+        <item quantity="other">%1$d resultados</item>
+    </plurals>
     <string name="album_no_results_query">No encontramos álbumes para «%1$s». Revisa la ortografía o prueba con otro nombre.</string>
     <string name="album_no_results_genre">No hay álbumes de este género todavía.</string>
     <string name="error_network">No hay conexión. Revisa tu red e intenta de nuevo.</string>
     <string name="error_not_found">No encontramos lo que buscas. Puede que ya no exista.</string>
     <string name="album_detail_eyebrow">Ficha del álbum</string>
     <string name="album_performers_prefix">por</string>
+    <string name="album_performer_open">Ver el detalle de %1$s</string>
+    <string name="track_added_announcement">Se agregó el track «%1$s»</string>
     <plurals name="album_track_count">
         <item quantity="one">%1$d track</item>
         <item quantity="other">%1$d tracks</item>
@@ -36,6 +44,7 @@
     <string name="read_more">Leer más</string>
     <string name="read_less">Leer menos</string>
     <string name="album_tracks_empty">Este álbum aún no tiene tracks.</string>
+    <!-- Also the reviews title of the collector detail (HU06). -->
     <string name="album_reviews_count">Reseñas · %1$d</string>
     <string name="album_reviews_empty">Aún no hay reseñas de este álbum.</string>
     <string name="review_anonymous">Anónimo</string>
@@ -46,6 +55,32 @@
     <string name="artist_no_band">Sin banda</string>
     <string name="artist_no_results_type">No hay artistas de este tipo todavía.</string>
     <string name="artist_show_all">Ver todos</string>
+    <!-- HU07 · Crear álbum -->
+    <string name="album_create_title">Datos del álbum</string>
+    <string name="add_track_title">Nuevo track</string>
+    <string name="album_create_eyebrow">Nuevo álbum</string>
+    <string name="album_field_cover">URL de la portada</string>
+    <string name="album_field_name">Nombre</string>
+    <string name="album_field_release_date">Fecha de lanzamiento (dd/mm/aaaa)</string>
+    <string name="album_field_genre">Género</string>
+    <string name="album_field_record_label">Sello</string>
+    <string name="album_field_description">Descripción</string>
+    <string name="album_description_counter">%1$d/%2$d</string>
+    <string name="album_error_required">Este campo es obligatorio.</string>
+    <string name="album_error_cover">La URL debe empezar por https://.</string>
+    <string name="album_error_date">Escribe una fecha válida en formato dd/mm/aaaa.</string>
+    <string name="album_error_future_date">La fecha no puede ser futura.</string>
+    <plurals name="album_form_review">
+        <item quantity="one">Revisa %1$d campo.</item>
+        <item quantity="other">Revisa %1$d campos.</item>
+    </plurals>
+    <string name="album_create_submitting">Enviando…</string>
+    <string name="album_create_rejected">El servicio rechazó los datos. Revísalos e intenta de nuevo.</string>
+    <string name="album_created_title">Álbum creado</string>
+    <string name="album_created_message">«%1$s» ya está en el catálogo.</string>
+    <string name="album_created_add_tracks">Agregar tracks</string>
+    <string name="album_created_view">Ver álbum</string>
+    <string name="album_created_not_now">Ahora no</string>
     <!-- Onboarding: selección de perfil -->
     <string name="onboarding_brand">Vinilos</string>
     <string name="onboarding_side_a">LADO A · 33⅓</string>
@@ -80,4 +115,29 @@
     <string name="artist_prizes_count">Premios · %1$d</string>
     <string name="artist_prizes_empty">Este artista aún no tiene premios.</string>
     <string name="artist_prize_unnamed">Premio</string>
+
+    <!-- HU08 · Asociar tracks -->
+    <string name="add_track_current">Tracks actuales</string>
+    <string name="add_track_position">Será el track %1$s</string>
+    <string name="track_field_name">Nombre del track</string>
+    <string name="track_field_duration">Duración (mm:ss)</string>
+    <string name="track_error_required">Este dato es obligatorio.</string>
+    <string name="track_error_duration">Usa el formato mm:ss, con segundos entre 00 y 59.</string>
+    <string name="add_track_saving">Guardando…</string>
+    <string name="add_track_cancel">Cancelar</string>
+    <string name="add_track_rejected">El servicio rechazó el track. Revisa los datos e intenta de nuevo.</string>
+
+    <!-- HU06 · Detalle de coleccionista -->
+    <string name="collector_detail_eyebrow">Perfil del coleccionista</string>
+    <string name="collector_telephone_description">Teléfono: %1$s</string>
+    <string name="collector_email_description">Correo: %1$s</string>
+    <string name="collector_favorites_count">Artistas favoritos · %1$d</string>
+    <string name="collector_favorites_empty">Aún no tiene artistas favoritos.</string>
+    <string name="collector_albums_count">Colección · %1$d</string>
+    <string name="collector_albums_empty">Aún no tiene álbumes en su colección.</string>
+    <string name="collector_album_price">Precio: %1$d</string>
+    <string name="collector_album_active">Activo</string>
+    <string name="collector_album_inactive">Inactivo</string>
+    <string name="collector_reviews_empty">Aún no ha escrito reseñas.</string>
+    <string name="collector_review_unknown_album">Álbum no disponible</string>
 </resources>

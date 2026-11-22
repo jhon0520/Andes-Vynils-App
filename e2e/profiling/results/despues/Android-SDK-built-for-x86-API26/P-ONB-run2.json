@@ -1,0 +1,112 @@
+{
+  "scenario": "P-ONB",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "Google",
+    "model": "Android SDK built for x86",
+    "androidRelease": "8.0.0",
+    "sdk": 26
+  },
+  "recordedAt": "2026-11-22T02:05:50.286Z",
+  "durationMs": 7970,
+  "coldStart": [
+    {
+      "totalTimeMs": 2250,
+      "waitTimeMs": 2256,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2243,
+      "waitTimeMs": 2248,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2241,
+      "waitTimeMs": 2249,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2234,
+      "waitTimeMs": 2249,
+      "launchState": null
+    },
+    {
+      "totalTimeMs": 2256,
+      "waitTimeMs": 2260,
+      "launchState": null
+    }
+  ],
+  "timings": {
+    "lista-de-coleccionistas": {
+      "ms": 1319,
+      "appiumRoundTripMs": 97
+    },
+    "catalogo": {
+      "ms": 1102,
+      "appiumRoundTripMs": 49
+    }
+  },
+  "cpu": {
+    "cores": 4,
+    "totalMs": 4020,
+    "mainThreadMs": 1730,
+    "otherThreadsMs": 2290,
+    "avgPct": 12.6,
+    "peakPct": 42.2
+  },
+  "memory": {
+    "totalPssKb": 47889,
+    "javaHeapKb": 10192,
+    "nativeHeapKb": 7124,
+    "graphicsKb": 0,
+    "codeKb": 18572,
+    "activities": 1,
+    "appContexts": 2,
+    "peakRssKb": 124968,
+    "peakThreads": 30
+  },
+  "frames": {
+    "total": 134,
+    "janky": 52,
+    "jankyPct": 38.81,
+    "slowOver16ms": 52,
+    "frozenOver700ms": 0,
+    "p50Ms": 12,
+    "p90Ms": 40,
+    "p95Ms": 109,
+    "p99Ms": 150,
+    "slowUiThread": 23,
+    "deadlineMissed": null
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 29
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 21
+      }
+    ],
+    "segments": []
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

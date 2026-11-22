@@ -74,7 +74,9 @@ function deviceFacts(serial) {
     sdk: Number(props['ro.build.version.sdk'] || 0),
     soc: [props['ro.soc.manufacturer'], props['ro.soc.model']].filter(Boolean).join(' ')
       || props['ro.board.platform'] || props['ro.hardware'] || '',
-    cores: Number(tryShell(serial, 'nproc').trim()) || maxFreqs.length || 1,
+    // Android 8 has no `nproc` and its emulator hides cpufreq: /proc/cpuinfo lists every core.
+    cores: Number(tryShell(serial, 'nproc').trim()) || maxFreqs.length
+      || (tryShell(serial, 'cat /proc/cpuinfo').match(/^processor\s*:/gm) || []).length || 1,
     cpuMaxGhz: maxFreqs.length ? Math.round(Math.max(...maxFreqs) / 1e4) / 100 : null,
     ramGb: Math.round((memTotalKb / 1024 / 1024) * 10) / 10,
     screen: (tryShell(serial, 'wm size').match(/(\d+x\d+)/) || [])[1] || '',
@@ -85,8 +87,10 @@ function deviceFacts(serial) {
   return facts;
 }
 
+// PROFILE_DEVICE_NAME names the folder when two devices report the same model (e.g. two emulators).
 function deviceDir(facts) {
-  return path.join(RESULTS_DIR, BUILD, facts.model.replace(/[^A-Za-z0-9._-]+/g, '-'));
+  const name = process.env.PROFILE_DEVICE_NAME || facts.model;
+  return path.join(RESULTS_DIR, BUILD, name.replace(/[^A-Za-z0-9._-]+/g, '-'));
 }
 
 // ---------- process ----------
@@ -145,6 +149,11 @@ function startSampler(profile) {
 }
 
 // ---------- logcat ----------
+
+// Limits a logcat read to the lines written since the scenario started (only set before Android 9).
+function sinceArg(profile) {
+  return profile && profile.since ? ` -T '${profile.since}'` : '';
+}
 
 const REQUEST = /-->\s+(GET|POST|PUT|PATCH|DELETE)\s+(\S+)/;
 const RESPONSE = /<--\s+(\d{3})\b.*?\s(https?:\/\/\S+)\s+\((\d+)ms/;
@@ -228,7 +237,7 @@ function readNetwork(profile) {
 
 // Fallback for a remote backend: the OkHttp logging interceptor (debug builds) writes "--> GET <url>".
 function readNetworkFromLogcat(profile) {
-  const out = tryShell(profile.serial, `logcat -d -v brief --pid=${profile.pid}`);
+  const out = tryShell(profile.serial, `logcat -d -v brief${sinceArg(profile)} --pid=${profile.pid}`);
   const requests = [];
   const responses = [];
   for (const line of out.split('\n')) {
@@ -312,12 +321,15 @@ When('I start profiling {kraken-string}', async function (scenario) {
   const pid = await waitForPid(serial);
   // A bigger log buffer so the OkHttp lines of a whole scenario fit.
   tryShell(serial, 'logcat -G 16M');
-  tryShell(serial, 'logcat -b all -c');
+  // Before Android 9, clearing logcat while Appium reads it can fail and kill Appium's reader, which
+  // ends the session. There the buffers are kept and every read starts at the scenario start instead.
+  const since = facts.sdk < 28 ? tryShell(serial, 'date "+%m-%d %H:%M:%S.000"').trim() : '';
+  if (!since) tryShell(serial, 'logcat -b all -c');
   tryShell(serial, `dumpsys gfxinfo ${PKG} reset`);
   const start = parseStat(shell(serial, statCommand(pid)));
   await startProxy(serial);
   this.profile = {
-    scenario, serial, pid, facts, start,
+    scenario, serial, pid, facts, start, since,
     startedAt: Date.now(),
     timings: {},
     checkpoints: [],
@@ -331,7 +343,9 @@ Given('I skip this scenario on the build {kraken-string}', function (build) {
   return build === BUILD ? 'skipped' : undefined;
 });
 
-async function tapAndMeasure(world, tapSelector, targetSelector, label) {
+// With `gone`, the time runs until the target leaves the screen (e.g. a sheet that closes once its
+// form is saved, when nothing new appears in its place).
+async function tapAndMeasure(world, tapSelector, targetSelector, label, gone = false) {
   assert.ok(world.profile, 'Run "I start profiling" first');
   const tap = await world.driver.$(tapSelector);
   await tap.waitForDisplayed({ timeout: TIMEOUT });
@@ -344,7 +358,7 @@ async function tapAndMeasure(world, tapSelector, targetSelector, label) {
   const t0 = Date.now();
   shell(world.device.id, `input tap ${Math.round(x + width / 2)} ${Math.round(y + height / 2)}`);
   const target = await world.driver.$(targetSelector);
-  await target.waitForDisplayed({ timeout: TIMEOUT, interval: POLL_MS });
+  await target.waitForDisplayed({ timeout: TIMEOUT, interval: POLL_MS, reverse: gone });
   const ms = Date.now() - t0;
   // One query to an element already on screen: the Appium round trip that the time above includes.
   const r0 = Date.now();
@@ -355,6 +369,11 @@ async function tapAndMeasure(world, tapSelector, targetSelector, label) {
 When('I tap the element with id {kraken-string} and measure until I see the element with id {kraken-string} as {kraken-string}',
   async function (tapId, targetId, label) {
     await tapAndMeasure(this, byId(tapId), byId(targetId), label);
+  });
+
+When('I tap the element with id {kraken-string} and measure until I stop seeing the element with id {kraken-string} as {kraken-string}',
+  async function (tapId, targetId, label) {
+    await tapAndMeasure(this, byId(tapId), byId(targetId), label, true);
   });
 
 When('I tap the element with id {kraken-string} and measure until I see a text containing {kraken-string} as {kraken-string}',
@@ -410,8 +429,8 @@ After(async function ({ result }) {
     const name = `${BUILD}-${p ? p.scenario : 'escenario'}-run${RUN}-${Date.now()}.log`;
     const log = [
       `# ${result.message || ''}`,
-      '# --- crash ---', tryShell(this.device.id, 'logcat -d -b crash'),
-      '# --- app ---', p ? tryShell(this.device.id, `logcat -d -v time --pid=${p.pid}`) : '',
+      '# --- crash ---', tryShell(this.device.id, `logcat -d -b crash${sinceArg(p)}`),
+      '# --- app ---', p ? tryShell(this.device.id, `logcat -d -v time${sinceArg(p)} --pid=${p.pid}`) : '',
       '# --- últimas líneas del sistema ---', tryShell(this.device.id, 'logcat -d -v time -t 300'),
     ].join('\n');
     fs.writeFileSync(path.join(FAILURES_DIR, name), log);
@@ -428,8 +447,8 @@ Then('I save the profiling', async function () {
   const meminfo = parseMeminfo(shell(p.serial, `dumpsys meminfo ${PKG}`));
   const frames = parseGfxinfo(shell(p.serial, `dumpsys gfxinfo ${PKG}`));
   const network = readNetwork(p);
-  const anr = tryShell(p.serial, 'logcat -d -b events -s am_anr').split('\n').filter((l) => l.includes(PKG)).length;
-  const crashes = tryShell(p.serial, 'logcat -d -b crash').split('\n').filter((l) => l.includes(`Process: ${PKG}`)).length;
+  const anr = tryShell(p.serial, `logcat -d -b events${sinceArg(p)} -s am_anr`).split('\n').filter((l) => l.includes(PKG)).length;
+  const crashes = tryShell(p.serial, `logcat -d -b crash${sinceArg(p)}`).split('\n').filter((l) => l.includes(`Process: ${PKG}`)).length;
 
   const ms = (ticks) => Math.round((ticks / p.facts.clkTck) * 1000);
   const totalTicks = end.total - p.start.total;

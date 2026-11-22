@@ -6,6 +6,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.sp
 import com.dev.wine.music.app.R
 
@@ -36,13 +38,20 @@ val TypographyLibron = Typography(
     labelSmall = DefaultTypography.labelSmall.copy(fontFamily = LibronFontFamily)
 )
 
+/**
+ * Splits a word with a hyphen at a syllable ("COLECCIO-NISTA") when it does not fit the line, instead of
+ * cutting it at any letter. Only for short texts in narrow places (labels, tabs, options): hyphenation
+ * makes text layout slower, so long paragraphs keep the default. Android 5 (API 21 and 22) ignores it.
+ */
+val Hyphenated = TextStyle(hyphens = Hyphens.Auto, lineBreak = LineBreak.Heading)
+
 /** Small monospaced caps for section labels ("¿CÓMO QUIERES INGRESAR?"). */
 val LabelMono = TextStyle(
     fontFamily = FontFamily.Monospace,
     fontWeight = FontWeight.Medium,
     fontSize = 12.sp,
     letterSpacing = 2.4.sp,
-)
+).merge(Hyphenated)
 
 /** Plain sans text from the catalog mockup: performers, search and tabs. */
 val SansBody = TextStyle(

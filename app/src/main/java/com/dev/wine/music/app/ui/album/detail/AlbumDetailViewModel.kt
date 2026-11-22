@@ -30,6 +30,9 @@ class AlbumDetailViewModel @Inject constructor(
     // Navigation puts the AlbumDetailRoute.albumId argument here under its property name.
     private val albumId: Int = checkNotNull(savedStateHandle[ALBUM_ID_KEY])
 
+    /** True when arriving from «Agregar tracks» right after creating the album. */
+    val openAddTrackOnArrival: Boolean = savedStateHandle[OPEN_ADD_TRACK_KEY] ?: false
+
     private val _uiState = MutableStateFlow<UiState<Album>>(UiState.Loading)
     val uiState: StateFlow<UiState<Album>> = _uiState.asStateFlow()
 
@@ -52,5 +55,6 @@ class AlbumDetailViewModel @Inject constructor(
 
     companion object {
         const val ALBUM_ID_KEY = "albumId"
+        const val OPEN_ADD_TRACK_KEY = "openAddTrack"
     }
 }

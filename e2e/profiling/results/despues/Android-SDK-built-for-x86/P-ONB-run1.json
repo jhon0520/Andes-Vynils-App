@@ -1,0 +1,112 @@
+{
+  "scenario": "P-ONB",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "unknown",
+    "model": "Android SDK built for x86",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-22T01:01:43.346Z",
+  "durationMs": 8439,
+  "coldStart": [
+    {
+      "totalTimeMs": 2632,
+      "waitTimeMs": 2633,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2613,
+      "waitTimeMs": 2617,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2625,
+      "waitTimeMs": 2628,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2690,
+      "waitTimeMs": 2692,
+      "launchState": "COLD"
+    },
+    {
+      "totalTimeMs": 2646,
+      "waitTimeMs": 2654,
+      "launchState": "COLD"
+    }
+  ],
+  "timings": {
+    "lista-de-coleccionistas": {
+      "ms": 1252,
+      "appiumRoundTripMs": 77
+    },
+    "catalogo": {
+      "ms": 1009,
+      "appiumRoundTripMs": 49
+    }
+  },
+  "cpu": {
+    "cores": 6,
+    "totalMs": 5180,
+    "mainThreadMs": 1720,
+    "otherThreadsMs": 3460,
+    "avgPct": 10.2,
+    "peakPct": 35.2
+  },
+  "memory": {
+    "totalPssKb": 89083,
+    "javaHeapKb": 20936,
+    "nativeHeapKb": 25680,
+    "graphicsKb": 0,
+    "codeKb": 28564,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 195152,
+    "peakThreads": 37
+  },
+  "frames": {
+    "total": 116,
+    "janky": 94,
+    "jankyPct": 81.03,
+    "slowOver16ms": 94,
+    "frozenOver700ms": 0,
+    "p50Ms": 21,
+    "p90Ms": 48,
+    "p95Ms": 150,
+    "p99Ms": 250,
+    "slowUiThread": 13,
+    "deadlineMissed": 15
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 48
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 23
+      }
+    ],
+    "segments": []
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}

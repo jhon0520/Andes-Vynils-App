@@ -1,0 +1,113 @@
+{
+  "scenario": "P-HU03",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "Google",
+    "model": "Android SDK built for x86",
+    "androidRelease": "8.0.0",
+    "sdk": 26
+  },
+  "recordedAt": "2026-11-22T02:01:01.805Z",
+  "durationMs": 15326,
+  "coldStart": null,
+  "timings": {
+    "artistas-primera-vez": {
+      "ms": 917,
+      "appiumRoundTripMs": 67
+    },
+    "artistas-regreso": {
+      "ms": 681,
+      "appiumRoundTripMs": 73
+    }
+  },
+  "cpu": {
+    "cores": 4,
+    "totalMs": 8120,
+    "mainThreadMs": 3360,
+    "otherThreadsMs": 4760,
+    "avgPct": 13.2,
+    "peakPct": 56.4
+  },
+  "memory": {
+    "totalPssKb": 51246,
+    "javaHeapKb": 10196,
+    "nativeHeapKb": 8800,
+    "graphicsKb": 0,
+    "codeKb": 18620,
+    "activities": 1,
+    "appContexts": 2,
+    "peakRssKb": 133816,
+    "peakThreads": 40
+  },
+  "frames": {
+    "total": 327,
+    "janky": 186,
+    "jankyPct": 56.88,
+    "slowOver16ms": 184,
+    "frozenOver700ms": 0,
+    "p50Ms": 17,
+    "p90Ms": 36,
+    "p95Ms": 69,
+    "p99Ms": 150,
+    "slowUiThread": 55,
+    "deadlineMissed": null
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 3,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/bands"
+      },
+      {
+        "method": "GET",
+        "path": "/musicians"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 35
+      },
+      {
+        "status": 200,
+        "path": "/bands",
+        "ms": 13
+      },
+      {
+        "status": 200,
+        "path": "/musicians",
+        "ms": 10
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/bands"
+          },
+          {
+            "method": "GET",
+            "path": "/musicians"
+          }
+        ]
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
