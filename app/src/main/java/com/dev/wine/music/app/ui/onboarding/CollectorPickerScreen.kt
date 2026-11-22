@@ -40,6 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,7 +119,7 @@ fun CollectorPickerContent(
             text = stringResource(R.string.collector_picker_question),
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp).semantics { heading() },
         )
         SearchField(
             query = uiState.query,
@@ -207,7 +210,9 @@ private fun CollectorRow(collector: Collector, selected: Boolean, onClick: () ->
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(if (selected) Terracotta else MaterialTheme.colorScheme.surfaceVariant),
+                .background(if (selected) Terracotta else MaterialTheme.colorScheme.surfaceVariant)
+                // The initials repeat the name read next to them, so TalkBack skips them.
+                .clearAndSetSemantics {},
             contentAlignment = Alignment.Center,
         ) {
             Text(

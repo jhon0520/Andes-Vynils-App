@@ -6,6 +6,15 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 
 ### Agregado
 
+- **Accesibilidad (sprint 3)**
+  - Contraste AA en el tema: terracota `#B53C0B` (5.02:1) y texto secundario `#5E574E` (4.92:1 sobre arena) ([#54](https://github.com/jhon0520/Andes-Vynils-App/issues/54)).
+  - Portadas y fotos de artistas con descripción; iniciales del coleccionista y separadores «·» ocultos a TalkBack ([#55](https://github.com/jhon0520/Andes-Vynils-App/issues/55), [#58](https://github.com/jhon0520/Andes-Vynils-App/issues/58)).
+  - Títulos de pantalla y de sección con rol de encabezado ([#56](https://github.com/jhon0520/Andes-Vynils-App/issues/56)).
+  - Área táctil de 48 dp en «Leer más» y en las pestañas de género ([#57](https://github.com/jhon0520/Andes-Vynils-App/issues/57)).
+  - Títulos de HU07 y HU08 distintos de su botón: «Datos del álbum» y «Nuevo track» ([#58](https://github.com/jhon0520/Andes-Vynils-App/issues/58)).
+  - `AccessibilityAuditE2ETest`: reglas de Accessibility Test Framework (ATF 4.1.1) sobre las pantallas de HU01–HU08 y el onboarding; falla con cualquier hallazgo de tipo ERROR.
+- **Pruebas de reconocimiento** en `e2e/recognition`: monkey con semillas fijas y exploración sistemática con `explore.py`, con sus resultados.
+
 - **Rendimiento (sprint 2), sobre la base de `RepositoryCache` y los dispatchers inyectados**
   - Los filtros de HU01, HU03 y del selector de coleccionista corren fuera del hilo principal (`flowOn`).
   - La búsqueda de HU01 normaliza los nombres una sola vez al cargar el catálogo, no en cada tecla.
@@ -53,6 +62,9 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 
 ### Corregido
 
+- La foto de artistas alojada en Wikimedia no cargaba (403 sin User-Agent, 400 por el ancho de 800 px). `ImageRequestInterceptor` identifica la app y pide un ancho permitido ([#59](https://github.com/jhon0520/Andes-Vynils-App/issues/59)).
+- HU06 ordenaba favoritos y colección con `lowercase()` dentro del comparador; ahora usa `String.CASE_INSENSITIVE_ORDER`.
+- Lint `ComposableLambdaParameterPosition` en `FormDropdown` (HU07).
 - `AlbumListContentTest` buscaba el texto «Retry»; ahora lee «Reintentar» desde `strings.xml`.
 - «Musico» ahora se escribe «Músico».
 - Con el teclado abierto, el mensaje de «sin resultados» quedaba tapado. Ahora la tecla «Buscar» del teclado lo cierra y esa vista se puede desplazar.

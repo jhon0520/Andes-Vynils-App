@@ -16,6 +16,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 import com.dev.wine.music.app.domain.model.UserSession
 import com.dev.wine.music.app.ui.theme.LabelMono
@@ -34,6 +36,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -241,6 +244,7 @@ private fun CatalogHeader(session: UserSession?) {
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.semantics { heading() },
             )
         }
         if (session != null) ProfileBadge(session = session)
@@ -339,6 +343,8 @@ private fun GenreTabs(selectedGenre: AlbumGenre?, onGenreSelect: (AlbumGenre?) -
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(IntrinsicSize.Max)
+                        // Short labels such as "Rock" still get a 48 dp wide touch target.
+                        .sizeIn(minWidth = 48.dp)
                         .selectable(selected = selected, role = Role.Tab, onClick = { onGenreSelect(genre) })
                         .testTag("album_genre_tab_${genre?.name?.lowercase() ?: "all"}"),
                 ) {

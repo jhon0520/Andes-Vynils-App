@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
@@ -115,9 +116,11 @@ fun AddTrackContent(
                 .padding(vertical = 8.dp),
         ) {
             Text(
-                text = stringResource(R.string.add_track),
+                // Not "Agregar track": the submit button says that, and two equal labels confuse TalkBack.
+                text = stringResource(R.string.add_track_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = album.name,

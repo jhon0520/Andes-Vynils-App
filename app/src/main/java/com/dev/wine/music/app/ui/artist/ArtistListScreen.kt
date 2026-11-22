@@ -27,6 +27,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -74,7 +76,7 @@ fun ArtistListContent(
         Text(
             text = stringResource(R.string.artists),
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).semantics { heading() },
         )
         when (uiState) {
             UiState.Loading -> LoadingView()
@@ -156,7 +158,7 @@ private fun ArtistItem(artist: Artist, modifier: Modifier = Modifier) {
             // The avatar shape tells the type apart: square for bands, round for musicians.
             AsyncImage(
                 model = artist.image,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.artist_image_description, artist.name),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(56.dp)

@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
@@ -122,10 +123,12 @@ fun AlbumCreateContent(
                 .testTag("album_create_form"),
         ) {
             Text(
-                text = stringResource(R.string.create_album),
+                // Not "Crear álbum": the submit button says that, and two equal labels confuse TalkBack.
+                text = stringResource(R.string.album_create_title),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.semantics { heading() },
             )
             FormNotice(errorCount = uiState.visibleErrors.size)
             AlbumFields(uiState = uiState, actions = actions)
@@ -302,13 +305,13 @@ private fun <T> FormDropdown(
     @StringRes label: Int,
     selected: String,
     options: List<T>,
-    optionLabel: @Composable (T) -> String,
     optionTag: (T) -> String,
     onSelect: (T) -> Unit,
     onDismiss: () -> Unit,
     @StringRes error: Int?,
     tag: String,
     enabled: Boolean,
+    optionLabel: @Composable (T) -> String,
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(

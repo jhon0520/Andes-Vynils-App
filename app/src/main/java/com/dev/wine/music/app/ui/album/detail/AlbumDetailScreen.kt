@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +33,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -156,7 +161,7 @@ private fun AlbumDetailBody(
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 8.dp).semantics { heading() },
         )
         if (album.performers.isNotEmpty()) {
             Performers(
@@ -197,7 +202,8 @@ private fun AlbumFacts(album: Album, modifier: Modifier = Modifier) {
     ).filter { (value, _) -> value.isNotBlank() }
     FlowRow(modifier = modifier.fillMaxWidth()) {
         facts.forEachIndexed { index, (value, tag) ->
-            if (index > 0) MetaText(" · ")
+            // The separator is only visual: TalkBack reads the values one after another.
+            if (index > 0) MetaText(" · ", Modifier.clearAndSetSemantics {})
             MetaText(value.uppercase(), Modifier.testTag(tag))
         }
     }
@@ -302,7 +308,9 @@ private fun ExpandableDescription(description: String, modifier: Modifier = Modi
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .clickable(role = Role.Button) { expanded = !expanded }
-                    .padding(vertical = 8.dp)
+                    // At least 48 x 48 dp to touch, although the text is shorter.
+                    .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                    .wrapContentHeight(Alignment.CenterVertically)
                     .testTag("read_more_button"),
             )
         }
@@ -394,7 +402,7 @@ private fun ReviewItem(comment: Comment) {
                 style = meta,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Text(text = " · ", style = meta, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(text = " · ", style = meta, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.clearAndSetSemantics {})
             RatingStars(comment.rating)
         }
     }

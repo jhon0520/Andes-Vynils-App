@@ -9,6 +9,7 @@
     <string name="retry">Reintentar</string>
     <string name="error_loading">Algo salió mal.</string>
     <string name="empty_list">Nada por aquí todavía.</string>
+    <string name="artist_image_description">Foto de %1$s</string>
     <string name="album_cover_description">Portada de %1$s</string>
     <string name="catalog_eyebrow">Vinilos · Catálogo</string>
     <string name="create_album">Crear álbum</string>
@@ -49,6 +50,8 @@
     <string name="artist_no_results_type">No hay artistas de este tipo todavía.</string>
     <string name="artist_show_all">Ver todos</string>
     <!-- HU07 · Crear álbum -->
+    <string name="album_create_title">Datos del álbum</string>
+    <string name="add_track_title">Nuevo track</string>
     <string name="album_create_eyebrow">Nuevo álbum</string>
     <string name="album_field_cover">URL de la portada</string>
     <string name="album_field_name">Nombre</string>

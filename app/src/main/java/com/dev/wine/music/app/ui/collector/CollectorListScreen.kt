@@ -35,6 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +82,7 @@ fun CollectorListContent(
         Text(
             text = stringResource(R.string.collectors),
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).semantics { heading() },
         )
         SearchField(
             query = uiState.query,
@@ -153,11 +156,13 @@ private fun CollectorItem(collector: Collector, onClick: () -> Unit) {
             .testTag("collector_item_${collector.id}"),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // The initials repeat the name read next to them, so TalkBack skips them.
         Box(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .clearAndSetSemantics {},
             contentAlignment = Alignment.Center,
         ) {
             Text(
