@@ -34,14 +34,15 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -195,6 +196,7 @@ private fun CollectorList(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class) // invisibleToUser
 @Composable
 private fun CollectorRow(collector: Collector, selected: Boolean, onClick: () -> Unit) {
     Row(
@@ -210,15 +212,15 @@ private fun CollectorRow(collector: Collector, selected: Boolean, onClick: () ->
             modifier = Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(if (selected) Terracotta else MaterialTheme.colorScheme.surfaceVariant)
-                // The initials repeat the name read next to them, so TalkBack skips them.
-                .clearAndSetSemantics {},
+                .background(if (selected) Terracotta else MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = collectorInitials(collector.name),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = if (selected) SleeveText else MaterialTheme.colorScheme.onSurfaceVariant,
+                // The initials repeat the name read next to them, so TalkBack skips them.
+                modifier = Modifier.semantics { invisibleToUser() },
             )
         }
         Spacer(Modifier.width(16.dp))
