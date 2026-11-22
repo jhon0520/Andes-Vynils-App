@@ -1,0 +1,13 @@
+{
+  "manufacturer": "Google",
+  "model": "Android SDK built for x86",
+  "marketName": "",
+  "androidRelease": "8.0.0",
+  "sdk": 26,
+  "soc": "ranchu",
+  "cores": 4,
+  "cpuMaxGhz": null,
+  "ramGb": 3,
+  "screen": "1080x1920",
+  "density": 420
+}

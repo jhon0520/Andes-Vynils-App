@@ -1,0 +1,115 @@
+{
+  "scenario": "P-HU02",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "unknown",
+    "model": "Android SDK built for x86",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-22T00:56:27.952Z",
+  "durationMs": 15784,
+  "coldStart": null,
+  "timings": {
+    "detalle-primera-vez": {
+      "ms": 932,
+      "appiumRoundTripMs": 89
+    },
+    "detalle-segunda-vez": {
+      "ms": 800,
+      "appiumRoundTripMs": 77
+    }
+  },
+  "cpu": {
+    "cores": 6,
+    "totalMs": 8360,
+    "mainThreadMs": 2580,
+    "otherThreadsMs": 5780,
+    "avgPct": 8.8,
+    "peakPct": 33.9
+  },
+  "memory": {
+    "totalPssKb": 101466,
+    "javaHeapKb": 30116,
+    "nativeHeapKb": 27932,
+    "graphicsKb": 0,
+    "codeKb": 28748,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 206620,
+    "peakThreads": 38
+  },
+  "frames": {
+    "total": 205,
+    "janky": 166,
+    "jankyPct": 80.98,
+    "slowOver16ms": 165,
+    "frozenOver700ms": 0,
+    "p50Ms": 21,
+    "p90Ms": 61,
+    "p95Ms": 121,
+    "p99Ms": 200,
+    "slowUiThread": 24,
+    "deadlineMissed": 40
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 3,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 38
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 22
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 46
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          },
+          {
+            "method": "GET",
+            "path": "/collectors"
+          }
+        ]
+      },
+      {
+        "name": "segunda-apertura",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": [
+    "read_more_button: tocado"
+  ]
+}
