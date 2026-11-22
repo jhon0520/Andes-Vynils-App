@@ -37,7 +37,9 @@ import coil.compose.AsyncImage
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Artist
 import com.dev.wine.music.app.domain.model.ArtistType
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
@@ -88,6 +90,11 @@ fun ArtistListContent(
                 if (catalog.totalCount == 0) {
                     EmptyView()
                 } else {
+                    // D-18: TalkBack says how many artists are left after choosing a type.
+                    AnnounceOnChange(
+                        message = resultsMessage(catalog.artists.size),
+                        key = selectedType to catalog.artists.size,
+                    )
                     TypeTabs(selectedType = selectedType, onTypeSelect = onTypeSelect)
                     if (catalog.artists.isEmpty()) {
                         NoResultsView(

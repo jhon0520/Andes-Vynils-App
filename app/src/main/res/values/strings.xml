@@ -11,6 +11,7 @@
     <string name="empty_list">Nada por aquí todavía.</string>
     <string name="artist_image_description">Foto de %1$s</string>
     <string name="album_cover_description">Portada de %1$s</string>
+    <string name="album_cover_preview_description">Vista previa de la portada</string>
     <string name="catalog_eyebrow">Vinilos · Catálogo</string>
     <string name="create_album">Crear álbum</string>
     <string name="album_search_hint">Buscar por álbum o artista</string>
@@ -22,6 +23,10 @@
     <string name="genre_folk">Folk</string>
     <string name="no_results_count">0 resultados</string>
     <string name="no_results_title">Esta funda está vacía</string>
+    <plurals name="results_count">
+        <item quantity="one">%1$d resultado</item>
+        <item quantity="other">%1$d resultados</item>
+    </plurals>
     <string name="album_no_results_query">No encontramos álbumes para «%1$s». Revisa la ortografía o prueba con otro nombre.</string>
     <string name="album_no_results_genre">No hay álbumes de este género todavía.</string>
     <string name="error_network">No hay conexión. Revisa tu red e intenta de nuevo.</string>
@@ -29,6 +34,7 @@
     <string name="album_detail_eyebrow">Ficha del álbum</string>
     <string name="album_performers_prefix">por</string>
     <string name="album_performer_open">Ver el detalle de %1$s</string>
+    <string name="track_added_announcement">Se agregó el track «%1$s»</string>
     <plurals name="album_track_count">
         <item quantity="one">%1$d track</item>
         <item quantity="other">%1$d tracks</item>

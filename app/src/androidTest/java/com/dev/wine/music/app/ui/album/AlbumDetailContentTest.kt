@@ -85,10 +85,10 @@ class AlbumDetailContentTest {
 
         composeTestRule.onNodeWithText("Buscando América").assertIsDisplayed()
         composeTestRule.onNodeWithTag("album_performer_100").assertTextEquals("Rubén Blades")
-        composeTestRule.onNodeWithTag("album_record_label").assertTextEquals("ELEKTRA")
-        composeTestRule.onNodeWithTag("album_release_date").assertTextEquals("01/08/1984")
-        composeTestRule.onNodeWithTag("album_genre").assertTextEquals(context.getString(R.string.genre_salsa).uppercase())
-        composeTestRule.onNodeWithTag("album_track_count").assertTextEquals("3 TRACKS")
+        composeTestRule.onNodeWithTag("album_record_label", useUnmergedTree = true).assertTextEquals("ELEKTRA")
+        composeTestRule.onNodeWithTag("album_release_date", useUnmergedTree = true).assertTextEquals("01/08/1984")
+        composeTestRule.onNodeWithTag("album_genre", useUnmergedTree = true).assertTextEquals(context.getString(R.string.genre_salsa).uppercase())
+        composeTestRule.onNodeWithTag("album_track_count", useUnmergedTree = true).assertTextEquals("3 TRACKS")
     }
 
     @Test

@@ -55,7 +55,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Collector
 import com.dev.wine.music.app.ui.collector.collectorInitials
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
@@ -122,6 +124,12 @@ fun CollectorPickerContent(
         // title and the search field alone can fill the screen, and a fixed header left the list a few dp tall.
         val collectors = uiState.collectors
         val showsRows = collectors is UiState.Success && collectors.data.isNotEmpty()
+        // D-18: TalkBack says how many collectors match the search.
+        val found = (collectors as? UiState.Success)?.data?.size?.takeIf { uiState.totalCount > 0 }
+        AnnounceOnChange(
+            message = found?.let { resultsMessage(it) },
+            key = found?.let { uiState.query to it },
+        )
         LazyColumn(
             modifier = Modifier
                 .weight(1f)

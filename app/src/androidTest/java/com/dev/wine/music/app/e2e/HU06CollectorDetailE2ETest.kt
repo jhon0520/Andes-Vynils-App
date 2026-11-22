@@ -74,7 +74,7 @@ class HU06CollectorDetailE2ETest {
         composeTestRule.onNodeWithTag(COLLECTION_TAG).performScrollTo().performClick()
 
         composeTestRule.waitUntilAtLeastOneExists(hasTestTag("album_detail_body"), timeoutMillis = TIMEOUT)
-        composeTestRule.onNodeWithTag("album_record_label").assertTextContains("ELEKTRA")
+        composeTestRule.onNodeWithTag("album_record_label", useUnmergedTree = true).assertTextContains("ELEKTRA")
     }
 
     @Test

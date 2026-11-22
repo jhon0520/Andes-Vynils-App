@@ -19,6 +19,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag as semanticsTestTag
 import com.dev.wine.music.app.domain.model.UserSession
+import com.dev.wine.music.app.ui.common.AnnounceOnChange
 import com.dev.wine.music.app.ui.theme.LabelMono
 import com.dev.wine.music.app.ui.theme.SansBody
 import androidx.compose.ui.unit.sp
@@ -74,6 +75,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.AlbumGenre
 import com.dev.wine.music.app.ui.common.UiState
+import com.dev.wine.music.app.ui.common.resultsMessage
 import com.dev.wine.music.app.ui.components.AlbumCard
 import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
@@ -191,6 +193,11 @@ private fun AlbumCatalogBody(
         }
         return
     }
+    // D-18: TalkBack says how many albums are left after a search or a filter.
+    AnnounceOnChange(
+        message = resultsMessage(catalog.albums.size),
+        key = Triple(query, selectedGenre, catalog.albums.size),
+    )
     // The header, the search field and the tabs are full-width items of the grid, so they scroll away with
     // the albums. With a large font they used to stay fixed and left the albums an eighth of the screen.
     val showsAlbums = catalog.albums.isNotEmpty()

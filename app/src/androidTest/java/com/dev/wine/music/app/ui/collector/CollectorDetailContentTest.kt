@@ -1,5 +1,6 @@
 package com.dev.wine.music.app.ui.collector
 
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -83,8 +84,13 @@ class CollectorDetailContentTest {
         setContent(UiState.Success(manolo))
 
         composeTestRule.onNodeWithTag("collector_name").assertTextEquals("Manolo Bellon")
-        composeTestRule.onNodeWithText("3502457896").assertIsDisplayed()
-        composeTestRule.onNodeWithText("manollo@caracol.com.co").assertIsDisplayed()
+        // TalkBack reads only the description, so the number is not read twice (D-20).
+        composeTestRule.onNodeWithTag("collector_telephone")
+            .assertIsDisplayed()
+            .assertContentDescriptionEquals(context.getString(R.string.collector_telephone_description, "3502457896"))
+        composeTestRule.onNodeWithTag("collector_email")
+            .assertIsDisplayed()
+            .assertContentDescriptionEquals(context.getString(R.string.collector_email_description, "manollo@caracol.com.co"))
     }
 
     @Test

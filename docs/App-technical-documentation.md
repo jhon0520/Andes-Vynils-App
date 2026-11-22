@@ -463,6 +463,12 @@ Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `h
 - **Palabras partidas:** los textos cortos en espacios angostos (etiquetas `LabelMono`, pestañas, opciones de perfil, títulos de tarjeta, `TerracottaAddButton`) usan `Hyphenated` (`Hyphens.Auto`), que corta por sílaba con guion. No se aplica a toda la tipografía porque la separación en sílabas hace más lento el *layout* de los párrafos. La barra inferior tiene alto fijo: su etiqueta va en una línea con «…». En la hoja de HU08 los botones van en un `FlowRow`.
 - **Logotipo:** la carátula del onboarding se dibuja con `fontScale = 1` (WCAG 1.4.4 exceptúa los logotipos).
 - **Pruebas:** `PhoneWithFontScale` (en `androidTest/.../ui/a11y/`) pinta el contenido como un teléfono de 360 × 640 dp con la fuente al 200 %; lo usan `CollectorPickerContentTest`, `AlbumListContentTest` y `AddTrackContentTest`.
+
+**TalkBack (A11Y-02, sprint 3).** Reglas que salieron del recorrido con TalkBack:
+- **Mensajes de estado (D-18):** lo que cambia sin mover el foco se anuncia con `AnnounceOnChange` (`ui/common/Announcer.kt`): resultados al filtrar o buscar (HU01, HU03, HU05 y «¿Quién eres?», con `resultsMessage`), el aviso «Revisa N campos.» (HU07) y, con `rememberAnnouncer()`, el track guardado (HU08). No anuncia la carga inicial ni mientras la `key` es `null`, y espera 700 ms para no hablar en cada tecla. Usa `View.announceForAccessibility` porque Compose 1.7 no tiene API para mensajes de estado. En las pruebas se reemplaza con `LocalAnnouncer`.
+- **Rol de botón (D-19):** el `clickable(role = Role.Button)` va en un `Box` alrededor del texto, nunca sobre el `Text`: sobre el texto, Compose expone un `TextView` y TalkBack no dice «Botón».
+- **Una parada por dato (D-20):** las filas que forman un dato (track, línea de metadatos del álbum) usan `semantics(mergeDescendants = true)`; las filas con descripción propia (teléfono, correo) usan `clearAndSetSemantics`, así el valor no se lee dos veces. Los textos fusionados se prueban con `useUnmergedTree = true`.
+- **Pruebas:** `TalkBackFeedbackTest`; recorrido real con `e2e/a11y/talkback/talkback_walk.py`.
 ---
 
 ## Consumo de la API REST
