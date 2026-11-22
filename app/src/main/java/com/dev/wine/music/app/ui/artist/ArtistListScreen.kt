@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -41,6 +42,7 @@ import com.dev.wine.music.app.ui.components.EmptyView
 import com.dev.wine.music.app.ui.components.ErrorView
 import com.dev.wine.music.app.ui.components.LoadingView
 import com.dev.wine.music.app.ui.components.NoResultsView
+import com.dev.wine.music.app.ui.theme.Hyphenated
 
 /** "Todos" first, then musicians and bands. */
 private val TYPE_OPTIONS: List<ArtistType?> = listOf(null, ArtistType.MUSICIAN, ArtistType.BAND)
@@ -126,7 +128,8 @@ private fun TypeTabs(selectedType: ArtistType?, onTypeSelect: (ArtistType?) -> U
             Tab(
                 selected = type == selectedType,
                 onClick = { onTypeSelect(type) },
-                text = { Text(stringResource(type.tabLabelRes())) },
+                // With a large font "Músicos" does not fit a third of the width: split it at a syllable.
+                text = { Text(stringResource(type.tabLabelRes()), style = LocalTextStyle.current.merge(Hyphenated)) },
                 modifier = Modifier.testTag("artist_type_tab_${type?.name?.lowercase() ?: "all"}"),
             )
         }

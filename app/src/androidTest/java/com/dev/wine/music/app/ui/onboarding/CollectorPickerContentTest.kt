@@ -1,19 +1,25 @@
 package com.dev.wine.music.app.ui.onboarding
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.dev.wine.music.app.R
 import com.dev.wine.music.app.domain.model.Collector
+import com.dev.wine.music.app.ui.a11y.MAX_FONT_SCALE
+import com.dev.wine.music.app.ui.a11y.PhoneWithFontScale
+import com.dev.wine.music.app.ui.a11y.assertFullyInside
 import com.dev.wine.music.app.ui.common.UiState
 import com.dev.wine.music.app.ui.theme.WineMusicAppTheme
 import org.junit.Assert.assertEquals
@@ -34,20 +40,24 @@ class CollectorPickerContentTest {
 
     private fun setContent(
         uiState: CollectorPickerUiState,
+        fontScale: Float? = null,
         onCollectorSelect: (Int) -> Unit = {},
         onContinue: () -> Unit = {},
         onQueryChange: (String) -> Unit = {},
     ) {
         composeTestRule.setContent {
             WineMusicAppTheme {
-                CollectorPickerContent(
-                    uiState = uiState,
-                    onBack = {},
-                    onQueryChange = onQueryChange,
-                    onCollectorSelect = onCollectorSelect,
-                    onContinue = onContinue,
-                    onRetry = {},
-                )
+                val content = @Composable {
+                    CollectorPickerContent(
+                        uiState = uiState,
+                        onBack = {},
+                        onQueryChange = onQueryChange,
+                        onCollectorSelect = onCollectorSelect,
+                        onContinue = onContinue,
+                        onRetry = {},
+                    )
+                }
+                if (fontScale == null) content() else PhoneWithFontScale(fontScale) { content() }
             }
         }
     }
@@ -120,5 +130,27 @@ class CollectorPickerContentTest {
         setContent(CollectorPickerUiState(collectors = UiState.Success(emptyList()), totalCount = 0))
 
         composeTestRule.onNodeWithTag("empty_view").assertIsDisplayed()
+    }
+
+    /** D-14: with the font at 200 % the title and search scroll away and each row fits on screen. */
+    @Test
+    fun withTheLargestFontEveryCollectorRowFitsOnScreen() {
+        setContent(loaded(), fontScale = MAX_FONT_SCALE)
+
+        listOf(jaime, manolo).forEach { collector ->
+            val row = composeTestRule.onNodeWithTag("collector_row_${collector.id}")
+            composeTestRule.onNodeWithTag("collector_list").performScrollToNode(hasTestTag("collector_row_${collector.id}"))
+            row.assertIsDisplayed()
+            row.assertFullyInside(composeTestRule.onNodeWithTag("collector_list"))
+        }
+        composeTestRule.onNodeWithTag("collector_continue").assertIsDisplayed()
+    }
+
+    @Test
+    fun withoutCollectorsTheBodyIsNotTaggedAsTheList() {
+        setContent(CollectorPickerUiState(collectors = UiState.Loading))
+
+        composeTestRule.onNodeWithTag("collector_list").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("loading_view").assertIsDisplayed()
     }
 }

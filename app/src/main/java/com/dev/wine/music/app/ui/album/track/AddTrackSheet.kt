@@ -3,6 +3,8 @@ package com.dev.wine.music.app.ui.album.track
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -86,6 +88,7 @@ fun AddTrackSheet(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class) // FlowRow
 @Composable
 fun AddTrackContent(
     album: Album,
@@ -157,9 +160,11 @@ fun AddTrackContent(
             )
         }
         uiState.submitError?.let { SubmitError(it) }
-        Row(
+        // When both buttons do not fit on one line (large font), "Agregar track" moves below "Cancelar"
+        // instead of being squeezed into a narrow column with its words cut.
+        FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 16.dp),
         ) {
             TextButton(

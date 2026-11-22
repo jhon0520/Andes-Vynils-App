@@ -340,6 +340,7 @@ No corresponde a una HU de HU01–HU08, pero las HU de coleccionista dependen de
 - **Muerte del proceso:** Navigation restaura las pantallas, pero la sesión se pierde. `MainScreen` lo detecta (`session == null` fuera del onboarding) y vuelve a `OnboardingGraph` limpiando la pila.
 - **Rutas:** `OnboardingGraph` (grafo anidado, `startDestination` de la app) con `RoleSelectionRoute` y `CollectorPickerRoute`. Al terminar se navega a `AlbumsRoute` con `popUpTo<OnboardingGraph> { inclusive = true }`, así atrás en Álbumes sale de la app.
 - **testTags:** `role_selection`, `role_visitor`, `role_collector`, `collector_picker`, `collector_search`, `collector_list`, `collector_row_{id}`, `collector_continue`.
+- **Texto grande (D-14, sprint 3):** en `CollectorPickerScreen` el título, el buscador y la nota «Podrás cambiar de perfil luego» son ítems del mismo `LazyColumn` que las filas; solo «Continuar» queda fijo. El `LazyColumn` lleva `collector_list` solo cuando muestra coleccionistas (si no, `collector_picker_body`), así las E2E, Kraken y P-ONB siguen esperando la lista con datos.
 - **Fase 2 (pendiente):** ícono de perfil arriba a la derecha para cambiar de rol (`SessionRepository.clear()`), y usar `UserSession.Collector` para comentarios y favoritos.
 
 **Navegación:** las rutas tipadas viven en `ui/navigation/Routes.kt`. Hoy existen `OnboardingGraph`, `RoleSelectionRoute`, `CollectorPickerRoute`, `AlbumsRoute`, `ArtistsRoute`, `CollectorsRoute` `AlbumCreateRoute`, `AlbumDetailRoute(albumId, openAddTrack)`, `ArtistDetailRoute(artistId, type)`, donde `type` es el nombre de `ArtistType`, y `CollectorDetailRoute(collectorId)` (HU06: desde un coleccionista de la lista; sus favoritos abren `ArtistDetailRoute` y sus álbumes y reseñas abren `AlbumDetailRoute`). HU08 no tiene ruta propia: es la hoja `AddTrackSheet` dentro del detalle del álbum. El botón «Crear álbum» de HU01 y «Agregar track» de HU02 solo aparecen con perfil coleccionista.
@@ -455,6 +456,13 @@ class AlbumListViewModel @Inject constructor(
 
 Cada pantalla tiene dos funciones: `AlbumListScreen` obtiene el ViewModel con `hiltViewModel()` y observa `uiState` con `collectAsStateWithLifecycle()`; `AlbumListContent` es una función sin estado que pinta carga, error, catálogo vacío, sin resultados o la cuadrícula. Esa separación permite probar la interfaz sin red, como hace `AlbumListContentTest`. Búsqueda y filtros de HU01, HU03 y HU05 van en el ViewModel, sobre la lista ya cargada. En HU01, `AlbumListViewModel` combina la lista cargada con `query` y `selectedGenre` (`combine` + `stateIn`) y expone un `AlbumCatalog` con los álbumes visibles y el total cargado; la búsqueda ignora mayúsculas y tildes y no vuelve a llamar a la API.
 
+
+**Texto grande (A11Y-03, sprint 3).** Las pantallas deben poder usarse con la fuente al 200 % y el tamaño de pantalla «más grande»:
+- **Nada fijo que se coma la pantalla:** en el catálogo, el encabezado, el buscador y las pestañas son ítems de ancho completo (`GridItemSpan(maxLineSpan)`) de la misma `LazyVerticalGrid`; la grilla lleva `album_list` solo cuando muestra álbumes (si no, `album_catalog`). Igual en «¿Quién eres?».
+- **El botón flotante no tapa la última fila:** el margen inferior de la grilla sale del alto medido del botón (`onSizeChanged`), no de un valor fijo.
+- **Palabras partidas:** los textos cortos en espacios angostos (etiquetas `LabelMono`, pestañas, opciones de perfil, títulos de tarjeta, `TerracottaAddButton`) usan `Hyphenated` (`Hyphens.Auto`), que corta por sílaba con guion. No se aplica a toda la tipografía porque la separación en sílabas hace más lento el *layout* de los párrafos. La barra inferior tiene alto fijo: su etiqueta va en una línea con «…». En la hoja de HU08 los botones van en un `FlowRow`.
+- **Logotipo:** la carátula del onboarding se dibuja con `fontScale = 1` (WCAG 1.4.4 exceptúa los logotipos).
+- **Pruebas:** `PhoneWithFontScale` (en `androidTest/.../ui/a11y/`) pinta el contenido como un teléfono de 360 × 640 dp con la fuente al 200 %; lo usan `CollectorPickerContentTest`, `AlbumListContentTest` y `AddTrackContentTest`.
 ---
 
 ## Consumo de la API REST
