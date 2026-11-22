@@ -4,5 +4,13 @@
   "ALBUM_QUERY": "ruben",
   "COLLECTOR_QUERY": "monsalve",
   "MUSICIAN_ITEM_ID": "artist_item_100",
-  "MUSICIAN_ALBUM_ID": "artist_album_100"
+  "MUSICIAN_ALBUM_ID": "artist_album_100",
+  "NEW_ALBUM_COVER": "https://example.com/kraken.jpg",
+  "NEW_ALBUM_DATE": "01081984",
+  "NEW_ALBUM_DESCRIPTION": "Created by a Kraken scenario",
+  "NEW_TRACK_DURATION": "0330",
+  "DETAIL_COLLECTOR_ITEM_ID": "collector_item_100",
+  "FAVORITE_ITEM_ID": "favorite_item_100",
+  "COLLECTOR_ALBUM_ID": "collector_album_100",
+  "COLLECTOR_REVIEW_ID": "collector_review_100"
 }

@@ -331,7 +331,9 @@ Given('I skip this scenario on the build {kraken-string}', function (build) {
   return build === BUILD ? 'skipped' : undefined;
 });
 
-async function tapAndMeasure(world, tapSelector, targetSelector, label) {
+// With `gone`, the time runs until the target leaves the screen (e.g. a sheet that closes once its
+// form is saved, when nothing new appears in its place).
+async function tapAndMeasure(world, tapSelector, targetSelector, label, gone = false) {
   assert.ok(world.profile, 'Run "I start profiling" first');
   const tap = await world.driver.$(tapSelector);
   await tap.waitForDisplayed({ timeout: TIMEOUT });
@@ -344,7 +346,7 @@ async function tapAndMeasure(world, tapSelector, targetSelector, label) {
   const t0 = Date.now();
   shell(world.device.id, `input tap ${Math.round(x + width / 2)} ${Math.round(y + height / 2)}`);
   const target = await world.driver.$(targetSelector);
-  await target.waitForDisplayed({ timeout: TIMEOUT, interval: POLL_MS });
+  await target.waitForDisplayed({ timeout: TIMEOUT, interval: POLL_MS, reverse: gone });
   const ms = Date.now() - t0;
   // One query to an element already on screen: the Appium round trip that the time above includes.
   const r0 = Date.now();
@@ -355,6 +357,11 @@ async function tapAndMeasure(world, tapSelector, targetSelector, label) {
 When('I tap the element with id {kraken-string} and measure until I see the element with id {kraken-string} as {kraken-string}',
   async function (tapId, targetId, label) {
     await tapAndMeasure(this, byId(tapId), byId(targetId), label);
+  });
+
+When('I tap the element with id {kraken-string} and measure until I stop seeing the element with id {kraken-string} as {kraken-string}',
+  async function (tapId, targetId, label) {
+    await tapAndMeasure(this, byId(tapId), byId(targetId), label, true);
   });
 
 When('I tap the element with id {kraken-string} and measure until I see a text containing {kraken-string} as {kraken-string}',

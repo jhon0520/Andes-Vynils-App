@@ -1,0 +1,104 @@
+{
+  "scenario": "P-HU05",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "motorola",
+    "model": "moto e20",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-21T22:16:44.432Z",
+  "durationMs": 19727,
+  "coldStart": null,
+  "timings": {
+    "coleccionistas-primera-vez": {
+      "ms": 1284,
+      "appiumRoundTripMs": 74
+    },
+    "coleccionistas-regreso": {
+      "ms": 871,
+      "appiumRoundTripMs": 64
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 9910,
+    "mainThreadMs": 4190,
+    "otherThreadsMs": 5720,
+    "avgPct": 6.3,
+    "peakPct": 32.9
+  },
+  "memory": {
+    "totalPssKb": 92220,
+    "javaHeapKb": 14188,
+    "nativeHeapKb": 26348,
+    "graphicsKb": 0,
+    "codeKb": 30984,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 206732,
+    "peakThreads": 50
+  },
+  "frames": {
+    "total": 165,
+    "janky": 58,
+    "jankyPct": 35.15,
+    "slowOver16ms": 57,
+    "frozenOver700ms": 0,
+    "p50Ms": 11,
+    "p90Ms": 69,
+    "p95Ms": 150,
+    "p99Ms": 500,
+    "slowUiThread": 23,
+    "deadlineMissed": 27
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 2,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/collectors"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 40
+      },
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 18
+      }
+    ],
+    "segments": [
+      {
+        "name": "primera-apertura",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/collectors"
+          }
+        ]
+      },
+      {
+        "name": "buscar",
+        "requests": []
+      },
+      {
+        "name": "regreso",
+        "requests": []
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
