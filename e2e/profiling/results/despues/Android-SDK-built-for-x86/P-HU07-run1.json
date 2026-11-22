@@ -1,0 +1,131 @@
+{
+  "scenario": "P-HU07",
+  "build": "despues",
+  "run": 1,
+  "device": {
+    "manufacturer": "unknown",
+    "model": "Android SDK built for x86",
+    "androidRelease": "11",
+    "sdk": 30
+  },
+  "recordedAt": "2026-11-22T00:59:43.972Z",
+  "durationMs": 26160,
+  "coldStart": null,
+  "timings": {
+    "formulario": {
+      "ms": 695,
+      "appiumRoundTripMs": 50
+    },
+    "album-creado": {
+      "ms": 1905,
+      "appiumRoundTripMs": 21
+    },
+    "detalle-album-creado": {
+      "ms": 1532,
+      "appiumRoundTripMs": 23
+    }
+  },
+  "cpu": {
+    "cores": 6,
+    "totalMs": 14410,
+    "mainThreadMs": 4790,
+    "otherThreadsMs": 9620,
+    "avgPct": 9.2,
+    "peakPct": 33.2
+  },
+  "memory": {
+    "totalPssKb": 82357,
+    "javaHeapKb": 15540,
+    "nativeHeapKb": 22664,
+    "graphicsKb": 0,
+    "codeKb": 28584,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 203420,
+    "peakThreads": 38
+  },
+  "frames": {
+    "total": 543,
+    "janky": 264,
+    "jankyPct": 48.62,
+    "slowOver16ms": 264,
+    "frozenOver700ms": 0,
+    "p50Ms": 13,
+    "p90Ms": 46,
+    "p95Ms": 89,
+    "p99Ms": 200,
+    "slowUiThread": 60,
+    "deadlineMissed": 65
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 4,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "POST",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/9"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 34
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 25
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 26
+      },
+      {
+        "status": 200,
+        "path": "/albums/9",
+        "ms": 21
+      }
+    ],
+    "segments": [
+      {
+        "name": "formulario",
+        "requests": []
+      },
+      {
+        "name": "crear",
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/albums"
+          }
+        ]
+      },
+      {
+        "name": "ver-album",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/9"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
