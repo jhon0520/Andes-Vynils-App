@@ -1,6 +1,7 @@
 package com.dev.wine.music.app.ui.album
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -171,7 +172,8 @@ class AlbumDetailContentTest {
     fun reviewsShowTextAuthorAndRating() {
         setContent(UiState.Success(album))
 
-        composeTestRule.onNodeWithTag("review_item_100").performScrollTo()
+        // TalkBack reads quote and author as one review.
+        composeTestRule.onNodeWithTag("review_item_100").performScrollTo().assertTextContains("Manolo Bellon")
         composeTestRule.onNodeWithText("“The most relevant album of Ruben Blades”").assertIsDisplayed()
         composeTestRule.onNodeWithText("Manolo Bellon").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(
