@@ -8,52 +8,53 @@
     "androidRelease": "15",
     "sdk": 35
   },
-  "recordedAt": "2026-11-14T22:36:18.547Z",
-  "durationMs": 20837,
+  "recordedAt": "2026-11-24T00:13:20.789Z",
+  "durationMs": 20819,
   "coldStart": null,
   "timings": {
     "detalle-primera-vez": {
-      "ms": 1052,
-      "appiumRoundTripMs": 87
+      "ms": 1510,
+      "appiumRoundTripMs": 51
     },
     "detalle-segunda-vez": {
-      "ms": 785,
-      "appiumRoundTripMs": 42
+      "ms": 847,
+      "appiumRoundTripMs": 49
     }
   },
   "cpu": {
     "cores": 8,
-    "totalMs": 7930,
-    "mainThreadMs": 4710,
-    "otherThreadsMs": 3220,
-    "avgPct": 4.8,
-    "peakPct": 30.4
+    "totalMs": 7670,
+    "mainThreadMs": 4610,
+    "otherThreadsMs": 3060,
+    "avgPct": 4.6,
+    "peakPct": 28.8
   },
   "memory": {
-    "totalPssKb": 119418,
-    "javaHeapKb": 19796,
-    "nativeHeapKb": 17552,
-    "graphicsKb": 19476,
-    "codeKb": 4772,
+    "totalPssKb": 114824,
+    "javaHeapKb": 19532,
+    "nativeHeapKb": 16556,
+    "graphicsKb": 19808,
+    "codeKb": 2556,
     "activities": 1,
     "appContexts": 5,
-    "peakRssKb": 213160,
+    "peakRssKb": 216304,
     "peakThreads": 51
   },
   "frames": {
-    "total": 201,
-    "janky": 26,
-    "jankyPct": 12.94,
-    "slowOver16ms": 36,
+    "total": 207,
+    "janky": 29,
+    "jankyPct": 14.01,
+    "slowOver16ms": 33,
     "frozenOver700ms": 0,
     "p50Ms": 9,
-    "p90Ms": 40,
-    "p95Ms": 125,
+    "p90Ms": 48,
+    "p95Ms": 97,
     "p99Ms": 200,
-    "slowUiThread": 21,
-    "deadlineMissed": 26
+    "slowUiThread": 23,
+    "deadlineMissed": 29
   },
   "network": {
+    "source": "proxy",
     "apiRequests": 3,
     "requests": [
       {
@@ -73,17 +74,17 @@
       {
         "status": 200,
         "path": "/albums",
-        "ms": 393
+        "ms": 151
       },
       {
         "status": 200,
         "path": "/albums/100",
-        "ms": 233
+        "ms": 492
       },
       {
         "status": 200,
         "path": "/collectors",
-        "ms": 354
+        "ms": 149
       }
     ],
     "segments": [

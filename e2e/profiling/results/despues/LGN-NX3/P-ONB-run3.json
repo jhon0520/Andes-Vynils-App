@@ -8,78 +8,79 @@
     "androidRelease": "15",
     "sdk": 35
   },
-  "recordedAt": "2026-11-14T22:50:13.230Z",
-  "durationMs": 10875,
+  "recordedAt": "2026-11-24T00:34:55.675Z",
+  "durationMs": 9925,
   "coldStart": [
     {
-      "totalTimeMs": 2801,
-      "waitTimeMs": 2803,
+      "totalTimeMs": 2707,
+      "waitTimeMs": 2713,
       "launchState": "COLD"
     },
     {
-      "totalTimeMs": 2747,
-      "waitTimeMs": 2749,
+      "totalTimeMs": 2681,
+      "waitTimeMs": 2686,
       "launchState": "COLD"
     },
     {
-      "totalTimeMs": 2902,
-      "waitTimeMs": 2906,
+      "totalTimeMs": 2696,
+      "waitTimeMs": 2698,
       "launchState": "COLD"
     },
     {
-      "totalTimeMs": 2809,
-      "waitTimeMs": 2812,
+      "totalTimeMs": 2695,
+      "waitTimeMs": 2697,
       "launchState": "COLD"
     },
     {
-      "totalTimeMs": 2787,
-      "waitTimeMs": 2791,
+      "totalTimeMs": 2705,
+      "waitTimeMs": 2707,
       "launchState": "COLD"
     }
   ],
   "timings": {
     "lista-de-coleccionistas": {
-      "ms": 1169,
-      "appiumRoundTripMs": 43
+      "ms": 1118,
+      "appiumRoundTripMs": 24
     },
     "catalogo": {
-      "ms": 1731,
-      "appiumRoundTripMs": 80
+      "ms": 1467,
+      "appiumRoundTripMs": 76
     }
   },
   "cpu": {
     "cores": 8,
-    "totalMs": 4900,
-    "mainThreadMs": 2650,
-    "otherThreadsMs": 2250,
-    "avgPct": 5.6,
-    "peakPct": 22.7
+    "totalMs": 4340,
+    "mainThreadMs": 2220,
+    "otherThreadsMs": 2120,
+    "avgPct": 5.5,
+    "peakPct": 29.4
   },
   "memory": {
-    "totalPssKb": 116748,
-    "javaHeapKb": 16692,
-    "nativeHeapKb": 19392,
-    "graphicsKb": 18956,
-    "codeKb": 4720,
+    "totalPssKb": 113397,
+    "javaHeapKb": 17068,
+    "nativeHeapKb": 19180,
+    "graphicsKb": 18900,
+    "codeKb": 2856,
     "activities": 1,
     "appContexts": 5,
-    "peakRssKb": 208260,
-    "peakThreads": 49
+    "peakRssKb": 213728,
+    "peakThreads": 54
   },
   "frames": {
-    "total": 117,
-    "janky": 13,
-    "jankyPct": 11.11,
-    "slowOver16ms": 20,
+    "total": 118,
+    "janky": 20,
+    "jankyPct": 16.95,
+    "slowOver16ms": 42,
     "frozenOver700ms": 0,
     "p50Ms": 9,
-    "p90Ms": 46,
+    "p90Ms": 57,
     "p95Ms": 150,
     "p99Ms": 250,
-    "slowUiThread": 12,
-    "deadlineMissed": 13
+    "slowUiThread": 17,
+    "deadlineMissed": 20
   },
   "network": {
+    "source": "proxy",
     "apiRequests": 2,
     "requests": [
       {
@@ -95,12 +96,12 @@
       {
         "status": 200,
         "path": "/collectors",
-        "ms": 152
+        "ms": 269
       },
       {
         "status": 200,
         "path": "/albums",
-        "ms": 47
+        "ms": 75
       }
     ],
     "segments": []

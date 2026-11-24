@@ -8,52 +8,53 @@
     "androidRelease": "15",
     "sdk": 35
   },
-  "recordedAt": "2026-11-14T22:42:15.009Z",
-  "durationMs": 21256,
+  "recordedAt": "2026-11-24T00:21:57.951Z",
+  "durationMs": 22054,
   "coldStart": null,
   "timings": {
     "artistas-primera-vez": {
-      "ms": 1196,
-      "appiumRoundTripMs": 59
+      "ms": 1259,
+      "appiumRoundTripMs": 46
     },
     "artistas-regreso": {
-      "ms": 585,
-      "appiumRoundTripMs": 54
+      "ms": 681,
+      "appiumRoundTripMs": 56
     }
   },
   "cpu": {
     "cores": 8,
-    "totalMs": 8160,
-    "mainThreadMs": 5040,
-    "otherThreadsMs": 3120,
-    "avgPct": 4.8,
-    "peakPct": 26.4
+    "totalMs": 8300,
+    "mainThreadMs": 5070,
+    "otherThreadsMs": 3230,
+    "avgPct": 4.7,
+    "peakPct": 20.3
   },
   "memory": {
-    "totalPssKb": 118866,
-    "javaHeapKb": 22060,
-    "nativeHeapKb": 15828,
-    "graphicsKb": 18780,
-    "codeKb": 4656,
+    "totalPssKb": 111341,
+    "javaHeapKb": 16888,
+    "nativeHeapKb": 16700,
+    "graphicsKb": 18820,
+    "codeKb": 2624,
     "activities": 1,
     "appContexts": 5,
-    "peakRssKb": 214932,
-    "peakThreads": 48
+    "peakRssKb": 215440,
+    "peakThreads": 62
   },
   "frames": {
-    "total": 236,
-    "janky": 26,
-    "jankyPct": 11.02,
-    "slowOver16ms": 33,
+    "total": 250,
+    "janky": 27,
+    "jankyPct": 10.8,
+    "slowOver16ms": 32,
     "frozenOver700ms": 0,
-    "p50Ms": 8,
-    "p90Ms": 28,
-    "p95Ms": 69,
-    "p99Ms": 200,
-    "slowUiThread": 21,
-    "deadlineMissed": 26
+    "p50Ms": 9,
+    "p90Ms": 27,
+    "p95Ms": 65,
+    "p99Ms": 150,
+    "slowUiThread": 20,
+    "deadlineMissed": 27
   },
   "network": {
+    "source": "proxy",
     "apiRequests": 3,
     "requests": [
       {
@@ -62,28 +63,28 @@
       },
       {
         "method": "GET",
-        "path": "/musicians"
+        "path": "/bands"
       },
       {
         "method": "GET",
-        "path": "/bands"
+        "path": "/musicians"
       }
     ],
     "responses": [
       {
         "status": 200,
         "path": "/albums",
-        "ms": 112
-      },
-      {
-        "status": 200,
-        "path": "/musicians",
-        "ms": 70
+        "ms": 277
       },
       {
         "status": 200,
         "path": "/bands",
-        "ms": 94
+        "ms": 91
+      },
+      {
+        "status": 200,
+        "path": "/musicians",
+        "ms": 119
       }
     ],
     "segments": [
@@ -92,11 +93,11 @@
         "requests": [
           {
             "method": "GET",
-            "path": "/musicians"
+            "path": "/bands"
           },
           {
             "method": "GET",
-            "path": "/bands"
+            "path": "/musicians"
           }
         ]
       },
