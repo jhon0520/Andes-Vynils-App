@@ -8,50 +8,50 @@
     "androidRelease": "15",
     "sdk": 35
   },
-  "recordedAt": "2026-11-15T01:43:30.746Z",
-  "durationMs": 19411,
+  "recordedAt": "2026-11-24T00:15:34.872Z",
+  "durationMs": 19869,
   "coldStart": null,
   "timings": {
     "coleccionistas-primera-vez": {
-      "ms": 1223,
-      "appiumRoundTripMs": 54
+      "ms": 1054,
+      "appiumRoundTripMs": 41
     },
     "coleccionistas-regreso": {
-      "ms": 969,
-      "appiumRoundTripMs": 38
+      "ms": 1239,
+      "appiumRoundTripMs": 62
     }
   },
   "cpu": {
     "cores": 8,
-    "totalMs": 7830,
-    "mainThreadMs": 4670,
-    "otherThreadsMs": 3160,
-    "avgPct": 5,
-    "peakPct": 22.7
+    "totalMs": 7520,
+    "mainThreadMs": 4440,
+    "otherThreadsMs": 3080,
+    "avgPct": 4.7,
+    "peakPct": 28.1
   },
   "memory": {
-    "totalPssKb": 114521,
-    "javaHeapKb": 20224,
-    "nativeHeapKb": 15908,
-    "graphicsKb": 18832,
-    "codeKb": 2456,
+    "totalPssKb": 115480,
+    "javaHeapKb": 21740,
+    "nativeHeapKb": 16540,
+    "graphicsKb": 18780,
+    "codeKb": 2468,
     "activities": 1,
     "appContexts": 5,
-    "peakRssKb": 218132,
+    "peakRssKb": 215516,
     "peakThreads": 52
   },
   "frames": {
-    "total": 199,
-    "janky": 26,
-    "jankyPct": 13.07,
-    "slowOver16ms": 50,
+    "total": 190,
+    "janky": 24,
+    "jankyPct": 12.63,
+    "slowOver16ms": 43,
     "frozenOver700ms": 0,
-    "p50Ms": 9,
-    "p90Ms": 42,
-    "p95Ms": 77,
+    "p50Ms": 7,
+    "p90Ms": 44,
+    "p95Ms": 85,
     "p99Ms": 250,
-    "slowUiThread": 23,
-    "deadlineMissed": 26
+    "slowUiThread": 19,
+    "deadlineMissed": 24
   },
   "network": {
     "source": "proxy",
@@ -70,12 +70,12 @@
       {
         "status": 200,
         "path": "/albums",
-        "ms": 219
+        "ms": 67
       },
       {
         "status": 200,
         "path": "/collectors",
-        "ms": 44
+        "ms": 29
       }
     ],
     "segments": [

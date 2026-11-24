@@ -1,0 +1,140 @@
+{
+  "scenario": "P-HU08",
+  "build": "despues",
+  "run": 2,
+  "device": {
+    "manufacturer": "HONOR",
+    "model": "LGN-NX3",
+    "androidRelease": "15",
+    "sdk": 35
+  },
+  "recordedAt": "2026-11-24T01:17:12.871Z",
+  "durationMs": 33228,
+  "coldStart": null,
+  "timings": {
+    "detalle-album": {
+      "ms": 1070,
+      "appiumRoundTripMs": 70
+    },
+    "hoja-agregar-track": {
+      "ms": 1997,
+      "appiumRoundTripMs": 64
+    },
+    "track-guardado": {
+      "ms": 1360,
+      "appiumRoundTripMs": 153
+    }
+  },
+  "cpu": {
+    "cores": 8,
+    "totalMs": 11700,
+    "mainThreadMs": 7010,
+    "otherThreadsMs": 4690,
+    "avgPct": 4.4,
+    "peakPct": 22.9
+  },
+  "memory": {
+    "totalPssKb": 122260,
+    "javaHeapKb": 21640,
+    "nativeHeapKb": 18012,
+    "graphicsKb": 20316,
+    "codeKb": 2996,
+    "activities": 1,
+    "appContexts": 5,
+    "peakRssKb": 221404,
+    "peakThreads": 54
+  },
+  "frames": {
+    "total": 413,
+    "janky": 37,
+    "jankyPct": 8.96,
+    "slowOver16ms": 214,
+    "frozenOver700ms": 0,
+    "p50Ms": 21,
+    "p90Ms": 27,
+    "p95Ms": 65,
+    "p99Ms": 200,
+    "slowUiThread": 32,
+    "deadlineMissed": 37
+  },
+  "network": {
+    "source": "proxy",
+    "apiRequests": 5,
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/collectors"
+      },
+      {
+        "method": "GET",
+        "path": "/albums"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      },
+      {
+        "method": "POST",
+        "path": "/albums/100/tracks"
+      },
+      {
+        "method": "GET",
+        "path": "/albums/100"
+      }
+    ],
+    "responses": [
+      {
+        "status": 200,
+        "path": "/collectors",
+        "ms": 104
+      },
+      {
+        "status": 200,
+        "path": "/albums",
+        "ms": 138
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 338
+      },
+      {
+        "status": 200,
+        "path": "/albums/100/tracks",
+        "ms": 119
+      },
+      {
+        "status": 200,
+        "path": "/albums/100",
+        "ms": 25
+      }
+    ],
+    "segments": [
+      {
+        "name": "detalle-album",
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          }
+        ]
+      },
+      {
+        "name": "guardar-track",
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/albums/100/tracks"
+          },
+          {
+            "method": "GET",
+            "path": "/albums/100"
+          }
+        ]
+      }
+    ]
+  },
+  "anr": 0,
+  "crashes": 0,
+  "notes": []
+}
