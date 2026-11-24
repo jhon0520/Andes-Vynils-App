@@ -39,7 +39,7 @@ Se adjunta documento con acta y evidencias de reunión del equipo [Documento](ht
 Puedes descargar la aplicación desde ./distributions/app-debug.apk
 
 > [!NOTE]
-> Actualmente el apk apunta a entornos locales.
+> El APK de `distributions/` es la versión **3.0.0** (sprint 3, MVP con HU01–HU08) y usa la API de BackVynils en Render, [`https://backvynils-q6yc.onrender.com/`](https://backvynils-q6yc.onrender.com/albums): se instala y funciona sin levantar nada. En el plan gratuito de Render la primera petición puede tardar hasta un minuto si el servicio estaba inactivo; si la app muestra «No hay conexión», espera y toca «Reintentar».
 
 ## Cómo construir y ejecutar la app
 

@@ -4,6 +4,10 @@ Cambios importantes de **Wine Music (Vinilos)** por versión. Formato basado en 
 
 ## [Sin publicar]
 
+## [3.0.0] - 2026-11-23
+
+MVP del sprint 3: las 8 HU (HU01–HU08), accesibilidad y pruebas de reconocimiento. El APK de `distributions/` usa la API de Render.
+
 ### Agregado
 
 - **Accesibilidad (sprint 3)**
@@ -100,5 +104,6 @@ Primer release: la arquitectura base de la app y las pantallas de consulta inici
   - Documentación técnica de la app y del backend, y guía de GitFlow.
   - APK de pruebas en `distributions/`.
 
-[Sin publicar]: https://github.com/jhon0520/Andes-Vynils-App/compare/release-1.0.0...develop
+[Sin publicar]: https://github.com/jhon0520/Andes-Vynils-App/compare/release-3.0.0...develop
+[3.0.0]: https://github.com/jhon0520/Andes-Vynils-App/releases/tag/release-3.0.0
 [1.0.0]: https://github.com/jhon0520/Andes-Vynils-App/releases/tag/release-1.0.0
