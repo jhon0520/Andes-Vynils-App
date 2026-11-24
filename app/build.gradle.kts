@@ -61,8 +61,8 @@ android {
         applicationId = "com.dev.wine.music.app"
         minSdk = 21
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "3.0.0"
 
         // Hilt runner: lets error tests swap the API URL for a fake backend (see HiltTestRunner).
         testInstrumentationRunner = "com.dev.wine.music.app.HiltTestRunner"
